@@ -66,7 +66,7 @@
         <panel>
             <view class="title" slot="title">测试组件Repeat</view>
             <repeat for="{{groupList}}" index="index" item="item" key="key">
-                <group :grouplist="item" :indexa="index"></group>
+                <group :grouplist="item" :index="index"></group>
             </repeat>
         </panel>
 
@@ -218,7 +218,8 @@
 
         onLoad() {
             let self = this
-            this.$parent.getUserInfo(function (userInfo) {
+            this.$parent.getUserInfo().then((userInfo) => {
+                console.log('userinfo:', userInfo)
                 if (userInfo) {
                     self.userInfo = userInfo
                 }
@@ -231,6 +232,8 @@
                 }, 3000)
 
                 self.$apply()
+            }).catch((error) => {
+                console.log('error:', error)
             })
         }
     }
