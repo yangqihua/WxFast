@@ -17,20 +17,19 @@
 </style>
 <template>
     <view class="container">
-        <view class="userinfo" @tap="handleViewTap">
+        <view class="userinfo">
             <image class="userinfo-avatar" src="{{ userInfo.avatarUrl }}" background-size="cover"/>
             <view class="userinfo-nickname">{{ userInfo.nickName }}</view>
         </view>
 
         <panel>
             <view class="title" slot="title">测试数据绑定</view>
-
             <text class="info">{{normalTitle}}</text>
             <text class="info">{{setTimeoutTitle}}</text>
             <text class="info">{{mixin}}</text>
             <text class="info">{{mynum}}</text>
             <text class="info">{{now}}</text>
-            <button @tap="plus('a')" size="mini"> +</button>
+            <button @tap="plus" size="mini"> +</button>
         </panel>
 
         <panel>
@@ -53,7 +52,7 @@
 
             <text class="testcounter">计数组件1:</text>
             <view class="counterview">
-                <counter1 @index-emit.user="counterEmit"/>
+                <counter1 @customEvent.user="counterEmit"/>
             </view>
 
             <text class="testcounter">计数组件2:</text>
@@ -205,7 +204,7 @@
             },
             counterEmit (...args) {
                 let $event = args[args.length - 1]
-                console.log(`${this.$name} receive ${$event.name} from ${$event.source.$name}`)
+                console.log(`${this.$name} counterEmit receive ${$event.name} from ${$event.source.$name}`)
             }
         }
 

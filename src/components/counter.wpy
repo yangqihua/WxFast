@@ -46,9 +46,9 @@
         }
 
         watch = {
-            num (curVal, oldVal) {
-                console.log(`旧值：${oldVal}，新值：${curVal}`)
-            }
+//            num (curVal, oldVal) {
+//                console.log(`旧值：${oldVal}，新值：${curVal}`)
+//            }
         }
 
         methods = {
