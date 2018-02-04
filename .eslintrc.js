@@ -24,6 +24,15 @@ module.exports = {
     'generator-star-spacing': 0,
     // allow debugger during development
     'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0,
-    'space-before-function-paren': 0
+    'space-before-function-paren': 0,
+
+    // 强制使用单引号
+    'quotes': ['error', 'single'],
+    // 要求或禁止使用分号而不是 ASI
+    'semi': ['error', 'never'],
+    // 禁止不必要的分号
+    'no-extra-semi': 'error',
+    // 空格4个
+    'indent': ['error', 4],
   }
 }
