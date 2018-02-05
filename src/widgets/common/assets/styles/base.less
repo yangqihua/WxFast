@@ -2,11 +2,45 @@
 
 
 // common styles
+.index-head {
+    padding: ~'70rpx';
+    text-align: center;
+}
+.index-body {
+    padding: 0 ~'30rpx' ~'40rpx' ~'30rpx';
+}
 
+page {
+    background-color: @background-color;
+    height: 100%;
+    font-size: @desc-font-size;
+    line-height: 1.5;
+}
+checkbox, radio{
+    margin-right: ~'10rpx';
+}
+button{
+    margin-top: ~'20rpx';
+    margin-bottom: ~'20rpx';
+}
+form{
+    width: 100%;
+}
 
 // mixin class
+.btn-mixin(@bg-color:@background-color;@color:@main-text-color){
+    padding: ~'20rpx' ~'30rpx';
+    min-width: ~'240rpx';
+    background-color: @bg-color;
+    color: @color;
+    border: 0 none;
+    border-radius: @btn-radius;
+    font-size: @btn-font-size;
+    text-align: center;
+    overflow: hidden;
+}
 
-.hairline (@border-color: @hairline-color) {
+.hairline-mixin (@border-color: @hairline-color) {
     content: '';
     position: absolute;
     top: 0;

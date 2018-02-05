@@ -23,7 +23,7 @@
         config = {
             navigationBarTitleText: '列表测试',
             backgroundColor: '#efefef',
-            enablePullDownRefresh:true,
+            enablePullDownRefresh: true,
         }
         components = {
             'scroll': Scroll,
@@ -49,7 +49,7 @@
 
         upCallBack() {
             setTimeout(() => {
-                this.list = [...this.list,...this.temp]
+                this.list = [...this.list, ...this.temp]
                 this.$apply()
             }, 500);
         }
@@ -78,17 +78,17 @@
             this.upCallBack()
         }
 
-        onPullDownRefresh(){
+        onPullDownRefresh() {
             console.log('onPullDownRefresh')
             wepy.showNavigationBarLoading()
-            setTimeout(()=>{
+            setTimeout(() => {
                 this.downCallBack()
                 wepy.hideNavigationBarLoading()
                 wepy.stopPullDownRefresh()
-            },600)
+            }, 600)
         }
 
-        onReachBottom(){
+        onReachBottom() {
             this.upCallBack()
             console.log('onReachBottom')
         }

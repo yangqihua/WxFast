@@ -14,7 +14,7 @@
     export default class GoodsList extends wepy.component {
         props = {
             list: {
-                type:Array,
+                type: Array,
                 default: [],
             },
         }

@@ -1,116 +1,31 @@
 <template>
     <view class="container">
-        <view class="userinfo">
-            <image class="userinfo-avatar" src="{{ userInfo.avatarUrl }}" background-size="cover"/>
-            <view class="userinfo-nickname">{{ userInfo.nickName }}</view>
-        </view>
-
-        <view>
-            <scroll>
-                <goods-list :list.sync="list"/>
-            </scroll>
-        </view>
+        <abnormal category="CART"></abnormal>
     </view>
 </template>
 
 <script>
     import wepy from 'wepy'
-    import ListMixin from '../mixins/list'
-    import GoodsList from '../components/goodslist'
-    import Scroll from '../components/common/scroll'
-
+    import Abnormal from '../../widgets/abnormal/index'
     export default class Index extends wepy.page {
         config = {
             navigationBarTitleText: '列表测试',
-            backgroundColor: '#efefef',
-            enablePullDownRefresh:true,
         }
         components = {
-            'scroll': Scroll,
-            'goods-list': GoodsList
+            'abnormal':Abnormal
         }
-
-        mixins = [ListMixin]
+        events = {
+            abnormalTap(detail){
+                console.log('detail:',detail)
+            }
+        }
 
         data = {
-            list: [{name: '商品1', price: '￥234'},],
-            userInfo: {},
-            temp: [
-                {name: '商品1', price: '￥234'},
-                {name: '商品2', price: '￥234'},
-                {name: '商品3', price: '￥234'},
-                {name: '商品4', price: '￥234'},
-                {name: '商品5', price: '￥234'},
-                {name: '商品6', price: '￥234'},
-                {name: '商品7', price: '￥234'},
-                {name: '商品8', price: '￥234'},
-            ],
         }
 
-        upCallBack() {
-            setTimeout(() => {
-                this.list = [...this.list,...this.temp]
-                this.$apply()
-            }, 500);
-        }
-
-        downCallBack() {
-            setTimeout(() => {
-                this.list = this.temp
-                this.$apply()
-            }, 500);
-        }
-
-        computed = {}
-
-        methods = {}
-
-        events = {}
-
-        onLoad() {
-            this.$parent.getUserInfo().then((userInfo) => {
-                this.userInfo = userInfo
-                this.$apply()
-            }).catch((error) => {
-                console.log('error:', error)
-            })
-
-            this.upCallBack()
-        }
-
-        onPullDownRefresh(){
-            console.log('onPullDownRefresh')
-            wepy.showNavigationBarLoading()
-            setTimeout(()=>{
-                this.downCallBack()
-                wepy.hideNavigationBarLoading()
-                wepy.stopPullDownRefresh()
-            },600)
-        }
-
-        onReachBottom(){
-            this.upCallBack()
-            console.log('onReachBottom')
-        }
 
     }
 </script>
 
 <style lang="less" rel="stylesheet/less">
-    .userinfo {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        border-bottom: ~'1rpx' solid #ddd;
-        padding-bottom: ~'10rpx';
-        width: ~'750rpx';
-        .userinfo-avatar {
-            width: ~'80rpx';
-            height: ~'80rpx';
-            border-radius: 50%;
-        }
-        .userinfo-nickname {
-            color: #aaa;
-        }
-    }
 </style>
