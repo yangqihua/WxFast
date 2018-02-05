@@ -1,0 +1,34 @@
+<template>
+    <view class="scroll-container">
+        <view style="width: 100%;height: auto">
+            <slot></slot>
+        </view>
+        <view class="footer">
+            <view>加载中 ... </view>
+        </view>
+    </view>
+</template>
+<script>
+    import wepy from 'wepy'
+    export default class Scroll extends wepy.component {
+        data = {}
+
+        events = {}
+
+        methods = {}
+
+        onLoad() {
+        }
+    }
+</script>
+
+<style lang="less" rel="stylesheet/less">
+    .scroll-container{
+        .footer{
+            text-align: center;
+            color: #bebebe;
+            font-size: ~'28rpx';
+            padding: ~'40rpx';
+        }
+    }
+</style>

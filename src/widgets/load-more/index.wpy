@@ -1,0 +1,52 @@
+<style lang="less"  rel="stylesheet/less">
+    @import "./style";
+</style>
+<template>
+    <block>
+        <block wx:if="{{nomore}}">
+            <view class="zk-loadmore zk-loadmore--nomore">
+                <view class="zk-loadmore__tips">
+                    <view class="zk-loadmore__dot"></view>
+                </view>
+            </view>
+        </block>
+
+        <block wx:elif="{{nodata}}">
+            <view class="zk-loadmore zk-loadmore--nodata">
+                <view class="zk-loadmore__tips">{{ nodata_str }}</view>
+            </view>
+        </block>
+
+        <block wx:elif="{{loading}}">
+            <view class="zk-loadmore">
+                <view class="zk-loading"></view>
+                <view class="zk-loadmore__tips">加载中...</view>
+            </view>
+        </block>
+    </block>
+</template>
+<script>
+    import wepy from 'wepy'
+
+    export default class zanLoadmore extends wepy.component {
+        props = {
+            loading: {
+                type: Boolean,
+                default: false
+            },
+            nodata: {
+                type: Boolean,
+                default: false
+            },
+            nomore: {
+                type: Boolean,
+                default: false
+            },
+            nodata_str: {
+                type: String,
+                default: '暂无数据'
+            }
+        }
+        methods = {}
+    }
+</script>

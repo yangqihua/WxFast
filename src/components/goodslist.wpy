@@ -1,0 +1,46 @@
+<template>
+    <view class="list-container">
+        <repeat for="{{list}}" key="index" index="index" item="item">
+            <view class="list-item">
+                <view class="item-name">{{item.name}}</view>
+                <view class="item-price">{{item.price}}</view>
+            </view>
+        </repeat>
+    </view>
+</template>
+<script>
+    import wepy from 'wepy'
+
+    export default class GoodsList extends wepy.component {
+        props = {
+            list: {
+                type:Array,
+                default: [],
+            },
+        }
+        data = {}
+        methods = {}
+
+        onLoad() {
+            console.log('list:', this.list)
+        }
+    }
+</script>
+
+<style lang="less" rel="stylesheet/less">
+    .list-item {
+        display: flex;
+        justify-content: space-between;
+        .item-name {
+            line-height: ~'100rpx';
+            font-size: ~'40rpx';
+            padding: ~'20rpx';
+        }
+        .item-price {
+            line-height: ~'100rpx';
+            font-size: ~'40rpx';
+            color: red;
+            padding: ~'20rpx';
+        }
+    }
+</style>
