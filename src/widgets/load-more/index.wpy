@@ -3,7 +3,6 @@
 </style>
 <template>
     <view>
-
         <view wx:if="{{loading}}" class="loadmore">
             <view class="loading"></view>
             <view class="loading_tips">加载中...</view>
@@ -12,14 +11,12 @@
         <view wx:else class="loadmore loadmore_nodata">
             <view class="loadmore_tips">{{ nodata_str }}</view>
         </view>
-
-
     </view>
 </template>
 <script>
     import wepy from 'wepy'
 
-    export default class zanLoadmore extends wepy.component {
+    export default class Loadmore extends wepy.component {
         props = {
             loading: {
                 type: Boolean,
