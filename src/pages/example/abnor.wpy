@@ -1,0 +1,34 @@
+<template>
+    <view>112312</view>
+    <view class="container">
+        <abnormal category="CART"></abnormal>
+        <abnormal category="REQUEST_ERROR"></abnormal>
+        <abnormal category="DATA"></abnormal>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy'
+    import Abnormal from '../../widgets/abnormal/index'
+    export default class Index extends wepy.page {
+        config = {
+            navigationBarTitleText: '异常流测试',
+        }
+        components = {
+            'abnormal':Abnormal
+        }
+        events = {
+            abnormalTap(detail){
+                console.log('detail:',detail)
+            }
+        }
+
+        data = {
+        }
+
+
+    }
+</script>
+
+<style lang="less" rel="stylesheet/less">
+</style>
