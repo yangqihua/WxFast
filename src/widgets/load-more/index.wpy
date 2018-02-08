@@ -1,5 +1,5 @@
 <style lang="less"  rel="stylesheet/less">
-    @import "./style";
+    @import "./load-more";
 </style>
 <template>
     <block>

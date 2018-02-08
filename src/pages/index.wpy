@@ -33,10 +33,10 @@
         mixins = [ListMixin]
 
         data = {
-            list: [{name: '商品1', price: '￥234'},],
+            list: [{name: '商品111', price: '￥234'},],
             userInfo: {},
             temp: [
-                {name: '商品1', price: '￥234'},
+                {name: '商品11', price: '￥234'},
                 {name: '商品2', price: '￥234'},
                 {name: '商品3', price: '￥234'},
                 {name: '商品4', price: '￥234'},

@@ -1,4 +1,5 @@
 <template>
+    <view>112312</view>
     <view class="container">
         <abnormal category="CART"></abnormal>
     </view>
