@@ -1,0 +1,26 @@
+<template>
+    <view>
+        <view>{{content.text}}</view>
+    </view>
+</template>
+<script>
+    import wepy from 'wepy'
+
+    export default class Test extends wepy.component {
+        props = {
+            content: {
+                type: Object,
+                default: '',
+            },
+        }
+        data = {}
+        methods = {}
+
+        onLoad() {
+            console.log('this.content:', this.content)
+        }
+    }
+</script>
+
+<style lang="less" rel="stylesheet/less">
+</style>

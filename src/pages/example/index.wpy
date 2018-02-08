@@ -1,27 +1,23 @@
 <template>
-    <view>112312</view>
-    <view class="container">
-        <abnormal category="CART"></abnormal>
+    <view>
+        <test :content="content1"></test>
+        <test :content="content2"></test>
     </view>
 </template>
 
 <script>
     import wepy from 'wepy'
-    import Abnormal from '../../widgets/abnormal/index'
+    import Test from '../../components/test'
     export default class Index extends wepy.page {
         config = {
-            navigationBarTitleText: '列表测试',
+            navigationBarTitleText: '测试',
         }
         components = {
-            'abnormal':Abnormal
+            'test': Test
         }
-        events = {
-            abnormalTap(detail){
-                console.log('detail:',detail)
-            }
-        }
-
         data = {
+            content1: {text:'内容1'},
+            content2: {text:'内容2'},
         }
 
 

@@ -1,27 +1,25 @@
 <template>
     <view class="container">
-        <abnormal category="DATA"></abnormal>
+        <load-more :nodata.sync="loadingStatus"></load-more>
         <!--<abnormal category="DATA"></abnormal>-->
     </view>
 </template>
 
 <script>
     import wepy from 'wepy'
-    import Abnormal from '../../widgets/abnormal/index'
-    export default class Abnor extends wepy.page {
+    import LoadMore from '../../widgets/load-more/index'
+    export default class LoadMoreExample extends wepy.page {
         config = {
-            navigationBarTitleText: '异常流测试',
+            navigationBarTitleText: 'Load More 演示',
         }
         components = {
-            'abnormal':Abnormal
+            'load-more':LoadMore
         }
         events = {
-            abnormalTap(detail){
-                console.log('detail:',detail)
-            }
         }
 
         data = {
+            loadingStatus:true
         }
 
 

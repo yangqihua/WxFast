@@ -1,29 +1,20 @@
-<style lang="less"  rel="stylesheet/less">
+<style lang="less" rel="stylesheet/less">
     @import "./load-more";
 </style>
 <template>
-    <block>
-        <block wx:if="{{nomore}}">
-            <view class="zk-loadmore zk-loadmore--nomore">
-                <view class="zk-loadmore__tips">
-                    <view class="zk-loadmore__dot"></view>
-                </view>
-            </view>
-        </block>
+    <view>
 
-        <block wx:elif="{{nodata}}">
-            <view class="zk-loadmore zk-loadmore--nodata">
-                <view class="zk-loadmore__tips">{{ nodata_str }}</view>
-            </view>
-        </block>
+        <view wx:if="{{loading}}" class="loadmore">
+            <view class="loading"></view>
+            <view class="loading_tips">加载中...</view>
+        </view>
 
-        <block wx:elif="{{loading}}">
-            <view class="zk-loadmore">
-                <view class="zk-loading"></view>
-                <view class="zk-loadmore__tips">加载中...</view>
-            </view>
-        </block>
-    </block>
+        <view wx:else class="loadmore loadmore_nodata">
+            <view class="loadmore_tips">{{ nodata_str }}</view>
+        </view>
+
+
+    </view>
 </template>
 <script>
     import wepy from 'wepy'
@@ -38,15 +29,16 @@
                 type: Boolean,
                 default: false
             },
-            nomore: {
-                type: Boolean,
-                default: false
-            },
             nodata_str: {
                 type: String,
                 default: '暂无数据'
             }
         }
+
+        onLoad() {
+            console.log('this loading:', this.loading)
+        }
+
         methods = {}
     }
 </script>
