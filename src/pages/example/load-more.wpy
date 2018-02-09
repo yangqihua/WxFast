@@ -1,7 +1,7 @@
 <template>
     <view class="container">
-        <load-more1 :nodata.sync="loadingStatus"></load-more1>
-        <load-more2 :loading.sync="loadingStatus"></load-more2>
+        <load-more1/>
+        <load-more2/>
         <!--<abnormal category="DATA"></abnormal>-->
     </view>
 </template>
@@ -21,10 +21,15 @@
         }
 
         data = {
-            loadingStatus:true
+            loadingStatus1:0,
+            loadingStatus2:0
         }
 
-
+        onLoad(){
+            setTimeout(()=>{
+                this.$invoke('load-more2', 'noMore');
+            },500)
+        }
     }
 </script>
 

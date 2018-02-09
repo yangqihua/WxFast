@@ -3,13 +3,13 @@
 </style>
 <template>
     <view>
-        <view wx:if="{{loading}}" class="loadmore">
+        <view wx:if="{{loadingStatus==0}}" class="loadmore">
             <view class="loading"></view>
-            <view class="loadmore_tips">加载中...</view>
+            <view class="loadmore_tips">{{message}}</view>
         </view>
 
-        <view wx:else class="loadmore loadmore_nodata">
-            <view class="loadmore_tips">{{ nodata_str }}</view>
+        <view wx:if="{{loadingStatus==1}}" class="loadmore no_more">
+            <view class="loadmore_tips">{{ noMore}}</view>
         </view>
     </view>
 </template>
@@ -17,25 +17,48 @@
     import wepy from 'wepy'
 
     export default class Loadmore extends wepy.component {
+        static LOADING = 0;
+        static NO_MORE = 1;
+        static FINISHED = 2;
+        static NO_DATA = 3;
+        static ERROR = 4;
         props = {
-            loading: {
-                type: Boolean,
-                default: false
+            loadingStatus: {
+                type: Number,
+                default: 0        // 0 代表正在加载，1 代表暂无更多 2代表隐藏加载成功 3代表无数据 4代表加载异常
             },
-            nodata: {
-                type: Boolean,
-                default: false
-            },
-            nodata_str: {
+            message: {
                 type: String,
-                default: '暂无数据'
+                default: '正在加载 ...'
+            },
+            noMore: {
+                type: String,
+                default: '暂无更多'
             }
         }
 
+        data = {}
+
         onLoad() {
-            console.log('this loading:', this.loading)
+            console.log('this loading:', this.loadingStatus)
         }
 
-        methods = {}
+        methods = {
+            loading(){
+                this.loadingStatus = Loadmore.LOADING;
+            },
+            noMore(){
+                this.loadingStatus = Loadmore.NO_MORE;
+            },
+            finished(){
+                this.loadingStatus = Loadmore.FINISHED;
+            },
+            noData(){
+                this.loadingStatus = Loadmore.NO_DATA;
+            },
+            error(){
+                this.loadingStatus = Loadmore.ERROR;
+            }
+        }
     }
 </script>
