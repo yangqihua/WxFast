@@ -5,7 +5,7 @@
     <view>
         <view wx:if="{{loading}}" class="loadmore">
             <view class="loading"></view>
-            <view class="loading_tips">加载中...</view>
+            <view class="loadmore_tips">加载中...</view>
         </view>
 
         <view wx:else class="loadmore loadmore_nodata">

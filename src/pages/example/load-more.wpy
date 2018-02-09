@@ -1,6 +1,7 @@
 <template>
     <view class="container">
-        <load-more :nodata.sync="loadingStatus"></load-more>
+        <load-more1 :nodata.sync="loadingStatus"></load-more1>
+        <load-more2 :loading.sync="loadingStatus"></load-more2>
         <!--<abnormal category="DATA"></abnormal>-->
     </view>
 </template>
@@ -13,7 +14,8 @@
             navigationBarTitleText: 'Load More 演示',
         }
         components = {
-            'load-more':LoadMore
+            'load-more1':LoadMore,
+            'load-more2':LoadMore,
         }
         events = {
         }
