@@ -1,0 +1,31 @@
+@import "../common/assets/styles/base";
+
+.panel {
+    position: relative;
+    background: #fff;
+    margin-top: 10px;
+    overflow: hidden;
+    &::after {
+        .hairline-mixin();
+        border-top-width: 1px;
+        border-bottom-width: 1px;
+    }
+}
+
+.panel-title {
+    font-size: @title-font-size;
+    line-height: 1;
+    color: @hint-color;
+    padding: 20px 15px 0 15px;
+}
+
+
+.panel--without-margin-top {
+    margin-top: 0;
+}
+
+.panel--without-border {
+    &::after {
+        border: 0 none;
+    }
+}

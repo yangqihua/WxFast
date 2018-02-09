@@ -1,0 +1,34 @@
+<template>
+    <view class="container">
+        <view class="panel-title">标题</view>
+        <view class="panel">
+            <view style="padding: 15px;">正常 panel</view>
+        </view>
+
+        <view class="panel panel--without-border">
+            <view style="padding: 15px;">无边框的panel</view>
+        </view>
+
+        <view class="panel">
+            <view style="padding: 15px;">正常 panel</view>
+        </view>
+
+        <view class="panel panel--without-border">
+            <view style="padding: 15px;">无边框的panel</view>
+        </view>
+
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy'
+    export default class LoadMoreExample extends wepy.page {
+        config = {
+            navigationBarTitleText: 'Panel 演示',
+        }
+    }
+</script>
+
+<style lang="less" rel="stylesheet/less">
+    @import "../../widgets/panel/panel";
+</style>

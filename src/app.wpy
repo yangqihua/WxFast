@@ -16,6 +16,7 @@
     export default class extends wepy.app {
         config = {
             pages: [
+                'pages/example/panel',
                 'pages/example/load-more',
                 'pages/example/abnor',
                 'pages/example/index',
@@ -25,7 +26,7 @@
                 navigationBarBackgroundColor: '#fff',
                 navigationBarTitleText: 'WeChat',
                 navigationBarTextStyle: 'black',
-                backgroundColor: '#EFEFEF',
+                backgroundColor: '#FEFEFE',
             }
         }
 
