@@ -1,22 +1,113 @@
 <template>
-    <view class="container">
-        <view class="panel-title">标题</view>
+    <view class="container" style="padding-bottom: 30px">
         <view class="panel">
-            <view style="padding: 15px;">正常 panel</view>
-        </view>
-
-        <view class="panel panel--without-border">
-            <view style="padding: 15px;">无边框的panel</view>
+            <view class="cell">
+                <view class="cell_body">单行列表</view>
+            </view>
         </view>
 
         <view class="panel">
-            <view style="padding: 15px;">正常 panel</view>
+            <view class="cell">
+                <view class="cell_body">单行列表</view>
+                <view class="cell_right">详细信息</view>
+            </view>
         </view>
 
-        <view class="panel panel--without-border">
-            <view style="padding: 15px;">无边框的panel</view>
+        <view class="panel">
+            <view class="cell">
+                <view class="cell_body">
+                    <view class="cell_text">单行列表</view>
+                    <view class="cell_desc">附加描述</view>
+                </view>
+                <view class="cell_right">详细信息</view>
+            </view>
         </view>
 
+        <view class="panel">
+            <view class="cell cell_access">
+                <view class="cell_body">单行列表</view>
+                <view class="cell_right"></view>
+            </view>
+        </view>
+
+        <view class="panel">
+            <view class="cell cell_access">
+                <view class="cell_body">多行列表</view>
+                <view class="cell_right"></view>
+            </view>
+            <view class="cell cell_access">
+                <view class="cell_body">多行列表</view>
+                <view class="cell_right"></view>
+            </view>
+            <view class="cell cell_access">
+                <view class="cell_body">多行列表</view>
+                <view class="cell_right"></view>
+            </view>
+        </view>
+
+        <view class="panel">
+            <view class="cell cell_access">
+                <view class="cell_body">多行列表</view>
+                <view class="cell_right">详细信息</view>
+            </view>
+            <view class="cell cell_access">
+                <view class="cell_body">多行列表</view>
+                <view class="cell_right">详细信息</view>
+            </view>
+            <view class="cell cell_access">
+                <view class="cell_body">多行列表</view>
+                <view class="cell_right">详细信息</view>
+            </view>
+        </view>
+
+        <view class="panel">
+            <view class="cell">
+                <view class="cell_body">多行列表</view>
+            </view>
+            <view class="cell">
+                <view class="cell_body">多行列表</view>
+            </view>
+            <view class="cell">
+                <view class="cell_body">多行列表</view>
+            </view>
+        </view>
+
+        <view class="panel">
+            <view class="cell">
+                <view class="cell_body">多行列表</view>
+                <view class="cell_right">详细信息</view>
+            </view>
+            <view class="cell">
+                <view class="cell_body">多行列表</view>
+                <view class="cell_right">详细信息</view>
+            </view>
+            <view class="cell">
+                <view class="cell_body">多行列表</view>
+                <view class="cell_right">详细信息</view>
+            </view>
+        </view>
+
+        <view class="panel">
+            <view class="cell cell_switch">
+                <view class="cell_body">开关</view>
+                <view class="cell_right">
+                    <template is="switch" data="{{ checked }}"/>
+                </view>
+            </view>
+        </view>
+
+        <view class="panel">
+            <view class="cell cell_access">
+                <image src="../../widgets/common/assets/images/group.png" class="cell_icon"/>
+                <view class="cell_body">我的用户</view>
+                <view class="cell_right">329个</view>
+            </view>
+            <view class="cell cell_access">
+                <image src="../../widgets/common/assets/images/kefu.png" class="cell_icon"/>
+                <view class="cell_body">联系客服</view>
+                <view class="cell_right"></view>
+            </view>
+        </view>
     </view>
 </template>
 
@@ -24,11 +115,12 @@
     import wepy from 'wepy'
     export default class LoadMoreExample extends wepy.page {
         config = {
-            navigationBarTitleText: 'Panel 演示',
+            navigationBarTitleText: 'Cell 演示',
         }
     }
 </script>
 
 <style lang="less" rel="stylesheet/less">
+    @import "../../widgets/cell/cell";
     @import "../../widgets/panel/panel";
 </style>
