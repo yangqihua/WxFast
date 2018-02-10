@@ -9,7 +9,7 @@
         <view class="panel">
             <view class="cell">
                 <view class="cell_body">单行列表</view>
-                <view class="cell_right">详细信息</view>
+                <view class="cell_right">描述信息</view>
             </view>
         </view>
 
@@ -19,7 +19,43 @@
                     <view class="cell_text">单行列表</view>
                     <view class="cell_desc">附加描述</view>
                 </view>
-                <view class="cell_right">详细信息</view>
+                <view class="cell_right">描述信息</view>
+            </view>
+        </view>
+
+        <view class="panel">
+            <view class="cell">
+                <view class="cell_body">多行列表</view>
+            </view>
+            <view class="cell">
+                <view class="cell_body">多行列表</view>
+            </view>
+            <view class="cell">
+                <view class="cell_body">多行列表</view>
+            </view>
+        </view>
+
+        <view class="panel">
+            <view class="cell">
+                <view class="cell_body">多行列表</view>
+                <view class="cell_right">描述信息</view>
+            </view>
+            <view class="cell">
+                <view class="cell_body">多行列表</view>
+                <view class="cell_right">描述信息</view>
+            </view>
+            <view class="cell">
+                <view class="cell_body">多行列表</view>
+                <view class="cell_right">描述信息</view>
+            </view>
+        </view>
+
+        <view class="panel">
+            <view class="cell cell_switch">
+                <view class="cell_body">开关</view>
+                <view class="cell_right">
+                    <switch checked/>
+                </view>
             </view>
         </view>
 
@@ -48,51 +84,15 @@
         <view class="panel">
             <view class="cell cell_access">
                 <view class="cell_body">多行列表</view>
-                <view class="cell_right">详细信息</view>
+                <view class="cell_right">描述信息</view>
             </view>
             <view class="cell cell_access">
                 <view class="cell_body">多行列表</view>
-                <view class="cell_right">详细信息</view>
+                <view class="cell_right">描述信息</view>
             </view>
             <view class="cell cell_access">
                 <view class="cell_body">多行列表</view>
-                <view class="cell_right">详细信息</view>
-            </view>
-        </view>
-
-        <view class="panel">
-            <view class="cell">
-                <view class="cell_body">多行列表</view>
-            </view>
-            <view class="cell">
-                <view class="cell_body">多行列表</view>
-            </view>
-            <view class="cell">
-                <view class="cell_body">多行列表</view>
-            </view>
-        </view>
-
-        <view class="panel">
-            <view class="cell">
-                <view class="cell_body">多行列表</view>
-                <view class="cell_right">详细信息</view>
-            </view>
-            <view class="cell">
-                <view class="cell_body">多行列表</view>
-                <view class="cell_right">详细信息</view>
-            </view>
-            <view class="cell">
-                <view class="cell_body">多行列表</view>
-                <view class="cell_right">详细信息</view>
-            </view>
-        </view>
-
-        <view class="panel">
-            <view class="cell cell_switch">
-                <view class="cell_body">开关</view>
-                <view class="cell_right">
-                    <template is="switch" data="{{ checked }}"/>
-                </view>
+                <view class="cell_right">描述信息</view>
             </view>
         </view>
 
