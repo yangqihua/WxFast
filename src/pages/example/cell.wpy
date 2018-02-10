@@ -102,11 +102,11 @@
                 <view class="cell_body">我的用户</view>
                 <view class="cell_right">329个</view>
             </view>
-            <view class="cell cell_access">
+            <button plain style="border:none" class="cell cell_access contact" open-type="contact">
                 <image src="../../widgets/common/assets/images/kefu.png" class="cell_icon"/>
                 <view class="cell_body">联系客服</view>
                 <view class="cell_right"></view>
-            </view>
+            </button>
         </view>
     </view>
 </template>
