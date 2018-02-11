@@ -1,6 +1,12 @@
 @import "../common/assets/styles/base";
 
-
+.screen-loop(@n, @i:1) when (@i <= @n) {
+    .screen-@{i} {
+        width: @i * 375 /24px;
+        height: @i * 375 /24px;
+    }
+    .screen-loop(@n, (@i + 1));
+}
 
 .col-loop(@n, @i:1) when (@i <= @n) {
     .col-@{i} {
@@ -25,5 +31,8 @@
     box-sizing: border-box;
     width: 0;
 }
+
 .col-loop(24);
+
+.screen-loop(24);
 

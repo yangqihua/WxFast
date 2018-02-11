@@ -1,0 +1,107 @@
+<template>
+    <view class="container" style="padding: 30px 0">
+        <view class="panel-title">col</view>
+        <view>Col 组件提供了24列栅格， col-x 中的x代表x份栅格</view>
+        <view class="panel">
+            <view class="row">
+                <view class="col col-8">
+                    col-8
+                </view>
+                <view class="col col-8">
+                    col-8
+                </view>
+                <view class="col col-8">
+                    col-8
+                </view>
+            </view>
+        </view>
+
+        <view class="panel-title">offset</view>
+        <view>添加 col-offset-x 类可以设置列的偏移宽度，计算方式与 col 相同</view>
+        <view class="panel">
+            <view class="row">
+                <view class="col col-4">col-4</view>
+                <view class="col col-10 col-offset-4">col-10 col-offset-4</view>
+            </view>
+            <view class="row">
+                <view class="col col-12 col-offset-12">col-12 col-offset-12</view>
+            </view>
+        </view>
+
+        <view class="panel-title">screen</view>
+        <view>Screen 高度和宽度相等，且均分屏幕宽度，可用来制作九宫格</view>
+        <view class="panel">
+            <view class="row table">
+                <view class="col screen-8">
+                    screen-8
+                </view>
+                <view class="col screen-8">
+                    screen-8
+                </view>
+                <view class="col screen-8">
+                    screen-8
+                </view>
+                <view class="col screen-8">
+                    screen-8
+                </view>
+                <view class="col screen-8">
+                    screen-8
+                </view>
+                <view class="col screen-8">
+                    screen-8
+                </view>
+                <view class="col screen-8">
+                    screen-8
+                </view>
+                <view class="col screen-8">
+                    screen-8
+                </view>
+                <view class="col screen-8">
+                    screen-8
+                </view>
+            </view>
+        </view>
+
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy'
+    export default class ColExample extends wepy.page {
+        config = {
+            navigationBarTitleText: 'Layout 演示',
+        }
+    }
+</script>
+
+<style lang="less" rel="stylesheet/less">
+    @import "../../widgets/col/col";
+    @import "../../widgets/panel/panel";
+
+    .col {
+        line-height: 30px;
+        text-align: center;
+        background-color: @active-color;
+        font-size: 12px;
+        color: #fff;
+    }
+
+    .col:nth-child(even) {
+        background-color: @theme-color;
+    }
+
+    .screen-8{
+        padding-top: 50px;
+        padding-bottom: 50px;
+        border-bottom: solid 1px #fff;
+        border-right: solid 1px #fff;
+    }
+    .screen-8:nth-child(3n+1) {
+        border-left: solid 1px #fff;
+    }
+
+    .table{
+        border-top: solid 1px #fff;
+    }
+
+</style>

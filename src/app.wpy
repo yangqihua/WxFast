@@ -16,8 +16,8 @@
     export default class extends wepy.app {
         config = {
             pages: [
+                'pages/example/layout',
                 'pages/example/cell',
-                'pages/example/col',
                 'pages/example/panel',
                 'pages/example/load-more',
                 'pages/example/abnor',
