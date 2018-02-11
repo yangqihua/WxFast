@@ -17,6 +17,7 @@
         config = {
             pages: [
                 'pages/example/cell',
+                'pages/example/col',
                 'pages/example/panel',
                 'pages/example/load-more',
                 'pages/example/abnor',

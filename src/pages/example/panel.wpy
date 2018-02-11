@@ -5,7 +5,7 @@
             <view style="padding: 15px;">正常 panel</view>
         </view>
 
-        <view class="panel panel--without-border">
+        <view class="panel panel-without-border">
             <view style="padding: 15px;">无边框的panel</view>
         </view>
 
@@ -13,7 +13,7 @@
             <view style="padding: 15px;">正常 panel</view>
         </view>
 
-        <view class="panel panel--without-border">
+        <view class="panel panel-without-border">
             <view style="padding: 15px;">无边框的panel</view>
         </view>
 

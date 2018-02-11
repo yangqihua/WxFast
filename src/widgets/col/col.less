@@ -1,0 +1,29 @@
+@import "../common/assets/styles/base";
+
+
+
+.col-loop(@n, @i:1) when (@i <= @n) {
+    .col-@{i} {
+        width: calc(@i * 100% / 24);
+    }
+    .col-offset-@{i} {
+        margin-left: calc(@i * 100% / 24);
+    }
+    .col-loop(@n, (@i + 1));
+}
+
+.row {
+    &:after {
+        content: "";
+        display: table;
+        clear: both;
+    }
+}
+
+.col {
+    float: left;
+    box-sizing: border-box;
+    width: 0;
+}
+.col-loop(24);
+
