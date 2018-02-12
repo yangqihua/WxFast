@@ -33,7 +33,7 @@
             },
             noMore: {
                 type: String,
-                default: '暂无更多'
+                default: '暂无更多 ~'
             }
         }
 

@@ -11,8 +11,8 @@
 }
 
 .loading {
-    width: 20px;
-    height: 20px;
+    width: @desc-font-size;
+    height: @desc-font-size;
     display: inline-block;
     vertical-align: middle;
     animation: weuiLoading 1s steps(12, end) infinite;
@@ -34,10 +34,10 @@
 }
 
 .no_more{
-    &::after {
-        .hairline-mixin(@hint-color);
-        border-top-width: 1px
-    }
+    //&::after {
+    //    .hairline-mixin(@hint-color);
+    //    border-top-width: 1px
+    //}
     .loadmore_tips {
         position: relative;
         top: -11px;

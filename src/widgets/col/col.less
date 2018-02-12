@@ -2,8 +2,8 @@
 
 .screen-loop(@n, @i:1) when (@i <= @n) {
     .screen-@{i} {
-        width: @i * 375 /24px;
-        height: @i * 375 /24px;
+        width: @i * 750 /24rpx;
+        height: @i * 750 /24rpx;
     }
     .screen-loop(@n, (@i + 1));
 }

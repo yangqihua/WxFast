@@ -1,38 +1,98 @@
 <template>
     <view>
-        <repeat for="{{contents}}" key="index" index="index" item="item">
-            <test :content="item"></test>
-        </repeat>
-        <!--<test1 :content="content1"></test1>-->
-        <!--<test2 :content="content2"></test2>-->
+
+        <view class="me_bg">
+            <image class="userinfo-avatar" src="{{ userInfo.avatarUrl }}" background-size="cover"/>
+            <view class="userinfo-nickname">{{ userInfo.nickName }}</view>
+        </view>
+
+        <view class="panel">
+            <view class="row content">
+                <repeat for="{{components}}" key="index" index="index" item="item">
+                    <navigator class="col screen-8" url="{{item.path}}">
+                        {{item.name}}
+                    </navigator>
+                </repeat>
+            </view>
+        </view>
     </view>
 </template>
 
 <script>
     import wepy from 'wepy'
-    import Test from '../../components/test'
+    import {components} from '../config'
     export default class Index extends wepy.page {
         config = {
-            navigationBarTitleText: '测试',
-        }
-        components = {
-            'test': Test,
-            'test1': Test,
-            'test2': Test,
+            navigationBarTitleText: 'WxFast 演示',
+            navigationBarBackgroundColor: '#F7701A',
         }
         data = {
-            contents:[
-                {text:'内容1'},
-                {text:'内容2'},
-                {text:'内容3'},
-            ],
-//            content1: {text:'内容1'},
-//            content2: {text:'内容2'},
+            components: components,
+            userInfo: {
+                avatarUrl: '',
+                nickName: '加载中...'
+            }
         }
 
+        onLoad() {
+            this.$parent.getUserInfo().then((userInfo) => {
+                this.userInfo = userInfo
+                console.log('this.userInfo:', this.userInfo)
+                this.$apply()
+            })
+        }
 
     }
 </script>
 
 <style lang="less" rel="stylesheet/less">
+    @import "../../widgets/col/col";
+    @import "../../widgets/panel/panel";
+
+    .me_bg {
+        width: ~'750rpx';
+        height: ~'240rpx';
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(to top, #F39172, #f7701a);
+        .userinfo-avatar {
+            width: ~'120rpx';
+            height: ~'120rpx';
+            border-radius: 50%;
+        }
+        .userinfo-nickname {
+            padding-top: ~'20rpx';
+            color: #efefef;
+            font-size: ~'28rpx';
+        }
+    }
+
+    .col {
+        line-height: ~'50rpx';
+        text-align: center;
+        background-color: @theme-color;
+        font-size: 12px;
+        color: #fff;
+    }
+
+    .col:nth-child(even) {
+        background-color: @active-color;
+    }
+
+    .screen-8 {
+        padding-top: 50px;
+        padding-bottom: 50px;
+        border-bottom: solid 1px @hairline-color;
+        border-right: solid 1px @hairline-color;
+    }
+
+    .screen-8:nth-child(3n+1) {
+        border-left: solid 1px @hairline-color;
+    }
+
+    .content {
+        border-top: solid 1px @hairline-color;
+    }
 </style>
