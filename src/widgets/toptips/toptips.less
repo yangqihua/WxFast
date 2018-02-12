@@ -1,0 +1,24 @@
+@import "../common/assets/styles/base";
+.toptips {
+    display: block;
+    position: fixed;
+    -webkit-transform: translateZ(0) translateY(-100%);
+    width: 100%;
+    /* 至少有一行的高度，保证第一次动画显示正常 */
+    min-height: ~'60rpx';
+    top: 0;
+    line-height: 2.2;
+    font-size: ~'28rpx';
+    text-align: center;
+    color: #FFF;
+    background-color: @danger-color;
+    z-index: 110;
+    opacity: 0;
+    /* 动画部分 */
+    transition: all 0.4s ease;
+}
+
+.toptips-show {
+    -webkit-transform: translateZ(0) translateY(0);
+    opacity: 1;
+}

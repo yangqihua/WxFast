@@ -1,0 +1,30 @@
+<template>
+    <view class="container">
+        <toptips/>
+        <button @tap="showTopTips" style="margin: 200px 20px" type="primary">显示</button>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy'
+    import TopTips from '../../widgets/toptips/index'
+    export default class LoadMoreExample extends wepy.page {
+        config = {
+            navigationBarTitleText: 'TopTips 演示',
+        }
+        components = {
+            'toptips':TopTips,
+        }
+        events = {
+        }
+
+        methods = {
+            showTopTips(){
+                this.$invoke('toptips', 'showTopTips', {content:'自定义显示的内容'});
+            }
+        }
+    }
+</script>
+
+<style lang="less" rel="stylesheet/less">
+</style>

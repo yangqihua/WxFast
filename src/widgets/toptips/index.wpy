@@ -1,0 +1,36 @@
+<style lang="less" rel="stylesheet/less">
+    @import "./toptips";
+</style>
+<template>
+    <view class="toptips {{ show ? 'toptips-show' : '' }}">{{ content }}</view>
+</template>
+<script>
+    import wepy from 'wepy'
+    export default class TopTips extends wepy.component {
+        data = {
+            show: false,
+            duration: 3000,
+            timer: null,
+            content: '提示内容',
+        }
+
+        showTopTips({content = '', options = 3000}) {
+            if (this.timer) {
+                clearTimeout(this.timer)
+                this.timer = 0
+            }
+            this.duration = options
+            let timer = setTimeout(() => {
+                this.show = false
+                this.timer = 0
+                this.$apply()
+            }, this.duration)
+            this.show = true
+            this.content = content
+            this.timer = timer
+            this.$apply()
+
+            console.log('this.show:',this.show)
+        }
+    }
+</script>
