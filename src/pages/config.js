@@ -8,6 +8,10 @@ export const components = [
         name: 'Cell',
         path: '/pages/example/cell',
     },
+    {
+        name: 'Button',
+        path: '/pages/example/button',
+    },
 
     {
         name: 'Panel',

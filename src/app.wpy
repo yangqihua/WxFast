@@ -9,6 +9,7 @@
         config = {
             pages: [
                 'pages/example/index',
+                'pages/example/button',
                 'pages/example/toptips',
                 'pages/example/layout',
                 'pages/example/cell',

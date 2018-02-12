@@ -1,0 +1,128 @@
+@import "../common/assets/styles/base";
+
+.btn {
+    position: relative;
+    color: @title-color;
+    background-color: #fff;
+    margin-bottom: ~'20rpx';
+    padding-left:  ~'30rpx';
+    padding-right:  ~'30rpx';
+    border-radius:  ~'4rpx';
+    font-size: @large-font-size;
+    line-height: ~'90rpx';
+    height: ~'90rpx';
+    box-sizing: border-box;
+    text-decoration: none;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.btn::after {
+    .hairline-mixin();
+    border-width: ~'2rpx';
+    border-radius: ~'8rpx';
+}
+
+.btns {
+    margin: ~'30rpx';
+}
+
+/* type */
+.btn-primary {
+    color: #fff;
+    background-color: @primary-color;
+
+    &::after {
+        border-color: #0a0;
+    }
+}
+
+.btn-warn {
+    color: #fff;
+    background-color: @warning-color;
+
+    &::after {
+        border-color:@warning-color
+    }
+}
+
+.btn-danger {
+    color: #fff;
+    background-color: @danger-color;
+
+    &::after {
+        border-color:@danger-color;
+    }
+}
+
+/* size */
+.btn-small {
+    display: inline-block;
+    height: ~'60rpx';
+    line-height: ~'60rpx';
+    font-size: @small-font-size;
+    margin-right: ~'10px';
+    margin-bottom: 0;
+}
+
+.btn-mini {
+    display: inline-block;
+    line-height: ~'42rpx';
+    height:  ~'42rpx';
+    font-size: @mini-font-size;
+    margin-right: ~'10rpx';
+    margin-bottom: 0;
+    padding-left: ~'10rpx';
+    padding-right:  ~'10rpx';
+}
+
+.btn-large {
+    border-radius: 0;
+    margin-bottom: 0;
+    border: none;
+    line-height: ~'100rpx';
+    height: ~'100rpx';
+}
+
+/* plain */
+.btn-plain.btn {
+    background-color: transparent;
+}
+
+.btn-plain.btn-primary {
+    color: @primary-color;;
+}
+
+.btn-plain.btn-warn {
+    color: @warning-color;
+}
+
+.btn-plain.btn-danger {
+    color: @danger-color;
+}
+
+/* 重写button组件的button-hover样式 */
+.button-hover {
+    opacity: 0.8;
+}
+
+/* disabled */
+.btn.btn-disabled {
+    /* 防止样式被 button[disabled] 的规则覆盖，所以使用了important */
+    color: @hint-color ! important;
+    background: #f8f8f8 ! important;
+    border-color: #e5e5e5 ! important;
+    cursor: not-allowed ! important;
+    opacity: 1 ! important;
+
+    &::after {
+        border-color: #e5e5e5 ! important;
+    }
+}
+
+/* :last-child */
+.btn-last-child,
+.btn:last-child {
+    margin-bottom: 0;
+    margin-right: 0;
+}

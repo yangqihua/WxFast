@@ -1,0 +1,61 @@
+<template>
+    <view class="container">
+        <view class="panel-title">超小号按钮</view>
+        <view class="panel" style="padding: 15px;">
+            <button class="btn btn-mini btn-plain">取消订单</button>
+            <button class="btn btn-mini btn-primary btn-plain">确认付款</button>
+            <button class="btn btn-mini btn-warn btn-plain">确认付款</button>
+            <button class="btn btn-mini btn-danger btn-plain">确认付款</button>
+        </view>
+
+        <view class="panel-title">小号按钮</view>
+        <view class="panel" style="padding: 15px;">
+            <button class="btn btn-small">取消订单</button>
+            <button class="btn btn-small btn-primary">确认付款</button>
+            <button class="btn btn-small btn-danger">取消订单</button>
+        </view>
+
+        <view class="panel-title">普通按钮</view>
+        <view class="panel">
+            <view class="btns">
+                <button class="btn">默认按钮</button>
+                <button class="btn btn-primary">Primary</button>
+                <button class="btn btn-warn">Warn</button>
+                <button class="btn btn-danger">Danger</button>
+            </view>
+        </view>
+
+        <view class="panel-title">Disabled</view>
+        <view class="panel">
+            <view class="btns">
+                <button class="btn btn-disabled" disabled>取消订单</button>
+                <button class="btn btn-disabled btn-primary" disabled>确认订单</button>
+                <button class="btn btn-disabled btn-warn" disabled>确认取消</button>
+                <button class="btn btn-disabled btn-danger" disabled>确认付款</button>
+            </view>
+        </view>
+
+        <view class="panel-title">大号按钮，没有边框线及圆角</view>
+        <view class="panel">
+            <button class="btn btn-large btn-primary" loading>Loading 按钮</button>
+            <button class="btn btn-large btn-warn">立即购买</button>
+            <button class="btn btn-large btn-danger">立即购买</button>
+        </view>
+
+
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy'
+    export default class LoadMoreExample extends wepy.page {
+        config = {
+            navigationBarTitleText: 'Button 演示',
+        }
+    }
+</script>
+
+<style lang="less" rel="stylesheet/less">
+    @import "../../widgets/panel/panel";
+    @import "../../widgets/button/button";
+</style>
