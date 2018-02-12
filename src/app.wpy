@@ -8,8 +8,8 @@
     export default class extends wepy.app {
         config = {
             pages: [
-                'pages/example/toptips',
                 'pages/example/index',
+                'pages/example/toptips',
                 'pages/example/layout',
                 'pages/example/cell',
                 'pages/example/panel',

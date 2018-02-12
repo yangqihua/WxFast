@@ -29,8 +29,6 @@
             this.content = content
             this.timer = timer
             this.$apply()
-
-            console.log('this.show:',this.show)
         }
     }
 </script>

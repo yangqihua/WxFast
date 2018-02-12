@@ -23,5 +23,9 @@ export const components = [
         name: 'Abnor 异常流',
         path: '/pages/example/abnor',
     },
+    {
+        name: 'Toptips 提示',
+        path: '/pages/example/toptips',
+    },
 
 ]
