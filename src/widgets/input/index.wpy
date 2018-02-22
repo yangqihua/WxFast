@@ -1,0 +1,21 @@
+<style lang="less" rel="stylesheet/less">
+    @import "./input";
+</style>
+<template>
+    <view>
+        <view wx:if="{{loadingStatus==0}}" class="loadmore">
+            <view class="loading"></view>
+            <view class="loadmore_tips">{{message}}</view>
+        </view>
+
+        <view wx:if="{{loadingStatus==1}}" class="loadmore no_more">
+            <view class="loadmore_tips">{{ noMore}}</view>
+        </view>
+    </view>
+</template>
+<script>
+    import wepy from 'wepy'
+
+    export default class Input extends wepy.component {
+    }
+</script>
