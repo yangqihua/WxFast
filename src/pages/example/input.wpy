@@ -2,15 +2,15 @@
     <view class="container">
         <view class="panel-title">基础用法</view>
         <view class="panel">
-            <input1 name="input1" float="right" label="用户名" placeholder="请填写用户名"/>
-            <input2 name="input2" placeholder="请填写收获地址"/>
+            <input1 name="input1" label="用户名" placeholder="请填写用户名"/>
+            <input2 name="input2" label="收获地址" placeholder="请填写收获地址"/>
             <input3 name="input3" label="联系方式" placeholder="请填写联系方式"/>
         </view>
 
         <view class="panel-title">wrapped 用法</view>
         <input6 mode="wrapped" placeholder="请输入优惠券金额"/>
         <input5 mode="wrapped" label="优惠券金额" placeholder="请输入优惠券金额"/>
-        <input4 mode="wrapped" float="right" label="优惠券金额" placeholder="请输入优惠券金额"/>
+        <input4 mode="wrapped" label="优惠券金额" placeholder="请输入优惠券金额"/>
 
         <view class="panel-title">input 验证</view>
         <view class="panel">

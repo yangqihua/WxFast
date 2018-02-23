@@ -29,9 +29,7 @@
             placeholder="{{ placeholder }}"
             class="field-input cell-body {{ float==='right' ? 'field-input-right' : '' }}"
             placeholder-class="field-placeholder"
-            bindinput="_bindInput"
-            bindfocus="_bindFocus"
-            bindBlur="_bindBlur"/>
+        />
     </view>
 </template>
 <script>

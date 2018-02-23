@@ -3,7 +3,7 @@
 
 .field {
     padding: ~'14rpx 30rpx';
-    color: @title-color;
+    color: @desc-color;
 }
 
 .field-wrapped {
@@ -11,8 +11,8 @@
     background-color: #fff;
     &::after {
         left: 0;
-        border-width: 1px;
         border-radius: 4px;
+        border: 1px solid @hairline-color;
     }
 }
 
@@ -45,7 +45,8 @@
 }
 
 .field-placeholder {
-    font-size: @title-font-size
+    font-size: @title-font-size;
+    color:@hint-color;
 }
 
 .field-input-right {
