@@ -129,10 +129,8 @@
 
         validateValue(event) {
             let value = event.detail.value
-            console.log('this.validateTypes:', this.validateTypes)
             for (let i = 0; i < this.validateTypes.length; i++) {
                 let validateType = this.validateTypes[i]
-                console.log('validateType:', validateType)
                 switch (validateType) {
                     case 'required':
                         if (!value) {
@@ -149,9 +147,7 @@
                         this.error = false
                         break;
                     case 'email':
-                        console.log('isEmail:')
                         if (!utils.isEmail(value)) {
-                            console.log('error:')
                             this.error = true
                             return
                         }
