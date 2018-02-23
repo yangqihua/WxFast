@@ -5,6 +5,7 @@
             <input1 name="input1" label="用户名" placeholder="请填写用户名"/>
             <input2 name="input2" label="收获地址" placeholder="请填写收获地址"/>
             <input3 name="input3" label="联系方式" placeholder="请填写联系方式"/>
+            <input12 type="textarea" name="input12" label="备注" :value.sync="textAreaValue" placeholder="请填写备注"/>
         </view>
 
         <view class="panel-title">wrapped 用法</view>
@@ -62,6 +63,7 @@
             navigationBarTitleText: 'Input 演示',
         }
         data = {
+            textAreaValue:'这里是 textarea ，用来写很长很长很长很长的文字，会根据文字多少自动换行',
             error:false,
             input7ValidateTypes: [
                 'required'
