@@ -1,0 +1,175 @@
+<style lang="less" rel="stylesheet/less">
+    @import "./input";
+</style>
+<template>
+    <view
+        class="cell field {{ error ? 'field-error' : '' }} {{ mode === 'wrapped' ? 'field-wrapped' : '' }}">
+        <view
+            wx:if="{{ label }}"
+            class="field-title">
+            <view style="display: inline-block">
+                {{ label }}
+            </view>
+            <view wx:if="{{isRequired}}" class="field-required">
+                *
+            </view>
+        </view>
+        <textarea
+            wx:if="{{ type === 'textarea' }}"
+            name="{{ name }}"
+            auto-height
+            value="{{ value }}"
+            placeholder="{{ placeholder }}"
+            class="field-input cell-body {{ float==='right' ? 'field-input-right' : '' }}"
+            placeholder-class="field-placeholder"
+            bindinput="_bindInput"
+            bindfocus="_bindFocus"
+            bindBlur="_bindBlur">
+        </textarea>
+        <input
+            wx:else
+            name="{{ name }}"
+            type="{{ inputType }}"
+            value="{{ value }}"
+            placeholder="{{ placeholder }}"
+            class="field-input cell-body {{ float==='right' ? 'field-input-right' : '' }}"
+            placeholder-class="field-placeholder"
+            bindinput="_bindInput"
+            bindfocus="_bindFocus"
+            bindBlur="_bindBlur"
+        />
+    </view>
+</template>
+<script>
+    import wepy from 'wepy'
+    import * as utils from '../common/js/utils'
+    export default class Input extends wepy.component {
+
+        data = {
+            inputValue: null,
+            requiredString: '*',
+            error: false,
+        }
+        props = {
+            label: String,
+            placeholder: String,
+            float: String,
+            name: {
+                type: String,
+                default: ''
+            },
+            mode: {
+                type: String,
+                default: ''
+            },
+            type: {
+                type: String,
+                default: 'input'
+            },
+            /**
+             * validateType 有 required、number、idcard、digit、phone、email
+             */
+            validateTypes: {
+                type: Array,
+                default: []
+            },
+            value: {
+                type: String,
+                default: ''
+            },
+        }
+
+        methods = {
+            _bindInput(event) {
+                event.name = this.name
+                this.validateValue(event)
+                this.$emit('bindInput', this.event)
+            },
+
+            _bindFocus(event) {
+                event.name = this.name
+                this.$emit('bindFocus', this.event)
+            },
+
+            _bindBlur(event) {
+                event.name = this.name
+                this.$emit('bindBlur', this.event)
+            }
+        }
+
+        computed = {
+            inputType(){
+                for (let i = 0; i < this.validateTypes.length; i++) {
+                    let validateType = this.validateTypes[i]
+                    switch (validateType) {
+                        case 'required':
+                            break;
+                        case 'phone':
+                            return 'number'
+                        case 'number':
+                            return 'number'
+                        case 'email':
+                            return 'text'
+                        case 'idcard':
+                            return 'idcard'
+                        case 'digit':
+                            return 'digit'
+                    }
+                }
+                return 'text'
+            },
+            isRequired(){
+                return this.isIncluded('required', this.validateTypes)
+            }
+        }
+
+        onLoad() {
+//            console.log('validateTypes:',this.validateTypes)
+        }
+
+        validateValue(event) {
+            let value = event.detail.value
+            console.log('this.validateTypes:', this.validateTypes)
+            for (let i = 0; i < this.validateTypes.length; i++) {
+                let validateType = this.validateTypes[i]
+                console.log('validateType:', validateType)
+                switch (validateType) {
+                    case 'required':
+                        if (!value) {
+                            this.error = true
+                            return
+                        }
+                        this.error = false
+                        break;
+                    case 'phone':
+                        if (!utils.isPhone(value)) {
+                            this.error = true
+                            return
+                        }
+                        this.error = false
+                        break;
+                    case 'email':
+                        console.log('isEmail:')
+                        if (!utils.isEmail(value)) {
+                            console.log('error:')
+                            this.error = true
+                            return
+                        }
+                        this.error = false
+                        break;
+                }
+            }
+        }
+
+        isIncluded(type, types) {
+            for (let i = 0; i < types.length; i++) {
+                if (type === types[i]) {
+                    return true
+                }
+            }
+            return false
+        }
+
+        f
+    }
+</script>

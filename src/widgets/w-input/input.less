@@ -24,13 +24,18 @@
     color: @danger-color;
 }
 
+.field-required {
+    display: inline-block;
+    padding-left: ~'4rpx';
+    color:red;
+}
+
 /* 圆角输入框时，将边框也置红 */
 .field-wrapped.field-error::after {
     border-color: @danger-color;
 }
 
 .field-title {
-    color: @title-color;
     min-width: ~'140rpx';
     padding-right: ~'20rpx';
 }
@@ -46,7 +51,7 @@
 
 .field-placeholder {
     font-size: @title-font-size;
-    color:@hint-color;
+    color: @hint-color;
 }
 
 .field-input-right {

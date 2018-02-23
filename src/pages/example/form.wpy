@@ -53,7 +53,7 @@
 <script>
     import wepy from 'wepy'
     import Input from '../../widgets/w-input/index'
-    export default class InputExample extends wepy.page {
+    export default class FormExample extends wepy.page {
         config = {
             navigationBarTitleText: 'Input 演示',
         }
@@ -84,6 +84,14 @@
             'input10': Input,
             'input11': Input,
             'input12': Input,
+        }
+        methods={
+            formSubmit(e) {
+                console.log('form发生了submit事件，携带数据为：', e.detail.value)
+            },
+            formReset() {
+                console.log('form发生了reset事件')
+            }
         }
     }
 </script>

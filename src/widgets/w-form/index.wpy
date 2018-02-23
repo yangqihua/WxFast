@@ -1,0 +1,15 @@
+<style lang="less" rel="stylesheet/less">
+    @import "./w-form";
+</style>
+<template>
+    <form>
+        <slot></slot>
+    </form>
+</template>
+<script>
+    import wepy from 'wepy'
+
+    export default class Form extends wepy.component {
+
+    }
+</script>
