@@ -16,7 +16,7 @@
         <view class="panel">
             <form bindsubmit="formSubmit" bindreset="formReset">
                 <input7 name="input7" label="用户名" :validateTypes.sync="input7ValidateTypes" placeholder="请输入用户名，必填"/>
-                <view class="cell field">
+                <view class="cell field {{ error ? 'field-error' : '' }}">
                     <view class="field-title">
                         <view style="display: inline-block">电话号码</view>
                         <view class="field-required">
@@ -28,6 +28,7 @@
                         type="text"
                         placeholder="请输入电话号码，必填"
                         placeholder-class="field-placeholder"
+                        bindinput="bindPhoneInput"
                         class="field-input cell-body"/>
                     <view class="cell-right">
                         <button class="btn btn-mini btn-primary">获取验证码</button>
@@ -40,10 +41,12 @@
                 <view class="btns">
                     <button
                         class="btn btn-primary"
-                        formType="submit">提交数据</button>
+                        formType="submit">提交数据
+                    </button>
                     <button
                         class="btn"
-                        formType="reset">重置数据</button>
+                        formType="reset">重置数据
+                    </button>
                 </view>
             </form>
         </view>
@@ -53,11 +56,13 @@
 <script>
     import wepy from 'wepy'
     import Input from '../../widgets/w-input/index'
+    import * as utils from '../../widgets/common/js/utils'
     export default class InputExample extends wepy.page {
         config = {
             navigationBarTitleText: 'Input 演示',
         }
         data = {
+            error:false,
             input7ValidateTypes: [
                 'required'
             ],
@@ -84,6 +89,16 @@
             'input10': Input,
             'input11': Input,
             'input12': Input,
+        }
+        methods = {
+            bindPhoneInput(event) {
+                let value = event.detail.value
+                if (!utils.isPhone(value)) {
+                    this.error = true
+                    return
+                }
+                this.error = false
+            },
         }
     }
 </script>
