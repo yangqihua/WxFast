@@ -1,0 +1,194 @@
+<template>
+    <view class="classify" >
+        <scroll-view class="classify-category" scroll-y scroll-with-animation style="height:{{windowHeight}}px">
+            <view class="name {{item.active? 'active':''}}" wx:for="{{rootCateList}}" wx:key="item" @tap="changeCate" data-code="{{item.code}}">
+                {{item.name}}
+            </view>
+        </scroll-view>
+        <scroll-view class="classify-detail" scroll-y scroll-with-animation style="height:{{windowHeight}}px">
+            <view class="children">
+                <navigator hover-class="none" class="children-item" wx:for="{{childCateList}}" wx:for-item="item"
+                           wx:key="index"
+                           url="/pages/search?cateCode={{item.secondCategory.code}}&title={{item.secondCategory.name}}">
+                    <image class="child-image" src="{{item.secondCategory.thumLogo}}"></image>
+                    <view class="child-name">{{item.secondCategory.name}}</view>
+                </navigator>
+            </view>
+        </scroll-view>
+    </view>
+</template>
+<script>
+    import wepy from 'wepy';
+    const data = [
+        {secondCategory:{code:'11',rootCode:'1',name:'商品11',thumLogo:'http://ozb2xxoij.bkt.clouddn.com/sale.png'}},
+        {secondCategory:{code:'12',rootCode:'1',name:'商品12',thumLogo:'http://ozb2xxoij.bkt.clouddn.com/shop.png'}},
+        {secondCategory:{code:'13',rootCode:'1',name:'商品13',thumLogo:'http://ozb2xxoij.bkt.clouddn.com/shop.png'}},
+
+        {secondCategory:{code:'14',rootCode:'2',name:'商品21',thumLogo:'http://ozb2xxoij.bkt.clouddn.com/sale.png'}},
+        {secondCategory:{code:'15',rootCode:'2',name:'商品22',thumLogo:'http://ozb2xxoij.bkt.clouddn.com/shop.png'}},
+        {secondCategory:{code:'16',rootCode:'2',name:'商品23',thumLogo:'http://ozb2xxoij.bkt.clouddn.com/shop.png'}},
+        {secondCategory:{code:'16',rootCode:'2',name:'商品23',thumLogo:'http://ozb2xxoij.bkt.clouddn.com/shop.png'}},
+        {secondCategory:{code:'16',rootCode:'2',name:'商品23',thumLogo:'http://ozb2xxoij.bkt.clouddn.com/shop.png'}},
+        {secondCategory:{code:'16',rootCode:'2',name:'商品23',thumLogo:'http://ozb2xxoij.bkt.clouddn.com/shop.png'}},
+        {secondCategory:{code:'16',rootCode:'2',name:'商品23',thumLogo:'http://ozb2xxoij.bkt.clouddn.com/shop.png'}},
+        {secondCategory:{code:'16',rootCode:'2',name:'商品23',thumLogo:'http://ozb2xxoij.bkt.clouddn.com/shop.png'}},
+        {secondCategory:{code:'16',rootCode:'2',name:'商品23',thumLogo:'http://ozb2xxoij.bkt.clouddn.com/shop.png'}},
+        {secondCategory:{code:'16',rootCode:'2',name:'商品23',thumLogo:'http://ozb2xxoij.bkt.clouddn.com/shop.png'}},
+        {secondCategory:{code:'16',rootCode:'2',name:'商品23',thumLogo:'http://ozb2xxoij.bkt.clouddn.com/shop.png'}},
+        {secondCategory:{code:'16',rootCode:'2',name:'商品23',thumLogo:'http://ozb2xxoij.bkt.clouddn.com/shop.png'}},
+        {secondCategory:{code:'16',rootCode:'2',name:'商品23',thumLogo:'http://ozb2xxoij.bkt.clouddn.com/shop.png'}},
+        {secondCategory:{code:'16',rootCode:'2',name:'商品23',thumLogo:'http://ozb2xxoij.bkt.clouddn.com/shop.png'}},
+        {secondCategory:{code:'16',rootCode:'2',name:'商品23',thumLogo:'http://ozb2xxoij.bkt.clouddn.com/shop.png'}},
+        {secondCategory:{code:'16',rootCode:'2',name:'商品23',thumLogo:'http://ozb2xxoij.bkt.clouddn.com/shop.png'}},
+        {secondCategory:{code:'16',rootCode:'2',name:'商品23',thumLogo:'http://ozb2xxoij.bkt.clouddn.com/shop.png'}},
+        {secondCategory:{code:'16',rootCode:'2',name:'商品23',thumLogo:'http://ozb2xxoij.bkt.clouddn.com/shop.png'}},
+        {secondCategory:{code:'16',rootCode:'2',name:'商品23',thumLogo:'http://ozb2xxoij.bkt.clouddn.com/shop.png'}},
+        {secondCategory:{code:'16',rootCode:'2',name:'商品23',thumLogo:'http://ozb2xxoij.bkt.clouddn.com/shop.png'}},
+        {secondCategory:{code:'16',rootCode:'2',name:'商品23',thumLogo:'http://ozb2xxoij.bkt.clouddn.com/shop.png'}},
+        {secondCategory:{code:'16',rootCode:'2',name:'商品23',thumLogo:'http://ozb2xxoij.bkt.clouddn.com/shop.png'}},
+        {secondCategory:{code:'16',rootCode:'2',name:'商品23',thumLogo:'http://ozb2xxoij.bkt.clouddn.com/shop.png'}},
+        {secondCategory:{code:'16',rootCode:'2',name:'商品23',thumLogo:'http://ozb2xxoij.bkt.clouddn.com/shop.png'}},
+        {secondCategory:{code:'16',rootCode:'2',name:'商品23',thumLogo:'http://ozb2xxoij.bkt.clouddn.com/shop.png'}},
+
+        {secondCategory:{code:'17',rootCode:'3',name:'商品31',thumLogo:'http://ozb2xxoij.bkt.clouddn.com/sale.png'}},
+        {secondCategory:{code:'18',rootCode:'3',name:'商品32',thumLogo:'http://ozb2xxoij.bkt.clouddn.com/shop.png'}},
+        {secondCategory:{code:'19',rootCode:'3',name:'商品33',thumLogo:'http://ozb2xxoij.bkt.clouddn.com/shop.png'}},
+
+        {secondCategory:{code:'20',rootCode:'4',name:'商品41',thumLogo:'http://ozb2xxoij.bkt.clouddn.com/sale.png'}},
+        {secondCategory:{code:'21',rootCode:'4',name:'商品42',thumLogo:'http://ozb2xxoij.bkt.clouddn.com/shop.png'}},
+        {secondCategory:{code:'22',rootCode:'4',name:'商品43',thumLogo:'http://ozb2xxoij.bkt.clouddn.com/shop.png'}},
+    ]
+
+    export default class Classify extends wepy.page {
+        config = {
+            navigationBarTitleText: '分类',
+        }
+        data = {
+            scrollTop: 100,
+            windowHeight: 0,
+            list: {},
+            //一级分类数据
+            rootCateList: [
+                {code:'1',name:'衣服'},
+                {code:'2',name:'裤子'},
+                {code:'3',name:'男鞋'},
+                {code:'4',name:'女鞋'},
+                {code:'5',name:'女鞋1'},
+                {code:'6',name:'女鞋2'},
+                {code:'7',name:'女鞋3'},
+                {code:'8',name:'女鞋4'},
+                {code:'9',name:'女鞋5'},
+                {code:'10',name:'女鞋6'},
+                {code:'11',name:'女鞋7'},
+                {code:'12',name:'女鞋8'},
+                {code:'13',name:'女鞋9'},
+                {code:'14',name:'女鞋10'},
+            ],
+            //二级三级分类数据
+            childCateList: [
+                {secondCategory:{code:'11',rootCode:'1',name:'商品11',thumLogo:'http://ozb2xxoij.bkt.clouddn.com/sale.png'}},
+                {secondCategory:{code:'12',rootCode:'1',name:'商品12',thumLogo:'http://ozb2xxoij.bkt.clouddn.com/shop.png'}},
+                {secondCategory:{code:'13',rootCode:'1',name:'商品13',thumLogo:'http://ozb2xxoij.bkt.clouddn.com/shop.png'}},
+            ],
+        }
+
+        getChildCate(rootCateCode) {
+            this.childCateList = data.filter(item=>{
+                return item.secondCategory.rootCode==rootCateCode
+            });
+        }
+
+        getRootCateTopLevel() {
+            let selRottCateCode = this.rootCateList[0].code;
+            this.rootCateList[0].active = true;
+            this.getChildCate(selRottCateCode);
+        }
+
+        onLoad() {
+            let systemInfo = this.$parent.getSystemInfoSync()
+            this.windowHeight = systemInfo.windowHeight;
+            this.$apply();
+            console.log('systemInfo:',systemInfo)
+        }
+
+        onShow() {
+            this.getRootCateTopLevel()
+        }
+
+        computed = {}
+        methods = {
+            changeCate(e) {
+                let code = e.currentTarget.dataset.code;
+                this.getChildCate(code);
+                for (let i = 0; i < this.rootCateList.length; i++) {
+                    let rootCate = this.rootCateList[i];
+                    rootCate.active = false;
+                    if (rootCate.code == code) {
+                        rootCate.active = true;
+                    }
+                }
+            },
+        }
+    }
+
+</script>
+<style lang="less" rel="stylesheet/less">
+    @import "../../widgets/common/assets/styles/variable";
+    .classify {
+        display: flex;
+        position: relative;
+        .classify-category {
+            width: ~'198rpx';
+            position: relative;
+            z-index: 1;
+            background-color: #f5f5f5;
+            .name {
+                text-align: center;
+                height: ~'90rpx';
+                line-height: ~'90rpx';
+                font-size: @title-font-size;
+                color: @desc-color;
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+            }
+            .active {
+                border-left: ~'4rpx' solid @active-color;
+                background: #fff;
+                color: @active-color;
+                font-weight: bold;
+            }
+        }
+        .classify-detail {
+            position: relative;
+            z-index: 999;
+            box-sizing: border-box;
+            background: #fff;
+            padding: 0 10px;
+            .children {
+                display: flex;
+                flex-wrap: wrap;
+                margin: ~'20rpx' 0;
+            }
+            .children-item {
+                height: ~'200rpx';
+                width: ~'184rpx';
+                text-align: center;
+            }
+            .child-image {
+                width: ~'120rpx';
+                height: ~'120rpx';
+            }
+            .child-name {
+                font-size: @desc-font-size;
+                color: @desc-color;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                width: ~'184rpx';
+            }
+
+        }
+    }
+
+</style>
