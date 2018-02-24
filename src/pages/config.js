@@ -31,5 +31,9 @@ export const components = [
         name: 'Toptips 提示',
         path: '/pages/example/toptips',
     },
+    {
+        name: 'Input',
+        path: '/pages/example/input',
+    },
 
 ]
