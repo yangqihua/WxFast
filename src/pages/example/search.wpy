@@ -1,0 +1,38 @@
+<template>
+    <view class="container">
+        <view style="padding:20px;background-color: #ff0077">
+            <search :searchValue.sync="searchValue"></search>
+        </view>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy'
+    //    import Search from '../components/search'
+    import Search from '../../widgets/search/index'
+    export default class Cell extends wepy.page {
+        config = {
+            navigationBarTitleText: 'Search 演示',
+        }
+        components = {
+            search: Search,
+        }
+        data = {
+            searchValue: '搜索默认值',
+        }
+        methods = {}
+        events = {
+            doSearch(value) {
+                console.log('search value is :', value)
+            },
+            doTap(){
+                console.log('hear is do tap method from parent')
+            }
+        }
+    }
+</script>
+
+<style lang="less" rel="stylesheet/less">
+    @import "../../widgets/cell/cell";
+    @import "../../widgets/panel/panel";
+</style>

@@ -11,6 +11,7 @@
     export default class extends wepy.app {
         config = {
             pages: [
+                'pages/example/search',
                 'pages/example/classify',
                 'pages/example/index',
                 'pages/example/input',

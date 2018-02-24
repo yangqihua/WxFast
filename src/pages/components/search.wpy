@@ -1,0 +1,89 @@
+<template>
+    <view class="search">
+        <view class="search-content">
+            <i class="iconfont icon-search"></i>
+            <input placeholder-class="search-placeholder" type="text" name="search-input"
+                   @tap="_bindTap" @input="_bindInput" @confirm="_bindConfirm"
+                   class="search-input" value="{{searchValue}}" confirm-type="search"
+                   placeholder="{{placeHolder}}"/>
+            <i wx:if="{{searchValue!=''}}" @tap="deleteSearchValue" class="iconfont icon-del"></i>
+        </view>
+    </view>
+</template>
+<script>
+    import wepy from 'wepy';
+    export default class Search extends wepy.component {
+
+        props = {
+            searchValue: {
+                type: String,
+                default: ''
+            },
+            placeHolder: {
+                type: String,
+                default: '请输入搜索内容'
+            },
+        }
+
+        data = {
+        };
+        methods = {
+            _bindTap(e) {
+                this.$emit('doTap', null);
+            },
+            _bindInput(e) {
+                this.searchValue = e.detail.value;
+                this.$apply();
+            },
+            _bindConfirm(e){
+                this.searchValue = e.detail.value;
+                this.$apply();
+                this.$emit('doSearch', this.searchValue);
+            },
+            deleteSearchValue() {
+                this.searchValue = "";
+                this.$apply();
+            },
+        }
+    }
+
+</script>
+<style lang="less" rel="stylesheet/less">
+    .search {
+        align-items: center;
+        display: flex;
+        margin: 0 auto;
+        width: 100%;
+        .search-content {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            border-radius: ~'160rpx';
+            color: #3b333b;
+            background: #fff;
+            padding: ~'5rpx 12rpx';
+            height: ~'54rpx';
+            .search-input {
+                font-size: ~'26rpx';
+                width: 100%;
+
+            }
+        }
+        .search-placeholder {
+            color: #b2b2b2;
+            text-align: center;
+        }
+        .icon-search {
+            color: #b2b2b2;
+            font-size: ~'40rpx';
+        }
+        .icon-del {
+            color: #b2b2b2;
+            height: ~'60rpx';
+            line-height: ~'60rpx';
+            width: ~'60rpx';
+            font-size: ~'40rpx';
+        }
+    }
+
+</style>

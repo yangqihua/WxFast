@@ -396,13 +396,13 @@
 
 </script>
 <style lang="less" rel="stylesheet/less">
-    @import "../../widgets/common/assets/styles/variable";
+    @import "../../widgets/common/assets/styles/base";
 
     .classify {
         display: flex;
         position: relative;
         .classify-category {
-            width: ~'210rpx';
+            width: ~'216rpx';
             position: relative;
             z-index: 1;
             background-color: #f5f5f5;
@@ -436,7 +436,7 @@
             }
             .children-item {
                 height: ~'200rpx';
-                width: ~'180rpx';
+                width: ~'178rpx';
                 text-align: center;
             }
             .child-image {
@@ -449,7 +449,7 @@
                 white-space: nowrap;
                 overflow: hidden;
                 text-overflow: ellipsis;
-                width: ~'180rpx';
+                width: ~'178rpx';
             }
 
         }
