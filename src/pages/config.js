@@ -35,5 +35,13 @@ export const components = [
         name: 'Input',
         path: '/pages/example/input',
     },
+    {
+        name: 'Search 组件',
+        path: '/pages/example/search',
+    },
+    {
+        name: '商品分类',
+        path: '/pages/example/classify',
+    }
 
 ]

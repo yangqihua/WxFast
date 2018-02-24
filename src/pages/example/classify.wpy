@@ -1,25 +1,33 @@
 <template>
-    <view class="classify">
-        <scroll-view class="classify-category" scroll-y scroll-with-animation style="height:{{windowHeight}}px">
-            <view class="name {{item.active? 'active':''}}" wx:for="{{rootCateList}}" wx:key="item" @tap="changeCate"
-                  data-code="{{item.code}}">
-                {{item.name}}
-            </view>
-        </scroll-view>
-        <scroll-view class="classify-detail" scroll-y scroll-with-animation style="height:{{windowHeight}}px">
-            <view class="children">
-                <navigator hover-class="none" class="children-item" wx:for="{{childCateList}}" wx:for-item="item"
-                           wx:key="index"
-                           url="/pages/search?cateCode={{item.secondCategory.code}}&title={{item.secondCategory.name}}">
-                    <image class="child-image" src="{{item.secondCategory.thumLogo}}"></image>
-                    <view class="child-name">{{item.secondCategory.name}}</view>
-                </navigator>
-            </view>
-        </scroll-view>
+    <view>
+        <view id="search_container">
+            <search class="search"></search>
+            <image src="http://p3orru6vb.bkt.clouddn.com/mesg.png"/>
+        </view>
+        <view class="classify">
+            <scroll-view class="classify-category" scroll-y scroll-with-animation style="height:{{windowHeight-searchViewHeight}}px">
+                <view class="name {{item.active? 'active':''}}" wx:for="{{rootCateList}}" wx:key="item"
+                      @tap="changeCate"
+                      data-code="{{item.code}}">
+                    {{item.name}}
+                </view>
+            </scroll-view>
+            <scroll-view class="classify-detail" scroll-y scroll-with-animation style="height:{{windowHeight-searchViewHeight}}px">
+                <view class="children">
+                    <navigator hover-class="none" class="children-item" wx:for="{{childCateList}}" wx:for-item="item"
+                               wx:key="index"
+                               url="/pages/search?cateCode={{item.secondCategory.code}}&title={{item.secondCategory.name}}">
+                        <image class="child-image" src="{{item.secondCategory.thumLogo}}"></image>
+                        <view class="child-name">{{item.secondCategory.name}}</view>
+                    </navigator>
+                </view>
+            </scroll-view>
+        </view>
     </view>
 </template>
 <script>
     import wepy from 'wepy';
+    import Search from '../../widgets/search/index'
     const data = [
         {
             secondCategory: {
@@ -301,8 +309,16 @@
     export default class Classify extends wepy.page {
         config = {
             navigationBarTitleText: '分类',
+            backgroundTextStyle: 'dark',
+            backgroundColor: '#EFEFEF',
+            navigationBarBackgroundColor: '#ff5777',
+            navigationBarTextStyle: '#fff',
+        }
+        components = {
+            'search': Search,
         }
         data = {
+            searchViewHeight:0,
             scrollTop: 100,
             windowHeight: 0,
             list: {},
@@ -367,18 +383,25 @@
             this.getChildCate(selRottCateCode);
         }
 
+        getSearchViewHeight() {
+            let query = wx.createSelectorQuery()
+            query.select('#search_container').boundingClientRect()
+            query.exec((res)=>{
+                this.searchViewHeight = res[0].height
+                this.$apply()
+            })
+        }
+
         onLoad() {
+            this.getSearchViewHeight()
             let systemInfo = this.$parent.getSystemInfoSync()
             this.windowHeight = systemInfo.windowHeight;
-            this.$apply();
-            console.log('systemInfo:', systemInfo)
         }
 
         onShow() {
             this.getRootCateTopLevel()
         }
 
-        computed = {}
         methods = {
             changeCate(e) {
                 let code = e.currentTarget.dataset.code;
@@ -392,11 +415,30 @@
                 }
             },
         }
+
+        events = {
+            doTap(){
+                console.log('hear is do tap method from parent')
+            }
+        }
     }
 
 </script>
 <style lang="less" rel="stylesheet/less">
     @import "../../widgets/common/assets/styles/base";
+
+    #search_container {
+        display: flex;
+        padding: ~'16rpx 10rpx 16rpx 30rpx';
+        background-color: #f0f0f0;
+        box-sizing: border-box;
+        border-bottom: 1px solid @hairline-color;
+        image{
+            padding: ~'1rpx 20rpx';
+            width: ~'60rpx';
+            height: ~'60rpx';
+        }
+    }
 
     .classify {
         display: flex;
@@ -428,11 +470,11 @@
             z-index: 999;
             box-sizing: border-box;
             background: #fff;
-            padding: 0 10px;
             .children {
                 display: flex;
                 flex-wrap: wrap;
                 margin: ~'20rpx' 0;
+                padding: ~'20rpx 20rpx 0 20rpx';
             }
             .children-item {
                 height: ~'200rpx';

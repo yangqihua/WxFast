@@ -25,6 +25,8 @@
         config = {
             navigationBarTitleText: 'WxFast 演示',
             navigationBarBackgroundColor: '#F7701A',
+            navigationBarTextStyle: '#fff',
+            backgroundColor: '#FFFFFF',
         }
         data = {
             components: components,
@@ -93,5 +95,8 @@
 
     .content {
         border-top: solid 1px @hairline-color;
+    }
+    .panel{
+        margin-bottom: 20px;
     }
 </style>

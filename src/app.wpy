@@ -11,9 +11,9 @@
     export default class extends wepy.app {
         config = {
             pages: [
-                'pages/example/search',
-                'pages/example/classify',
                 'pages/example/index',
+                'pages/example/classify',
+                'pages/example/search',
                 'pages/example/input',
                 'pages/example/button',
                 'pages/example/toptips',
@@ -24,6 +24,7 @@
                 'pages/example/abnor',
             ],
             window: {
+                enablePullDownRefresh: false,
                 backgroundTextStyle: 'light',
                 navigationBarBackgroundColor: '#fff',
                 navigationBarTitleText: 'WeChat',
