@@ -4,6 +4,7 @@
 
 <script>
     import wepy from 'wepy'
+    import tip from './widgets/common/js/tip'
     import 'wepy-async-function'
 
     export default class extends wepy.app {
@@ -79,33 +80,74 @@
         }
 
         onLaunch() {
+            this.checkLogin()
         }
 
-        async login() {
-            let loginResult = await wepy.login()
-            console.log('loginResult: ', loginResult)
-            // TODO: 根据 loginResult.code 去业务服务器拿 openid
-            let userResult = await wepy.getUserInfo().catch((error) => {
-                console.log('get userInfo error:', error)
+        resolveDeny() {
+            return new Promise(async(resolve, reject) => {
+                tip.confirm({text: '拒绝授权将不能使用本程序，重新授权？'}).then((result) => {
+                    wx.openSetting({
+                        success: async(res) => {
+                            if (res.authSetting["scope.userInfo"]) {
+                                let userResult = await wepy.getUserInfo()
+                                resolve(userResult.userInfo)
+                                console.log('重新授权成功,userInfo:', userResult.userInfo)
+                            } else {
+                                this.resolveDeny().then((userInfo) => {
+                                    resolve(userInfo)
+                                }).catch((error) => reject(error))
+                            }
+                        }, fail: function (error) {
+                            reject(error)
+                        }
+                    })
+                }).catch((reject) => {
+                    // 退出程序
+                })
             })
-            wepy.setStorageSync('userInfo', userResult.userInfo)
-            this.globalData.userInfo = userResult.userInfo
-
         }
 
-        async getUserInfo() {
+        async checkLogin() {
+            await wepy.checkSession().catch(async(fail) => {
+                let loginResult = await wepy.login()
+                console.log('loginResult:', loginResult)
+                this.getUserInfo().then((userInfo) => {
+                    console.log('login userInfo:', userInfo)
+                    // TODO: 根据 loginResult.code 去业务服务器拿 openid
+                }).catch((error) => {
+                    console.log('login userInfo error:', error)
+                })
+            })
+        }
+
+        async getUserInfoFromWx() {
+            return new Promise(async(resolve, reject) => {
+                let userResult = await wepy.getUserInfo().catch((error) => {
+                    this.resolveDeny().then((userInfo) => {
+                        wepy.setStorageSync('userInfo', userInfo)
+                        this.globalData.userInfo = userInfo
+                        resolve(userInfo)
+                    }).catch((error) => {
+                        reject(error)
+                    })
+                })
+                if (userResult) {
+                    wepy.setStorageSync('userInfo', userResult.userInfo)
+                    this.globalData.userInfo = userResult.userInfo
+                    resolve(userResult.userInfo)
+                }
+            })
+        }
+
+        getUserInfo() {
             let userInfo = this.globalData.userInfo || wepy.getStorageSync('userInfo')
             return new Promise(async(resolve, reject) => {
                 if (userInfo) {
                     resolve(userInfo)
                 } else {
-                    await wepy.checkSession().catch(async(fail) => {
-                        await this.login()
-                    })
-                    let userResult = await wepy.getUserInfo().catch((error) => {
-                        reject(error)
-                    })
-                    resolve(userResult.userInfo)
+                    this.getUserInfoFromWx().then((userInfo) => {
+                        resolve(userInfo)
+                    }).catch((error) => reject(error))
                 }
             })
         }

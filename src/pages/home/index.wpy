@@ -9,6 +9,13 @@
 	import wepy from 'wepy'
 	export default class Index extends wepy.page {
 
+	    onLoad(){
+//	        this.$parent.getUserInfo().then((result)=>{
+//	            console.log('result:',result)
+//	        }).catch((error)=>{
+//	            console.log('error:',error)
+//	        })
+	    }
 	}
 </script>
 
