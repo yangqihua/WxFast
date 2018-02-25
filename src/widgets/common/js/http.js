@@ -3,79 +3,62 @@
  */
 import wepy from 'wepy'
 import tip from './tip'
-const BASE_URL = ''
-class HTTPUtil {
-	static wxRequest(url,params = {},method='GET',headers={}) {
-		headers['content-type'] = 'application/json'
-        return new Promise(async(resolve, reject) => {
-            let result = await wepy.request({
-                url: BASE_URL+url,
-                data: params,
-                method: method,
-                header: headers,
-            }).catch((fail) => {
-                tip.error('请求数据异常')
-                reject(fail)
-            })
-            resolve(result)
-        })
-	}
+import md5 from './md5'
+import {BASE_URL, PROJECTID, KEY} from '../../../service/config/env'
 
-	static get({url, params = {}, scb, ecb,isLoading=true}) {
-		if(isLoading){
-			tip.loading()
-		}
-		HTTPUtil.wxRequest(url, params).then((json) => {
-			if(isLoading) {
-				tip.loaded()
-			}
-			let res = json.data
-			if(json['statusCode']==200){
-				if(res.code==200){
-					scb&&scb(res.data)
-				}else{
-					ecb&&ecb(json['msg'])
-				}
-			}else{
-				if(json['statusCode']==500){
-					ecb&&ecb('服务器异常')
-				}else{
-					ecb&&ecb('状态码: '+json['statusCode'])
-				}
-			}
-		}, (err) => {
-			if(isLoading) {
-				tip.loaded()
-			}
-			tip.error("错误："+err)
-			ecb && ecb(err)
-		})
-	}
-	static post({url, params = {}, scb, ecb,isLoading=true}) {
-		if(isLoading){
-			tip.loading()
-		}
-		HTTPUtil.wxRequest(url, params,'POST').then((json) => {
-			if(isLoading) {
-				tip.loaded()
-			}
-			let res = json.data
-			if(json['statusCode']==200){
-				if(res.code==200){
-					scb&&scb(res.data)
-				}else{
-					ecb&&ecb(json['msg'])
-				}
-			}else{
-				ecb&&ecb(json['errMsg'])
-			}
-		}, (err) => {
-			if(isLoading) {
-				tip.loaded()
-			}
-			ecb && ecb(err)
-		})
-	}
+
+const TIMESTAMP = new Date().getTime()
+const SIGN = md5.hex_md5((TIMESTAMP + API_SECRET_KEY).toLowerCase())
+
+class HTTPUtil {
+    static  getSign(url) {
+        let sign =
+            TIMESTAMP +
+            url.toLowerCase() +
+            KEY +
+            PROJECTID +
+            '不知道是什么东西'
+        return md5(sign)
+    }
+
+    static async wxRequest(url, params = {}, isLoading = true, method = 'GET', headers = {}) {
+        let sign = HTTPUtil.getSign()
+        headers['content-type'] = 'application/json'
+        isLoading && tip.loading()
+        let result = await wepy.request({
+            url: BASE_URL + '/api/' + url + '?sign=' + sign + '&timestamp=' + TIMESTAMP,
+            data: params,
+            method: method,
+            header: headers,
+        }).catch((fail) => {
+            isLoading && tip.loaded()
+            tip.error('请求数据异常')
+        })
+        result && isLoading && tip.loaded()
+        if (result && result['statusCode'] !== 200) {
+            if (result['statusCode'] === 500) {
+                tip.error('服务器异常')
+            } else {
+                tip.error('code:' + result['statusCode'])
+            }
+        }
+        console.log('result:', result)
+        return result
+    }
+
+    static async get(params = {}, url, isLoading = true) {
+        let json = await HTTPUtil.wxRequest(url, params, isLoading)
+        let errorMessage = '请求数据异常'
+        if (json) {
+            // TODO: 根据业务code去判断异常
+            let result = json.data
+            if (result.hasOwnProperty('code') && result['code'] == 200) {
+                return result
+            }
+            errorMessage = '业务异常'
+        }
+        throw errorMessage;
+    }
 
 }
 

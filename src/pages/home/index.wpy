@@ -6,11 +6,14 @@
 
 <script>
     import wepy from 'wepy'
+    import {getSwiperList} from '../../service/api/api'
     export default class Index extends wepy.page {
 
-	    onLoad() {
-//            let userInfo = await this.$parent.getUserInfo()
-//            console.log('Index userInfo:', userInfo)
+        async onLoad() {
+            let result = await getSwiperList({'id':1}).catch((error) => {
+                console.log('error:', error)
+            })
+	        console.log('Index result:',result)
         }
     }
 </script>
