@@ -20,7 +20,7 @@
 
 <script>
     import wepy from 'wepy'
-    import {components} from '../config'
+    import {components} from './config'
     export default class Index extends wepy.page {
         config = {
             navigationBarTitleText: 'WxFast 演示',
