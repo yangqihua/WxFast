@@ -111,12 +111,9 @@
             await wepy.checkSession().catch(async(fail) => {
                 let loginResult = await wepy.login()
                 console.log('loginResult:', loginResult)
-                this.getUserInfo().then((userInfo) => {
-                    console.log('login userInfo:', userInfo)
-                    // TODO: 根据 loginResult.code 去业务服务器拿 openid
-                }).catch((error) => {
-                    console.log('login userInfo error:', error)
-                })
+                let userInfo = await this.getUserInfo()
+                console.log('login userInfo:', userInfo)
+                // TODO: 根据 loginResult.code 去业务服务器拿 openid
             })
         }
 
@@ -139,17 +136,13 @@
             })
         }
 
-        getUserInfo() {
+        async getUserInfo() {
             let userInfo = this.globalData.userInfo || wepy.getStorageSync('userInfo')
-            return new Promise(async(resolve, reject) => {
-                if (userInfo) {
-                    resolve(userInfo)
-                } else {
-                    this.getUserInfoFromWx().then((userInfo) => {
-                        resolve(userInfo)
-                    }).catch((error) => reject(error))
-                }
-            })
+            if (userInfo) {
+                return await userInfo
+            } else {
+                return await this.getUserInfoFromWx()
+            }
         }
 
         getSystemInfoSync() {
