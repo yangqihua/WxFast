@@ -1,7 +1,5 @@
 <style lang="less" rel="stylesheet/less">
-    .container {
-        margin: ~'40rpx 0 80rpx 0';
-    }
+	@import "./widgets/common/assets/styles/base";
 </style>
 
 <script>
@@ -11,25 +9,62 @@
     export default class extends wepy.app {
         config = {
             pages: [
-                'pages/example/index',
-                'pages/example/classify',
-                'pages/example/search',
-                'pages/example/input',
-                'pages/example/button',
-                'pages/example/toptips',
-                'pages/example/layout',
-                'pages/example/cell',
-                'pages/example/panel',
-                'pages/example/load-more',
-                'pages/example/abnor',
+                'pages/home/index',
+                'pages/home/category',
+                'pages/home/cart',
+                'pages/home/me',
+
+//                'pages/example/index',
+//                'pages/example/classify',
+//                'pages/example/search',
+//                'pages/example/input',
+//                'pages/example/button',
+//                'pages/example/toptips',
+//                'pages/example/layout',
+//                'pages/example/cell',
+//                'pages/example/panel',
+//                'pages/example/load-more',
+//                'pages/example/abnor',
             ],
             window: {
                 enablePullDownRefresh: false,
                 backgroundTextStyle: 'light',
                 navigationBarBackgroundColor: '#fff',
-                navigationBarTitleText: 'WeChat',
+                navigationBarTitleText: '首页',
                 navigationBarTextStyle: 'black',
                 backgroundColor: '#FEFEFE',
+            },
+            tabBar: {
+                color: "#666",
+                selectedColor: "#ff5777",
+                backgroundColor: "#ffffff",
+                borderStyle: "#b2b2b2",
+                list: [
+                    {
+                        pagePath: 'pages/home/index',
+                        text: "首页",
+                        iconPath: "assets/images/tabs/home.png",
+                        selectedIconPath: "assets/images/tabs/home_fill.png",
+                    },
+                    {
+                        pagePath: 'pages/home/category',
+                        text: "分类",
+                        iconPath: "assets/images/tabs/crown.png",
+                        selectedIconPath: "assets/images/tabs/crown_fill.png",
+                    },
+                    {
+                        pagePath: 'pages/home/cart',
+                        text: "购物车",
+                        iconPath: "assets/images/tabs/cart.png",
+                        selectedIconPath: "assets/images/tabs/cart_fill.png",
+                    },
+                    {
+                        pagePath: 'pages/home/me',
+                        text: "个人中心",
+                        iconPath: "assets/images/tabs/people.png",
+                        selectedIconPath: "assets/images/tabs/people_fill.png",
+                    }
+                ]
             }
         }
 

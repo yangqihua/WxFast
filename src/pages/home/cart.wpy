@@ -1,0 +1,16 @@
+
+<template>
+	<view>
+		Cart
+	</view>
+</template>
+
+<script>
+    import wepy from 'wepy'
+    export default class Cart extends wepy.page {
+
+    }
+</script>
+
+<style lang="less"  rel="stylesheet/less">
+</style>
