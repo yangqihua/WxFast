@@ -3,7 +3,7 @@
  */
 
 import http from '../../widgets/common/js/http'
-const getSwiperList = (params) => http.get(params, 'getList',false);
+const getSwiperList = (params) => http.get(params, 'diy/getlink',true);
 
 export {
     getSwiperList
