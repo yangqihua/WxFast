@@ -110,7 +110,7 @@
         async checkLogin() {
             await wepy.checkSession().catch(async(fail) => {
                 let loginResult = await wepy.login()
-                console.log('loginResult:', loginResult)
+               h console.log('loginResult:', loginResult)
                 let userInfo = await this.getUserInfo()
                 console.log('login userInfo:', userInfo)
                 // TODO: 根据 loginResult.code 去业务服务器拿 openid

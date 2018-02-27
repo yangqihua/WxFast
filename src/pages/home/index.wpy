@@ -7,10 +7,13 @@
 <script>
     import wepy from 'wepy'
     import {getSwiperList} from '../../service/api/api'
+    import http from '../../widgets/common/js/http'
     export default class Index extends wepy.page {
 
         async onLoad() {
-            let result = await getSwiperList({'id':1}).catch((error) => {
+            let sign = http.getSign('index')
+            console.log('sign:',sign)
+            let result = await getSwiperList({'diyKey':'swiper_index'}).catch((error) => {
                 console.log('error:', error)
             })
 	        console.log('Index result:',result)
