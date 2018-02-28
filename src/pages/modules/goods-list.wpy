@@ -56,8 +56,8 @@
 		border: 1px solid #efe8ee;
 
 		image {
-			width: 100%;
-			height:~'360rpx';
+			width:~'358rpx';
+			height:~'358rpx';
 		}
 		.goods-details {
 			padding: ~'6rpx 12rpx 15rpx 12rpx';

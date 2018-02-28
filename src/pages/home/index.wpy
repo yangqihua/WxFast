@@ -20,6 +20,7 @@
 		<view class="goods-container">
 			<view class="goods-text">流行单品</view>
 			<index-goods :goodsList.sync="goodsList" :scrollTop.sync="scrollTop"/>
+			<load-more :loadingStatus.sync="loadingStatus"/>
 		</view>
 	</view>
 </template>
@@ -28,15 +29,18 @@
     import wepy from 'wepy'
     import {getLink, getGoodList} from '../../services/api/api'
     import IndexGoodsList from '../modules/goods-list'
+    import LoadMore from '../../widgets/load-more/index'
     export default class Index extends wepy.page {
         config = {
             navigationBarTitleText: '首页',
             navigationBarTextStyle: '#fff',
             navigationBarBackgroundColor: '#ff5777',
+            backgroundColor: '#efefef',
             enablePullDownRefresh: true,
         }
         components = {
             'index-goods': IndexGoodsList,
+            'load-more': LoadMore,
         }
         data = {
             swiperList: [],
@@ -45,6 +49,7 @@
             pageIndex: 1,
             pageSize: 10,
             scrollTop: 0,
+            loadingStatus: LoadMore.LOADING,
         }
         methods = {
             navigateTo(url){
@@ -55,9 +60,49 @@
         async onLoad() {
             this.swiperList = await getLink({diyKey: 'swiper_index'})
             this.gridList = await getLink({diyKey: 'grid_index'})
-            let goodsListResult = await getGoodList({'pageIndex': this.pageIndex, 'pageSize': this.pageSize})
-	        this.goodsList = goodsListResult['productItems']
             this.$apply()
+            await this.getGoodsList()
+        }
+
+        async getGoodsList(isRefresh = false) {
+            let curTime = (new Date()).valueOf();
+            let goodsListResult = await getGoodList({'pageIndex': this.pageIndex, 'pageSize': this.pageSize})
+            if (goodsListResult.length == 0) {
+                this.loadingStatus = LoadMore.NO_MORE
+            }else{
+                this.loadingStatus = LoadMore.FINISHED
+            }
+            if (!isRefresh) {
+                this.goodsList = [...this.goodsList, ...goodsListResult['productItems']]
+                this.pageIndex++
+                this.$apply()
+            } else {
+                wx.showNavigationBarLoading()
+                this.goodsList = goodsListResult['productItems']
+                this.pageIndex++
+                if ((new Date()).valueOf() - curTime > 1500) {
+                    this.$apply();
+                    wx.hideNavigationBarLoading()
+                    wx.stopPullDownRefresh()
+                } else {
+                    let delay = parseInt(1000 - ((new Date()).valueOf() - curTime));
+                    setTimeout(() => {
+                        this.$apply();
+                        wx.hideNavigationBarLoading()
+                        wx.stopPullDownRefresh()
+                    }, parseInt(delay))
+                }
+            }
+        }
+
+        async onReachBottom() {
+            if (this.loadingStatus == LoadMore.FINISHED) {
+                await this.getGoodsList();
+            }
+        }
+
+        async onPullDownRefresh() {
+            await this.getGoodsList(true)
         }
 
         onPageScroll(e) {
@@ -91,6 +136,7 @@
 	.goods-container {
 		margin-top: ~'20rpx';
 		background: #fff;
+		padding-bottom: ~'20rpx';
 		.goods-text {
 			margin: ~'22rpx 0 12rpx 0';
 			padding: ~'4rpx 40rpx';

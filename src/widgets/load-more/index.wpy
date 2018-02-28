@@ -3,7 +3,7 @@
 </style>
 <template>
     <view>
-        <view wx:if="{{loadingStatus==0}}" class="loadmore">
+        <view wx:if="{{loadingStatus==0 || loadingStatus==2}}" class="loadmore">
             <view class="loading"></view>
             <view class="loadmore_tips">{{message}}</view>
         </view>
@@ -58,7 +58,7 @@
             },
             error(){
                 this.loadingStatus = Loadmore.ERROR;
-            }
+            },
         }
     }
 </script>

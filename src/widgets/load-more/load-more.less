@@ -3,16 +3,16 @@
 .loadmore {
     position: relative;
     width: 65%;
-    margin: 21px auto;
-    line-height: 20px;
-    font-size: @desc-font-size;
+    margin: ~'42rpx' auto;
+    line-height: ~'40rpx';
+    font-size: ~'28rpx';
     text-align: center;
     vertical-align: middle
 }
 
 .loading {
-    width: @desc-font-size;
-    height: @desc-font-size;
+    width: ~'36rpx';
+    height: ~'36rpx';
     display: inline-block;
     vertical-align: middle;
     animation: weuiLoading 1s steps(12, end) infinite;
@@ -21,15 +21,15 @@
 }
 
 .loadmore .loading {
-    margin-right: 4px
+    margin-right: 2px
 }
 
 .loadmore_tips {
     display: inline-block;
     vertical-align: middle;
-    height: 20px;
-    line-height: 20px;
-    color: @hint-color
+    height:  ~'40rpx';
+    line-height:  ~'40rpx';
+    color: @hint-color;
 }
 
 .no_more{
@@ -39,9 +39,9 @@
     //}
     .loadmore_tips {
         position: relative;
-        top: -11px;
+        top: ~'-22rpx';
         background: @background-color;
-        padding: 0 6px;
+        padding: ~'0 12rpx';
         z-index: 1
     }
 }
