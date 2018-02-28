@@ -6,7 +6,7 @@
 
 <script>
     import wepy from 'wepy'
-    import {getSwiperList} from '../../service/api/api'
+    import {getSwiperList} from '../../services/api/api'
     import http from '../../widgets/common/js/http'
     export default class Index extends wepy.page {
 

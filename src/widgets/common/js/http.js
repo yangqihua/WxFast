@@ -4,7 +4,7 @@
 import wepy from 'wepy'
 import tip from './tip'
 import md5 from './md5'
-import {BASE_URL, PROJECTID, KEY} from '../../../service/config/env'
+import {BASE_URL, PROJECT_ID, KEY} from '../../../services/config/env'
 
 const TIMESTAMP = Math.round(new Date().getTime() / 1000)
 
@@ -22,32 +22,36 @@ class HTTPUtil {
             method: method,
             header: headers,
         }).catch((fail) => {
+            // 1.客户端类型异常
             isLoading && tip.loaded()
             tip.error('请求数据异常')
         })
         result && isLoading && tip.loaded()
+        // 2.Http 类型异常
         if (result && result['statusCode'] !== 200) {
             if (result['statusCode'] === 500) {
                 tip.error('服务器异常')
             } else {
                 tip.error('code:' + result['statusCode'])
             }
+            return null
+        }
+        result = result.data
+        // 3.业务类型异常
+        if (result.hasOwnProperty('status') && result['status'] !== 1) {
+            tip.error(result.message || '未知错误')
+            return null
         }
         return result
+
     }
 
     static async get(params = {}, url, isLoading = true) {
-        let json = await HTTPUtil.wxRequest(url, params, isLoading)
-        let errorMessage = '请求数据异常'
-        if (json) {
-            // TODO: 根据业务code去判断异常
-            let result = json.data
-            if (result.hasOwnProperty('status') && result['status'] == 1) {
-                return result
-            }
-            errorMessage = '业务异常'
-        }
-        throw errorMessage;
+        return await HTTPUtil.wxRequest(url, params, isLoading)
+    }
+
+    static async post(params = {}, url, isLoading = true) {
+        return await HTTPUtil.wxRequest(url, params, isLoading,'POST')
     }
 
     static getSign(url) {
@@ -55,7 +59,7 @@ class HTTPUtil {
             TIMESTAMP +
             url.toLowerCase() +
             KEY +
-            PROJECTID +
+            PROJECT_ID +
             'localhost'
         return md5.hex_md5(sign)
     }
