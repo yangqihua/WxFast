@@ -15,6 +15,7 @@
     }
     .cell-body {
         flex: 1;
+        color: @title-color;
     }
     .cell-text {
         line-height: ~'48rpx';
@@ -49,6 +50,8 @@
     }
 }
 
+
+.cell-no-border::after,
 .cell-last-child::after,
 .cell:last-child::after {
     display: none;
