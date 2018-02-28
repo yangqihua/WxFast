@@ -24,22 +24,28 @@ class HTTPUtil {
         }).catch((fail) => {
             // 1.客户端类型异常
             isLoading && tip.loaded()
-            tip.error('请求数据异常')
+            tip.alert({text:'请求数据异常'})
         })
         result && isLoading && tip.loaded()
         // 2.Http 类型异常
         if (result && result['statusCode'] !== 200) {
             if (result['statusCode'] === 500) {
-                tip.error('服务器异常')
+                tip.alert({text:'服务器异常'})
             } else {
-                tip.error('code:' + result['statusCode'])
+                tip.alert({text:'code:' + result['statusCode']})
             }
             return null
         }
         result = result.data
         // 3.业务类型异常
         if (result.hasOwnProperty('status') && result['status'] !== 1) {
-            tip.error(result.message || '未知错误')
+            if(result['status'] ==101){
+                wx.navigateTo({
+                    url: 'pages/common/bind-phone',
+                })
+            }else{
+                tip.alert({text:result.message || '未知错误'})
+            }
             return null
         }
         return result
@@ -48,6 +54,10 @@ class HTTPUtil {
 
     static async get(params = {}, url, isLoading = true) {
         return await HTTPUtil.wxRequest(url, params, isLoading)
+    }
+
+    static async put(params = {}, url, isLoading = true) {
+        return await HTTPUtil.wxRequest(url, params, isLoading,'PUT')
     }
 
     static async post(params = {}, url, isLoading = true) {

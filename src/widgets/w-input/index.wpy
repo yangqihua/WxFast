@@ -83,17 +83,17 @@
             _bindInput(event) {
                 event.name = this.name
                 this.validateValue(event)
-                this.$emit('bindInput', this.event)
+                this.$emit('bindInput', event)
             },
 
             _bindFocus(event) {
                 event.name = this.name
-                this.$emit('bindFocus', this.event)
+                this.$emit('bindFocus', event)
             },
 
             _bindBlur(event) {
                 event.name = this.name
-                this.$emit('bindBlur', this.event)
+                this.$emit('bindBlur', event)
             }
         }
 

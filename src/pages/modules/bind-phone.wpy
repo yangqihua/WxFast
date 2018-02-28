@@ -1,0 +1,109 @@
+<template>
+	<view class="bind-phone">
+		<view class="bind-text">绑定手机</view>
+		<view class="panel">
+			<form bindsubmit="formSubmit">
+				<bind-phone-input value="18428360735" @bindInput.user="bindPhoneInput" label="电话号码"
+				                  placeholder="请输入电话号码" :validateTypes.sync="validateTypes"/>
+				<view class="cell field">
+					<view class="field-title">
+						<view style="display: inline-block">验证码</view>
+						<view class="field-required">
+							*
+						</view>
+					</view>
+
+					<input
+							type="text"
+							placeholder="请输入验证码"
+							placeholder-class="field-placeholder"
+							bindinput="bindCodeInput"
+							class="field-input cell-body"/>
+					<view class="cell-right">
+						<button class="btn btn-mini btn-primary" bindtap="sendCode">获取验证码</button>
+					</view>
+				</view>
+				<view class="btns">
+					<button
+							class="btn btn-primary"
+							formType="submit">提交数据
+					</button>
+				</view>
+			</form>
+		</view>
+	</view>
+</template>
+<script>
+    import wepy from 'wepy';
+    import Input from '../../widgets/w-input/index'
+    import {sendCode, register} from '../../services/api/api'
+    import tip from '../../widgets/common/js/tip'
+    export default class BindPhone extends wepy.component {
+        data = {
+            validateTypes: ['required', 'phone'],
+            phone: null,
+            code: null,
+        }
+        components = {
+            'bind-phone-input': Input,
+        }
+        methods = {
+            bindCodeInput(event){
+                this.code = event.detail.value
+            },
+            bindPhoneInput(event){
+                this.phone = event.detail.value
+            },
+            async sendCode(){
+                let result = await sendCode(this.phone)
+                if (result) {
+                    tip.success("发送成功")
+                }
+            },
+            async formSubmit(e) {
+                let userInfo = await wepy.$instance.getUserInfo()
+                let password = this.getPassword()
+                console.log('userInfo:', userInfo)
+                let registerResult = await register({
+                    "openid": this.userInfo.openid,
+                    "UserName": this.phone,
+                    "Password": password,
+                    "ConfirmPassword": password,
+                    "Mobile": this.phone,
+                    "MobileVerifiyCode": this.code,
+                    "Agree": true
+                })
+                console.log('registerResult：', registerResult)
+            },
+        }
+
+        getPassword() {
+            let num = ""
+            for (let i = 0; i < 6; i++) {
+                num += Math.floor(Math.random() * 10)
+            }
+            return num
+        }
+
+        events = {}
+    }
+
+</script>
+<style lang="less" rel="stylesheet/less">
+	@import "../../widgets/panel/panel";
+	@import "../../widgets/button/button";
+
+	.bind-phone {
+		background: #FFFFFF;
+		padding-top: ~'20rpx';
+
+		.bind-text {
+			text-align: center;
+			font-size: @large-font-size;
+			margin: ~'50rpx' 0;
+		}
+		.btns {
+			margin-top: ~'40rpx';
+		}
+	}
+</style>

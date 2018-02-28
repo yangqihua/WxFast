@@ -8,9 +8,9 @@
 <script>
     import wepy from 'wepy'
     import BindPhone from '../modules/bind-phone'
-    export default class Cart extends wepy.page {
+    export default class BindPhonePage extends wepy.page {
         config = {
-            navigationBarTitleText: '购物车',
+            navigationBarTitleText: '绑定手机号',
         }
         components = {
             'bind-phone': BindPhone,
