@@ -48,7 +48,7 @@ class HTTPUtil {
             }
             return null
         }
-        return result
+        return result.result
 
     }
 

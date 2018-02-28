@@ -1,25 +1,106 @@
 <template>
 	<view>
-		Index
+		<swiper class="swiper" indicator-active-color="#ff5777" indicator-dots="true"
+		        autoplay="true" interval="3000" duration="300" circular="true">
+			<repeat for="{{swiperList}}" key="imageUrl" index="index" item="item">
+				<swiper-item>
+					<image src="{{item.imageUrl}}" mode="widthFix" style="width: 100%" @tap="navigateTo({{item.url}})"/>
+				</swiper-item>
+			</repeat>
+		</swiper>
+		<view class="grid-list">
+			<repeat for="{{gridList}}" key="url" index="index" item="item">
+				<navigator open-type="navigate" url="{{url}}" hover-class="none">
+					<image src="{{item.imageUrl}}" class="nav-icon"></image>
+					<view class="nav-text">{{item.name}}</view>
+				</navigator>
+			</repeat>
+		</view>
+
+		<view class="goods-container">
+			<view class="goods-text">流行单品</view>
+			<index-goods :goodsList.sync="goodsList" :scrollTop.sync="scrollTop"/>
+		</view>
 	</view>
 </template>
 
 <script>
     import wepy from 'wepy'
-    import {getSwiperList} from '../../services/api/api'
-    import http from '../../widgets/common/js/http'
+    import {getLink, getGoodList} from '../../services/api/api'
+    import IndexGoodsList from '../modules/goods-list'
     export default class Index extends wepy.page {
+        config = {
+            navigationBarTitleText: '首页',
+            navigationBarTextStyle: '#fff',
+            navigationBarBackgroundColor: '#ff5777',
+            enablePullDownRefresh: true,
+        }
+        components = {
+            'index-goods': IndexGoodsList,
+        }
+        data = {
+            swiperList: [],
+            gridList: [],
+            goodsList: [],
+            pageIndex: 1,
+            pageSize: 10,
+            scrollTop: 0,
+        }
+        methods = {
+            navigateTo(url){
+                wx.navigateTo({url: url})
+            }
+        }
 
         async onLoad() {
-            let sign = http.getSign('index')
-            console.log('sign:',sign)
-            let result = await getSwiperList({'diyKey':'swiper_index'}).catch((error) => {
-                console.log('error:', error)
-            })
-	        console.log('Index result:',result)
+            this.swiperList = await getLink({diyKey: 'swiper_index'})
+            this.gridList = await getLink({diyKey: 'grid_index'})
+            let goodsListResult = await getGoodList({'pageIndex': this.pageIndex, 'pageSize': this.pageSize})
+	        this.goodsList = goodsListResult['productItems']
+            this.$apply()
+        }
+
+        onPageScroll(e) {
+            this.scrollTop = e.scrollTop
         }
     }
 </script>
 
 <style lang="less" rel="stylesheet/less">
+	@import "../../widgets/common/assets/styles/base";
+
+	.grid-list {
+		background-color: #fff;
+		color: @title-color;
+		display: flex;
+		flex-wrap: wrap;
+		font-size: @desc-font-size;
+		padding: ~'20rpx 19rpx';
+
+		navigator {
+			text-align: center;
+			padding: ~'20rpx 39rpx';
+		}
+		.nav-icon {
+			height: ~'100rpx';
+			width: ~'100rpx';
+		}
+
+	}
+
+	.goods-container {
+		margin-top: ~'20rpx';
+		background: #fff;
+		.goods-text {
+			margin: ~'22rpx 0 12rpx 0';
+			padding: ~'4rpx 40rpx';
+			line-height: ~'40rpx';
+			border-bottom-right-radius: ~'22rpx';
+			border-top-right-radius: ~'22rpx';
+			font-size: @title-color;
+			display: inline-block;
+			color: #fff;
+			background: linear-gradient(to right, #F39172, #f7701a);
+		}
+	}
 </style>
