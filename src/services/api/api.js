@@ -10,10 +10,12 @@ const sendCode = (params) => http.post(params, 'common/sendmobileVerifiyCode',tr
 
 const getLink = (params) => http.get(params, 'diy/getlink',false);
 const getGoodList = (params) => http.get(params, 'product/list',false);
+const getCategoryList = (params) => http.get(params, 'product/class',false);
 
 export {
     getLink,
     getGoodList,
+    getCategoryList,
     login,
     register,
     updateUserInfo,
