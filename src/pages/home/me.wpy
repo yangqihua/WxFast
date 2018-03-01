@@ -12,7 +12,7 @@
 		<view class="order-nav">
 			<view class="order-nav-item" wx:for="{{userOrderNavList}}" wx:for-item="item" wx:key="index"
 			      @tap="tapOrderNav({{item.url}})">
-				<image class="child-image" src="http://ozb2xxoij.bkt.clouddn.com/sale.png"></image>
+				<image class="child-image" src="/assets/svg/{{item.icon}}.svg"></image>
 				<view class="child-name">{{item.name}}</view>
 			</view>
 		</view>
@@ -21,7 +21,7 @@
 		<view class="order-nav">
 			<view class="order-nav-item" wx:for="{{userIndexNavList}}" wx:for-item="item" wx:key="index"
 			      @tap="tapOrderNav({{item.url}})">
-				<image class="child-image" src="http://ozb2xxoij.bkt.clouddn.com/shop.png"></image>
+				<image class="child-image" src="/assets/svg/{{item.icon}}.svg"></image>
 				<view class="child-name">{{item.name}}</view>
 			</view>
 		</view>
@@ -31,7 +31,7 @@
 			<view class="panel">
 				<view class="cell cell-access" wx:for="{{cells.links}}"
 				      wx:for-item="item" wx:key="index" @tap="tapOrderNav({{item.url}})">
-						<image src="../../widgets/common/assets/images/group.png" class="cell-icon"/>
+						<image src="/assets/svg/{{item.icon}}.svg" class="cell-icon"/>
 						<view class="cell-body">{{item.name}}</view>
 						<view class="cell-right"></view>
 				</view>
@@ -110,8 +110,10 @@
 		width: ~'167.5rpx';
 		text-align: center;
 		.child-image {
-			width: ~'100rpx';
-			height: ~'100rpx';
+			display: inline-block;
+			width: ~'80rpx';
+			height: ~'80rpx';
+			fill:red;
 		}
 		.child-name {
 			font-size: @title-font-size;
