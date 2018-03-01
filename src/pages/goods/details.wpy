@@ -1,0 +1,32 @@
+<template>
+	<view>
+	</view>
+</template>
+
+<script>
+    import wepy from 'wepy'
+    import {getGoodsDetails} from '../../services/api/api'
+    export default class Me extends wepy.page {
+        config = {
+            navigationBarTitleText: '商品详情',
+            backgroundTextStyle: 'dark',
+            navigationBarBackgroundColor: '#FFFFFF',
+            navigationBarTextStyle: 'black',
+            backgroundColor: '#fefefe'
+        }
+
+        data = {
+            goodsDetails:{},
+        }
+
+        async onLoad() {
+            this.goodsDetails = await getGoodsDetails({id:44})
+	        console.log('this.goodsDetails:',this.goodsDetails)
+        }
+    }
+</script>
+
+<style lang="less" rel="stylesheet/less">
+	@import "../../widgets/common/assets/styles/base";
+
+</style>

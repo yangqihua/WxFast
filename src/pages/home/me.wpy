@@ -65,8 +65,6 @@
             this.userOrderNavList = await getLink({diyKey: 'grid_user_order_nav'})
             this.userIndexNavList = await getLink({diyKey: 'grid_user_index_nav'})
             this.userCellList = await getLink({diyKey: 'cell_user_index'})
-
-            console.log('result:', this.userCellList)
             this.$apply()
         }
     }
@@ -113,7 +111,6 @@
 			display: inline-block;
 			width: ~'80rpx';
 			height: ~'80rpx';
-			fill:red;
 		}
 		.child-name {
 			font-size: @title-font-size;

@@ -12,8 +12,9 @@
     export default class extends wepy.app {
         config = {
             pages: [
-                'pages/home/me',
+                'pages/goods/details',
                 'pages/home/index',
+                'pages/home/me',
                 'pages/home/category',
                 'pages/home/cart',
 
@@ -115,9 +116,11 @@
             await wepy.checkSession().catch(async(fail) => {
                 let loginResult = await wepy.login()
                 let userInfo = await this.getUserInfo()
+	            console.log('loginCode:',loginResult.code)
                 let result = await login({
                     jsCode: loginResult.code
                 })
+	            console.log('login result :',result)
 	            if(result){
                     userInfo['isReg'] = result['isReg']
                     userInfo['openid'] = result['session']['openid']
