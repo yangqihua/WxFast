@@ -44,6 +44,34 @@
 				<image src="{{item}}" mode="widthFix" style="width: 100%"/>
 			</repeat>
 		</view>
+
+		<view class="recommend">
+
+		</view>
+
+		<view class="detail-bottom">
+			<view class="bottom-box">
+				<view class="item item-border">
+					<i class="iconfont icon-home"></i>
+					<view class="doc">首页</view>
+				</view>
+
+				<contact-button class="contact">
+				</contact-button>
+				<view class="item item-border">
+					<i class="iconfont icon-message"></i>
+					<view class="doc">客服</view>
+				</view>
+
+				<view class="item {{isFavorite?'selec_active':''}}" @tap="takeFavorite">
+					<i class="iconfont icon-collection"></i>
+					<view class="doc">收藏</view>
+				</view>
+
+				<view class="sy-bottom btn_cart" @tap="takeCart">加入购物车</view>
+				<view class="sy-bottom btn_order" @tap="takeOrder">立即购买</view>
+			</view>
+		</view>
 	</view>
 </template>
 
@@ -171,6 +199,89 @@
 		}
 		&::before {
 			left: 32%;
+		}
+	}
+
+	.recommend{
+		margin-bottom: ~'100rpx';
+	}
+
+	.detail-bottom {
+		width: 100%;
+		border-top: 1px solid @hairline-color;
+		position: fixed;
+		bottom: 0;
+		background: #fefefe;
+		z-index: 1001;
+		.bottom-box {
+			box-sizing: border-box;
+			display: flex;
+			align-items: center;
+			justify-content: flex-end;
+			position: relative;
+			.contact {
+				width: ~'110rpx';
+				height: ~'100rpx';
+				margin: 0 auto;
+				position: absolute;
+				text-align: center;
+				line-height: ~'80rpx';
+				left: ~'110rpx';
+				opacity: 0;
+			}
+		}
+
+		.sy-bottom {
+			flex: 1;
+			text-align: center;
+			padding: ~'20rpx 0';
+			height: ~'60rpx';
+			line-height: ~'60rpx';
+			font-size: ~'30rpx';
+		}
+
+		.btn_order {
+			background: @active-color;
+			color: #fff;
+		}
+
+		.btn_cart {
+			color: #fff;
+			background: #ff6e30;
+		}
+
+		.order_color {
+			background: #A9A9A9;
+			color: #fff;
+		}
+
+		.cart_color {
+			color: #fff;
+			background: #A9A9A9;
+		}
+
+		.item-border {
+			border-right: ~'1rpx' solid @hairline-color;
+		}
+		.item {
+			width: ~'110rpx';
+			text-align: center;
+
+			.doc {
+				font-size: ~'24rpx';
+			}
+
+		}
+		.selec_active {
+
+			.doc {
+				color: #ff4856;
+			}
+
+			.iconfont {
+				color: #ff4856;
+			}
+
 		}
 	}
 </style>
