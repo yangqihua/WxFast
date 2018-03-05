@@ -13,7 +13,7 @@ const getGoodList = (params) => http.get(params, 'product/list',false);
 const getCategoryList = (params) => http.get(params, 'product/class',false);
 const getListByLogin = (params) => http.get(params, 'diy/GetListByLogin',false);
 
-const getGoodsDetails = (params) => http.get(params, 'product/show',false);
+const getGoodsDetails = (params) => http.get(params, 'product/show',true);
 
 export {
     getLink,

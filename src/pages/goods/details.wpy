@@ -1,12 +1,56 @@
 <template>
 	<view>
+		<swiper style="height:{{systemInfo.windowWidth}}px" indicator-active-color="#ff5777" indicator-dots="true"
+		        autoplay="true" interval="3000" duration="300" circular="true">
+			<repeat for="{{goodsDetails.productExtensions.productThums}}" key="index" index="index" item="item">
+				<swiper-item>
+					<image src="{{item.originalUrl}}" mode="widthFix" style="width: 100%"
+					       @tap="showThumb({{item.originalUrl}})"/>
+				</swiper-item>
+			</repeat>
+		</swiper>
+		<view class="goods-details">
+			<view class="goods-info">
+				<view class="price-container">
+					<view class="price">{{goodsDetails.displayPrice}}</view>
+					<view class="market-price">￥{{goodsDetails.marketPrice}}</view>
+				</view>
+				<view class="buy-count">{{goodsDetails.soldCount}}人已购</view>
+			</view>
+			<view class="goods-name">
+				{{goodsDetails.name}}
+			</view>
+			<view class="goods-text">
+				<view>• 24小时发货</view>
+				<view>• 7天包退</view>
+				<view>• 售后补贴</view>
+			</view>
+		</view>
+		<view class="split"/>
+		<view>
+			<view class="cell cell-access">
+				<view class="cell-body">请选择</view>
+				<view class="cell-right">描述信息</view>
+			</view>
+
+			<view class="cell cell-access">
+				<view class="cell-body">商品参数</view>
+				<view class="cell-right">描述信息</view>
+			</view>
+		</view>
+		<view class="split split-goods">图文详情</view>
+		<view>
+			<repeat for="{{introductionImages}}" key="index" index="index" item="item">
+				<image src="{{item}}" mode="widthFix" style="width: 100%"/>
+			</repeat>
+		</view>
 	</view>
 </template>
 
 <script>
     import wepy from 'wepy'
     import {getGoodsDetails} from '../../services/api/api'
-    export default class Me extends wepy.page {
+    export default class GoodsDetails extends wepy.page {
         config = {
             navigationBarTitleText: '商品详情',
             backgroundTextStyle: 'dark',
@@ -16,17 +60,117 @@
         }
 
         data = {
-            goodsDetails:{},
+            goodsDetails: {
+                productExtensions: {
+                    productThums: [],
+                }
+            },
+            introductionImages: [],
+            systemInfo: {
+                windowWidth: 0,
+                windowHeight: 0,
+            }
         }
 
         async onLoad() {
-            this.goodsDetails = await getGoodsDetails({id:44})
-	        console.log('this.goodsDetails:',this.goodsDetails)
+            this.goodsDetails = await getGoodsDetails({id: 44})
+            console.log('this.goodsDetails:', this.goodsDetails)
+
+            this.regProductIntro(this.goodsDetails.detail.mobileIntro)
+            this.systemInfo = this.$parent.getSystemInfoSync()
+            this.$apply()
+        }
+
+        methods = {
+            showThumb(url){
+                console.log('url:', url)
+            }
+        }
+
+        regProductIntro(str) {
+            let imgReg = /<img.*?(?:>|\/>)/gi;
+            let srcReg = /src=[\'\"]?([^\'\"]*)[\'\"]?/i;
+            let arr = str.match(imgReg);
+            for (let i = 0; i < arr.length; i++) {
+                let src = arr[i].match(srcReg);
+                if (src[1]) {
+                    this.introductionImages.push(src[1])
+                }
+            }
+            this.$apply()
         }
     }
 </script>
 
 <style lang="less" rel="stylesheet/less">
-	@import "../../widgets/common/assets/styles/base";
+	@import "../../widgets/cell/cell";
 
+	.goods-details {
+		padding: ~'28rpx';
+		.goods-name {
+			padding: ~'12rpx 0';
+			font-size: @title-font-size;
+			border-bottom: ~'1rpx' solid #efefef;
+		}
+	}
+
+	.goods-text {
+		view {
+			display: inline-block;
+			line-height: @big-font-size;
+			padding-right: ~'18rpx';
+			padding-top: ~'28rpx';
+			color: @hint-color;
+			font-size: @desc-font-size;
+		}
+	}
+
+	.goods-info {
+		display: flex;
+		justify-content: space-between;
+		line-height: @big-font-size;
+		.price {
+			color: @active-color;
+			font-size: @price-font-size;
+			padding-right: ~'12rpx';
+			display: inline-block;
+		}
+		.market-price {
+			display: inline-block;
+			font-size: @desc-font-size;
+			color: @hint-color;
+			text-decoration: line-through;
+		}
+		.buy-count {
+			color: @hint-color
+		}
+
+		.name {
+			color: @title-color;
+			font-size: @title-font-size;
+		}
+	}
+
+	.split-goods {
+		position: relative;
+		height: ~'80rpx';
+		line-height: ~'80rpx';
+		text-align: center;
+		color: #bababa;
+		font-size: ~'26rpx';
+		&::after, &::before {
+			background: #ddd;
+			content: "";
+			height: 1px;
+			position: absolute;
+			top: 50%;
+			width: 12%;
+		}
+		&::after {
+			right: 32%;
+		}
+		&::before {
+			left: 32%;
+		}
+	}
 </style>
