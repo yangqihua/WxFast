@@ -1,0 +1,66 @@
+<style lang="less" rel="stylesheet/less">
+	@import "stepper";
+</style>
+<template>
+	<view class="stepper">
+		<view class="jian-btn {{count==(min)? 'disabled' : ''}}" catchtap="jianBtnTap">-</view>
+		<input type="number" @blur="_bindBlur" value="{{count}}"/>
+		<view class="jia-btn {{count==(max)? 'disabled' : ''}}" catchtap="jiaBtnTap">+</view>
+	</view>
+</template>
+<script>
+    import wepy from 'wepy';
+    export default class Stepper extends wepy.component {
+        props = {
+            min: {
+                type: Number,
+                default: 1,
+            },
+            max: {
+                type: Number,
+                default: 99
+            },
+            stepper: {
+                type: Number,
+                default: 1
+            },
+        }
+        data = {
+            count: 1,
+        }
+        methods = {
+            _bindBlur(e){
+                let value = e.detail.value;
+                if (!value) {
+                    this.count = this.min
+                    this.$apply()
+                }
+                if (value > this.max) {
+                    this.count = this.max
+                } else if (value < this.min) {
+                    this.count = this.min
+                } else {
+                    this.count = value
+                }
+                this.$apply()
+                this.$emit('handleStepperChange', this.count);
+                return '' + this.count
+            },
+            jiaBtnTap(){
+                if (this.count == this.max) {
+                    return
+                }
+                this.count = this.count + this.stepper;
+                this.$emit('handleStepperChange', this.count);
+            },
+            jianBtnTap(){
+                if (this.count == this.min) {
+                    return
+                }
+                this.count = this.count - this.stepper;
+                this.$emit('handleStepperChange', this.count);
+            },
+        }
+    }
+
+</script>

@@ -45,11 +45,7 @@
 					</repeat>
 					<view class="num-box">
 						<view class="title">数量</view>
-						<view class="buy-num">
-							<view class="jian-btn {{buyCount<2? 'disabled' : ''}}" catchtap="jianBtnTap">-</view>
-							<input type="number" bindinput="bindBuyCountInput" value="{{buyCount}}"/>
-							<view class="jia-btn {{buyCount>99? 'disabled' : ''}}" catchtap="jiaBtnTap">+</view>
-						</view>
+						<stepper :max.sync="activeStock"></stepper>
 					</view>
 				</scroll-view>
 				<view class="close-model" @tap="closeSaleModel"><i class="iconfont icon-close"></i></view>
@@ -82,7 +78,11 @@
 <script>
     import wepy from 'wepy';
     import * as utils from '../../widgets/common/js/utils'
+    import Stepper from '../../widgets/stepper/index'
     export default class ShowParameter extends wepy.component {
+        components = {
+            'stepper': Stepper,
+        }
         props = {
             productView: {
                 type: Object,
@@ -107,11 +107,13 @@
             salePropertyTitle: '请选择：',
             // 选择的商品Sku
             selectSku: {
-                propertyValueDesc: '',
+                propertyValueDesc: null,
+                stock: null
             },
             displayPropertys: [],
             salePropertys: [],
             activeProductCategory: [],
+	        activeStock:null,
 
             buyCount: 10, // 商品购买数量
             saleItems: [] // 可能存在多个商品规格属性，默认填充四个
@@ -127,25 +129,6 @@
         }
 
         methods = {
-            bindBuyCountInput(e){
-                let value = e.detail.value;
-                if (value && value > 1) {
-                    this.buyCount = value
-                    this.$apply()
-                }
-            },
-            jiaBtnTap(){
-                if (this.buyCount > 99) {
-                    return
-                }
-                this.buyCount = this.buyCount + 1;
-            },
-            jianBtnTap(){
-                if (this.buyCount < 2) {
-                    return
-                }
-                this.buyCount = this.buyCount - 1;
-            },
             selAttr(event){
                 let id = event.currentTarget.dataset.id;
                 let activeItem = {}
@@ -211,6 +194,12 @@
             }
         }
 
+        events = {
+            handleStepperChange(count){
+                console.log('count:', count)
+            },
+        }
+
         showParameterModal() {
             let height = this.systemInfo.windowHeight * 0.85;
             this.parameterAnimation.height(utils.pxTorpx(height) + 'rpx').step();
@@ -237,8 +226,8 @@
         async setSaleScrollViewHeight() {
             let headerHeight = await utils.getDomHeight('#sale-footer-id')
             let footerHeight = await utils.getDomHeight('#sale-header-id')
-	        let paddingAndMargin = 50
-            this.saleScrollViewHeight = utils.pxTorpx(this.systemInfo.windowHeight * 0.8) - headerHeight - footerHeight -paddingAndMargin + 'rpx'
+            let paddingAndMargin = 50
+            this.saleScrollViewHeight = utils.pxTorpx(this.systemInfo.windowHeight * 0.8) - headerHeight - footerHeight - paddingAndMargin + 'rpx'
             this.$apply()
         }
 
@@ -250,6 +239,10 @@
                     this.salePropertyTitle = this.salePropertyTitle + element.name + ' '
                 })
                 this.selectSku = newValue.productExtensions.productSkus[0] // 根据specSn获取商品的规格
+	            if(this.selectSku){
+                    this.activeStock = this.selectSku['stock']
+	            }
+	            console.log('this.activeStock:',this.activeStock)
                 this.$apply()
             },
         }
@@ -409,51 +402,6 @@
 			color: @desc-color;
 			font-size: @title-font-size;
 			margin-top: ~'10rpx';
-		}
-
-	}
-
-	.buy-num {
-		width: ~'240rpx';
-		height: ~'52rpx';
-		line-height: ~'52rpx';
-		display: flex;
-		font-size: ~'26rpx';
-		text-align: center;
-		border: ~'1rpx' solid #ccc;
-		border-radius: ~'6rpx';
-		color: @active-color;
-		.jian-btn {
-			flex: 1;
-			width: ~'52rpx';
-			height: 100%;
-		}
-
-		.jian-btn.disabled {
-			background-color: #f5f5f9;
-			color: #ccc;
-		}
-
-		.jia-btn {
-			flex: 1;
-			width: ~'52rpx';
-			height: 100%;
-		}
-
-		.jia-btn.disabled {
-			background-color: #f5f5f9;
-			color: #ccc;
-		}
-
-		input {
-			color: @title-color;
-			width: ~'100rpx';
-			height: ~'52rpx';
-			min-height: ~'52rpx';
-			text-align: center;
-			font-size: ~'26rpx';
-			border-left: ~'1rpx' solid #ccc;
-			border-right: ~'1rpx' solid #ccc;
 		}
 
 	}
