@@ -1,18 +1,19 @@
 <template>
 	<view>
 		<view>
-			<view class="cell cell-access">
+			<view class="cell cell-access" @tap="takeOrder">
 				<view class="cell-body">{{salePropertyTitle}}</view>
 				<view class="cell-right">{{selectSku.propertyValueDesc}}</view>
 			</view>
 
-			<view class="cell cell-access">
+			<view class="cell cell-access" @tap="showParameter">
 				<view class="cell-body">商品参数</view>
-				<view class="cell-right"></view>
+				<view class="cell-right">查看</view>
 			</view>
 		</view>
-		<view class="over-model" wx:if="{{!hidden}}" @tap="closeModel"></view>
-		<view class="panel-model" animation="{{animationData}}">
+		<view class="over-model" wx:if="{{!hidden}}" @tap="closeAllModel"></view>
+
+		<view class="panel-model" animation="{{saleAnimationData}}">
 			<view class="model-content">
 				<view class="head-box">
 					<image class="goods-img" mode="widthFix" src="{{productView.thumbnailUrl}}"/>
@@ -53,15 +54,36 @@
 						</view>
 					</view>
 				</scroll-view>
-				<view class="close-model" @tap="closeModel"><i class="iconfont icon-close"></i></view>
+				<view class="close-model" @tap="closeSaleModel"><i class="iconfont icon-close"></i></view>
 			</view>
-			<view class="confirm-btn" @tap.stop="confirmTake">确 定</view>
+			<view class="confirm-btn">
+				<view class="cart-btn" @tap="doCart">加入购物车</view>
+				<view class="order-btn" @tap="doOrder">立即购买</view>
+			</view>
+		</view>
+
+		<view class="panel-model" id="parameter-id" animation="{{parameterAnimationData}}">
+			<view class="panel-title" style="padding-bottom: 20rpx;">商品参数</view>
+			<scroll-view scroll-y="true" style="height:{{parameterScrollViewHeight}};">
+				<view class="panel">
+					<repeat for="{{displayPropertys}}" key="index" index="index" item="propItem">
+						<view class="cell">
+							<view class="cell-body">{{propItem.name}}</view>
+							<view class="cell-right">{{propItem.displayValue}}</view>
+						</view>
+					</repeat>
+				</view>
+			</scroll-view>
+			<view class="confirm-btn" style="padding:10rpx 0rpx">
+				<view class="confirm-parameter" @tap="closeParameterModel">完成</view>
+			</view>
 		</view>
 	</view>
 </template>
 
 <script>
     import wepy from 'wepy';
+    import * as utils from '../../widgets/common/js/utils'
     export default class ShowParameter extends wepy.component {
         props = {
             productView: {
@@ -70,61 +92,100 @@
             },
         }
         data = {
-            animation: null,
-            animationData: null,
+            saleAnimation: null,
+            saleAnimationData: null,
+            parameterAnimation: null,
+            parameterAnimationData: null,
             hidden: true,
             systemInfo: {
                 windowWidth: 0,
                 windowHeight: 0,
             },
+            parameterScrollViewHeight:0,
 
             showParameter: false, // 是否显示商品参数窗口
             showSale: false, // 显示规格选择窗口
             salePropertyTitle: '请选择：',
             // 选择的商品Sku
             selectSku: {
-                propertyValueDesc:'',
+                propertyValueDesc: '',
             },
+            displayPropertys: [],
             buyCount: 10, // 商品购买数量
             saleItems: [] // 可能存在多个商品规格属性，默认填充四个
         }
 
         onLoad() {
-            this.animation = wx.createAnimation({
-                transformOrigin: "50% 50%",
-                duration: 200,
-                timingFunction: "ease",
-                delay: 0
-            })
+            this.saleAnimation = utils.createAnimation('ease')
+            this.parameterAnimation = utils.createAnimation('ease')
             this.systemInfo = this.$root.$parent.getSystemInfoSync()
+	        this.setParameterScrollViewHeight()
             this.showConfirmData()
         }
 
         methods = {
-            takeCart(){
-                this.showConfirmData();
-            },
             takeOrder(){
                 this.showConfirmData();
             },
-            closeModel(){
-                this.animation.height(0).step();
-                this.animationData = this.animation.export()
+            doCart(){
+
+            },
+            doOrder(){
+
+            },
+            showParameter(){
+                this.showParameterModal()
+            },
+            closeAllModel(){
+                this.saleAnimation.height(0).step();
+                this.saleAnimationData = this.saleAnimation.export()
+
+                this.parameterAnimation.height(0).step();
+                this.parameterAnimationData = this.parameterAnimation.export()
+
+                this.hidden = true;
+                this.$apply();
+            },
+            closeSaleModel(){
+                this.saleAnimation.height(0).step();
+                this.saleAnimationData = this.saleAnimation.export()
+                this.hidden = true;
+                this.$apply();
+            },
+            closeParameterModel(){
+                this.parameterAnimation.height(0).step();
+                this.parameterAnimationData = this.parameterAnimation.export()
                 this.hidden = true;
                 this.$apply();
             }
         }
 
-        showConfirmData() {
-            let height = this.systemInfo.windowHeight * 0.8;
-            this.animation.height(height + 'px').step();
-            this.animationData = this.animation.export()
+        showParameterModal() {
+            let height = this.systemInfo.windowHeight * 0.85;
+            this.parameterAnimation.height(height + 'px').step();
+            this.parameterAnimationData = this.parameterAnimation.export()
             this.hidden = false;
             this.$apply();
         }
 
+        showConfirmData() {
+            let height = this.systemInfo.windowHeight * 0.8;
+            this.saleAnimation.height(height + 'px').step();
+            this.saleAnimationData = this.saleAnimation.export()
+            this.hidden = false;
+            this.$apply();
+        }
+
+        setParameterScrollViewHeight(){
+            let headerHeight = '88'
+            let footerHeight = '100'
+            this.parameterScrollViewHeight = utils.pxTorpx(this.systemInfo.windowHeight * 0.85)-headerHeight-footerHeight+'rpx';
+            this.$apply()
+        }
+
         watch = {
             productView(newValue){
+                this.displayPropertys = newValue.productExtensions.productCategory.displayPropertys
                 newValue.productExtensions.productCategory.salePropertys.forEach(element => {
                     this.salePropertyTitle = this.salePropertyTitle + element.name + ' '
                 })
@@ -136,7 +197,8 @@
 </script>
 
 <style lang="less" rel="stylesheet/less">
-	@import "../../widgets/common/assets/styles/variable";
+	@import "../../widgets/cell/cell";
+	@import "../../widgets/panel/panel";
 
 	.over-model {
 		position: fixed;
@@ -207,16 +269,36 @@
 	}
 
 	.confirm-btn {
-		height: ~'100rpx';
-		line-height: ~'100rpx';
+		padding-bottom: ~'20rpx';
+		line-height: ~'80rpx';
 		width: 100%;
-		background: linear-gradient(to right, #F39172, #f7701a);
 		text-align: center;
 		font-size: @title-font-size;
 		color: #fff;
 		position: absolute;
 		bottom: 0;
 		z-index: 10003;
+		display: flex;
+		.cart-btn {
+			flex: 1;
+			margin-left: ~'20rpx';
+			background: #ff6e30;
+			border-bottom-left-radius: ~'40rpx';
+			border-top-left-radius: ~'40rpx';
+		}
+		.order-btn {
+			flex: 1;
+			margin-right: ~'20rpx';
+			background: @active-color;
+			border-bottom-right-radius: ~'40rpx';
+			border-top-right-radius: ~'40rpx';
+		}
+	}
+	.confirm-parameter{
+		margin: 0 ~'20rpx';
+		flex:1;
+		border-radius: ~'40rpx';
+		background: linear-gradient(to right, #F39172, #f7701a);;
 	}
 
 	.button-more-cmment {

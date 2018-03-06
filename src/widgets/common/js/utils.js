@@ -1,7 +1,7 @@
 /**
  * Created by yangqihua on 2018/2/23.
  */
-
+import wepy from 'wepy'
 // 判断是否为手机号
 export function isMobilePhone(mPhone) {
     let re = /^[1][3,4,5,7,8][0-9]{9}$/
@@ -21,4 +21,30 @@ export function isPhone(phone) {
 export function isEmail(email) {
     let re = /^(?:\w+\.?)*\w+@(?:\w+\.)*\w+$/;
     return re.test(email)
+}
+
+export function createAnimation(timingFunction) {
+    return wx.createAnimation({
+        transformOrigin: "50% 50%",
+        duration: 200,
+        timingFunction: timingFunction,
+        delay: 0
+    })
+}
+
+export function getDomHeight(id) {
+    return new Promise((resolve,reject)=>{
+        let query = wx.createSelectorQuery()
+        query.select(id).boundingClientRect()
+        query.exec((res) => {
+            let domHeight = res[0].height
+            resolve(domHeight)
+        })
+    })
+}
+
+export function pxTorpx(px) {
+    let systemInfo = wepy.getSystemInfoSync()
+    let rate = 750/systemInfo.windowWidth;
+    return px*rate;
 }
