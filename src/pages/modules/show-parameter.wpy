@@ -15,7 +15,7 @@
 
 		<view class="panel-model" animation="{{saleAnimationData}}">
 			<view class="model-content">
-				<view class="head-box">
+				<view class="head-box" id="sale-header-id">
 					<image class="goods-img" mode="widthFix" src="{{productView.thumbnailUrl}}"/>
 					<view class="product-wrap">
 						<view class="product-name">{{productView.name}}</view>
@@ -23,40 +23,38 @@
 							<view class="price">{{productView.displayPrice}}</view>
 							<view class="market-price">￥{{productView.marketPrice}}</view>
 						</view>
-						<view>
-							<view>库存:</view>
-							<view>货号:</view>
+						<view class="modal-spec">
+							库存：{{selectSku.stock}} 货号：{{selectSku.bn}}
 						</view>
 					</view>
 				</view>
-				<scroll-view scroll-y="true" style="height:400rpx">
-					<view class="rule_box" wx:for="{{detail.goodsSkuNameList}}" item="item" wx:key="key"
-					      wx:for-index="ex">
-						<view class="title">test</view>
-						<view class="items">
-							<view class="item {{item.current?'active':''}}" wx:for="{{item.skuValList}}" item="item"
-							      wx:key="key" @tap.stop="selAttr" data-id="{{item.skuValId}}"
-							      data-nameid="{{item.skuNameId}}" data-index="{{ex}}">test
+				<scroll-view scroll-y="true" style="height:{{saleScrollViewHeight}}">
+					<repeat for="{{salePropertys}}" key="index" index="index" item="salePropertyItem">
+						<view class="rule-box">
+							<view class="title">{{salePropertyItem.name}}</view>
+							<view class="items">
+								<repeat for="{{salePropertyItem.propertyValues}}" key="index" index="index"
+								        item="propertyValueItem">
+									<view @tap="selAttr" class="item {{propertyValueItem.active?'active':''}}"
+									      data-id="{{propertyValueItem.id}}">
+										{{propertyValueItem.valueAlias}}
+									</view>
+								</repeat>
 							</view>
 						</view>
-					</view>
-					<view class="num_box">
+					</repeat>
+					<view class="num-box">
 						<view class="title">数量</view>
-						<view class="stock">库存:12件</view>
 						<view class="buy-num">
-							<view class="jian-btn {{item.number==1? 'disabled' : ''}}" catchtap="jianBtnTap"
-							      data-index="{{index}}">-
-							</view>
-							<input type="number" bindinput="bindOrderNumInput" value="{{orderNum}}"/>
-							<view class="jia-btn {{item.number==10? 'disabled' : ''}}" catchtap="jiaBtnTap"
-							      data-index="{{index}}">+
-							</view>
+							<view class="jian-btn {{buyCount<2? 'disabled' : ''}}" catchtap="jianBtnTap">-</view>
+							<input type="number" bindinput="bindBuyCountInput" value="{{buyCount}}"/>
+							<view class="jia-btn {{buyCount>99? 'disabled' : ''}}" catchtap="jiaBtnTap">+</view>
 						</view>
 					</view>
 				</scroll-view>
 				<view class="close-model" @tap="closeSaleModel"><i class="iconfont icon-close"></i></view>
 			</view>
-			<view class="confirm-btn">
+			<view class="confirm-btn" id="sale-footer-id">
 				<view class="cart-btn" @tap="doCart">加入购物车</view>
 				<view class="order-btn" @tap="doOrder">立即购买</view>
 			</view>
@@ -101,7 +99,8 @@
                 windowWidth: 0,
                 windowHeight: 0,
             },
-            parameterScrollViewHeight:0,
+            parameterScrollViewHeight: 0,
+            saleScrollViewHeight: 0,
 
             showParameter: false, // 是否显示商品参数窗口
             showSale: false, // 显示规格选择窗口
@@ -111,19 +110,71 @@
                 propertyValueDesc: '',
             },
             displayPropertys: [],
+            salePropertys: [],
+            activeProductCategory: [],
+
             buyCount: 10, // 商品购买数量
             saleItems: [] // 可能存在多个商品规格属性，默认填充四个
         }
 
-        onLoad() {
+        async onLoad() {
             this.saleAnimation = utils.createAnimation('ease')
             this.parameterAnimation = utils.createAnimation('ease')
             this.systemInfo = this.$root.$parent.getSystemInfoSync()
-	        this.setParameterScrollViewHeight()
+            this.setParameterScrollViewHeight()
+            await this.setSaleScrollViewHeight()
             this.showConfirmData()
         }
 
         methods = {
+            bindBuyCountInput(e){
+                let value = e.detail.value;
+                if (value && value > 1) {
+                    this.buyCount = value
+                    this.$apply()
+                }
+            },
+            jiaBtnTap(){
+                if (this.buyCount > 99) {
+                    return
+                }
+                this.buyCount = this.buyCount + 1;
+            },
+            jianBtnTap(){
+                if (this.buyCount < 2) {
+                    return
+                }
+                this.buyCount = this.buyCount - 1;
+            },
+            selAttr(event){
+                let id = event.currentTarget.dataset.id;
+                let activeItem = {}
+                let flag = false
+                for (let i = 0; i < this.salePropertys.length; i++) {
+                    let items = this.salePropertys[i]['propertyValues']
+                    for (let j = 0; j < items.length; j++) {
+                        if (items[j]['id'] == id) {
+                            this.salePropertys[i]['propertyValues'][j]['active'] = true
+
+                            for (let k = 0; k < items.length; k++) {
+                                if (items[k]['id'] != id) {
+                                    this.salePropertys[i]['propertyValues'][k]['active'] = false
+                                }
+                            }
+
+                            for (let n = 0; n < this.activeProductCategory.length; n++) {
+                                if (this.activeProductCategory[n]['categoryId'] == this.salePropertys[i]['id']) {
+                                    this.activeProductCategory.splice(n, 1)
+                                }
+                            }
+                            activeItem['categoryId'] = this.salePropertys[i]['id']
+                            activeItem['propId'] = items[j]['id']
+                            this.activeProductCategory.push(activeItem)
+                        }
+                    }
+                    this.$apply()
+                }
+            },
             takeOrder(){
                 this.showConfirmData();
             },
@@ -176,22 +227,30 @@
             this.$apply();
         }
 
-        setParameterScrollViewHeight(){
+        setParameterScrollViewHeight() {
             let headerHeight = '88'
             let footerHeight = '100'
-            this.parameterScrollViewHeight = utils.pxTorpx(this.systemInfo.windowHeight * 0.85)-headerHeight-footerHeight+'rpx';
+            this.parameterScrollViewHeight = utils.pxTorpx(this.systemInfo.windowHeight * 0.85) - headerHeight - footerHeight + 'rpx';
+            this.$apply()
+        }
+
+        async setSaleScrollViewHeight() {
+            let headerHeight = await utils.getDomHeight('#sale-footer-id')
+            let footerHeight = await utils.getDomHeight('#sale-header-id')
+            this.saleScrollViewHeight = utils.pxTorpx(this.systemInfo.windowHeight * 0.8) - headerHeight - footerHeight + 'rpx'
             this.$apply()
         }
 
         watch = {
             productView(newValue){
                 this.displayPropertys = newValue.productExtensions.productCategory.displayPropertys
+                this.salePropertys = newValue.productExtensions.productCategory.salePropertys
                 newValue.productExtensions.productCategory.salePropertys.forEach(element => {
                     this.salePropertyTitle = this.salePropertyTitle + element.name + ' '
                 })
                 this.selectSku = newValue.productExtensions.productSkus[0] // 根据specSn获取商品的规格
                 this.$apply()
-            }
+            },
         }
     }
 </script>
@@ -228,7 +287,7 @@
 		align-items: center;
 		border-bottom: 1px solid @hairline-color;
 		padding-bottom: ~'20rpx';
-
+		box-sizing: border-box;
 		.goods-img {
 			height: ~'200rpx';
 			width: ~'200rpx';
@@ -237,10 +296,17 @@
 		.product-wrap {
 			padding: ~'0 20rpx';
 		}
-
+		.product-name {
+			color: @title-color;
+			font-size: @desc-font-size;
+		}
+		.price-container {
+			padding-top: ~'6rpx';
+			line-height: ~'32rpx';
+		}
 		.price {
 			color: @active-color;
-			font-size: @price-font-size;
+			font-size: ~'30rpx';
 			padding-right: ~'12rpx';
 			display: inline-block;
 		}
@@ -250,11 +316,11 @@
 			color: @hint-color;
 			text-decoration: line-through;
 		}
-
-		.product-name {
+		.modal-spec {
 			color: @desc-color;
 			font-size: @desc-font-size;
 		}
+
 	}
 
 	.close-model {
@@ -294,11 +360,101 @@
 			border-top-right-radius: ~'40rpx';
 		}
 	}
-	.confirm-parameter{
+
+	.confirm-parameter {
 		margin: 0 ~'20rpx';
-		flex:1;
+		flex: 1;
 		border-radius: ~'40rpx';
 		background: linear-gradient(to right, #F39172, #f7701a);;
+	}
+
+	.rule-box {
+		border-bottom: 1px solid @hairline-color;
+		padding-bottom: ~'26rpx';
+
+		.title {
+			color: @desc-color;
+			font-size: @title-font-size;
+			margin-top: ~'10rpx';
+		}
+		.items {
+			display: flex;
+			flex-wrap: wrap;
+			margin-top: ~'5rpx';
+			margin-left: ~'-20rpx';
+		}
+
+		.item {
+			padding: ~'15rpx 28rpx';
+			background: #e6e6e6;
+			color: #000;
+			margin-left: ~'20rpx';
+			margin-top: ~'10rpx';
+			border-radius: ~'10rpx';
+		}
+
+		.active {
+			background: @active-color;
+			color: #fff;
+		}
+
+	}
+
+	.num-box {
+		display: flex;
+		justify-content: space-between;
+		padding: ~'20rpx 0rpx';
+		.title {
+			color: @desc-color;
+			font-size: @title-font-size;
+			margin-top: ~'10rpx';
+		}
+
+	}
+
+	.buy-num {
+		width: ~'240rpx';
+		height: ~'52rpx';
+		line-height: ~'52rpx';
+		display: flex;
+		font-size: ~'26rpx';
+		text-align: center;
+		border: ~'1rpx' solid #ccc;
+		border-radius: ~'6rpx';
+		color: @active-color;
+		.jian-btn {
+			flex: 1;
+			width: ~'52rpx';
+			height: 100%;
+		}
+
+		.jian-btn.disabled {
+			background-color: #f5f5f9;
+			color: #ccc;
+		}
+
+		.jia-btn {
+			flex: 1;
+			width: ~'52rpx';
+			height: 100%;
+		}
+
+		.jia-btn.disabled {
+			background-color: #f5f5f9;
+			color: #ccc;
+		}
+
+		input {
+			color: @title-color;
+			width: ~'100rpx';
+			height: ~'52rpx';
+			min-height: ~'52rpx';
+			text-align: center;
+			font-size: ~'26rpx';
+			border-left: ~'1rpx' solid #ccc;
+			border-right: ~'1rpx' solid #ccc;
+		}
+
 	}
 
 	.button-more-cmment {

@@ -37,7 +37,7 @@ export function getDomHeight(id) {
         let query = wx.createSelectorQuery()
         query.select(id).boundingClientRect()
         query.exec((res) => {
-            let domHeight = res[0].height
+            let domHeight = pxTorpx(res[0].height)
             resolve(domHeight)
         })
     })
