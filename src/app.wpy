@@ -161,11 +161,11 @@
         }
 
         getSystemInfoSync() {
-            let systemInfo = this.globalData.systemInfo || wepy.getStorageSync('systemInfo')
-            if (systemInfo) {
-                return systemInfo
-            }
-            systemInfo = wepy.getSystemInfoSync()
+//            let systemInfo = this.globalData.systemInfo || wepy.getStorageSync('systemInfo')
+//            if (systemInfo) {
+//                return systemInfo
+//            }
+            let systemInfo = wepy.getSystemInfoSync()
             this.globalData.systemInfo = systemInfo
             wepy.setStorageSync('systemInfo', systemInfo)
             return systemInfo

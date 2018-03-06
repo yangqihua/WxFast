@@ -213,7 +213,7 @@
 
         showParameterModal() {
             let height = this.systemInfo.windowHeight * 0.85;
-            this.parameterAnimation.height(height + 'px').step();
+            this.parameterAnimation.height(utils.pxTorpx(height) + 'rpx').step();
             this.parameterAnimationData = this.parameterAnimation.export()
             this.hidden = false;
             this.$apply();
@@ -221,7 +221,7 @@
 
         showConfirmData() {
             let height = this.systemInfo.windowHeight * 0.8;
-            this.saleAnimation.height(height + 'px').step();
+            this.saleAnimation.height(utils.pxTorpx(height) + 'rpx').step();
             this.saleAnimationData = this.saleAnimation.export()
             this.hidden = false;
             this.$apply();
@@ -237,7 +237,8 @@
         async setSaleScrollViewHeight() {
             let headerHeight = await utils.getDomHeight('#sale-footer-id')
             let footerHeight = await utils.getDomHeight('#sale-header-id')
-            this.saleScrollViewHeight = utils.pxTorpx(this.systemInfo.windowHeight * 0.8) - headerHeight - footerHeight + 'rpx'
+	        let paddingAndMargin = 50
+            this.saleScrollViewHeight = utils.pxTorpx(this.systemInfo.windowHeight * 0.8) - headerHeight - footerHeight -paddingAndMargin + 'rpx'
             this.$apply()
         }
 
