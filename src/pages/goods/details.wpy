@@ -27,17 +27,7 @@
 			</view>
 		</view>
 		<view class="split"/>
-		<view>
-			<view class="cell cell-access">
-				<view class="cell-body">请选择</view>
-				<view class="cell-right">描述信息</view>
-			</view>
-
-			<view class="cell cell-access">
-				<view class="cell-body">商品参数</view>
-				<view class="cell-right">描述信息</view>
-			</view>
-		</view>
+		<show-parameter :productView.sync="goodsDetails"></show-parameter>
 		<view class="split split-goods">图文详情</view>
 		<view>
 			<repeat for="{{introductionImages}}" key="index" index="index" item="item">
@@ -72,12 +62,15 @@
 				<view class="sy-bottom btn_order" @tap="takeOrder">立即购买</view>
 			</view>
 		</view>
+
+
 	</view>
 </template>
 
 <script>
     import wepy from 'wepy'
     import {getGoodsDetails} from '../../services/api/api'
+    import ShowParameter from '../modules/show-parameter'
     export default class GoodsDetails extends wepy.page {
         config = {
             navigationBarTitleText: '商品详情',
@@ -85,6 +78,9 @@
             navigationBarBackgroundColor: '#FFFFFF',
             navigationBarTextStyle: 'black',
             backgroundColor: '#fefefe'
+        }
+        components = {
+            'show-parameter': ShowParameter,
         }
 
         data = {
@@ -112,7 +108,13 @@
         methods = {
             showThumb(url){
                 console.log('url:', url)
-            }
+            },
+	        takeCart(){
+                this.$invoke('show-parameter', 'takeCart', {});
+	        },
+	        takeOrder(){
+                this.$invoke('show-parameter', 'takeOrder', {});
+	        }
         }
 
         regProductIntro(str) {
@@ -157,6 +159,10 @@
 		display: flex;
 		justify-content: space-between;
 		line-height: @big-font-size;
+		.buy-count {
+			color: @hint-color
+		}
+
 		.price {
 			color: @active-color;
 			font-size: @price-font-size;
@@ -169,15 +175,14 @@
 			color: @hint-color;
 			text-decoration: line-through;
 		}
-		.buy-count {
-			color: @hint-color
-		}
 
 		.name {
 			color: @title-color;
 			font-size: @title-font-size;
 		}
 	}
+
+
 
 	.split-goods {
 		position: relative;
@@ -202,7 +207,7 @@
 		}
 	}
 
-	.recommend{
+	.recommend {
 		margin-bottom: ~'100rpx';
 	}
 
@@ -284,4 +289,5 @@
 
 		}
 	}
+
 </style>
