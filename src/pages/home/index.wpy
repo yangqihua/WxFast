@@ -65,6 +65,7 @@
         }
 
         async getGoodsList(isRefresh = false) {
+            this.loadingStatus = LoadMore.LOADING
             let curTime = (new Date()).valueOf();
             let goodsListResult = await getGoodList({'pageIndex': this.pageIndex, 'pageSize': this.pageSize})
             if (goodsListResult.length == 0) {

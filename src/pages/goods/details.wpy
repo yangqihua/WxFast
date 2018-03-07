@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<scroll-view scroll-into-view="{{toView}}" scroll-y="true" scroll-with-animation="true"
-		             style="height:{{systemInfo.windowHeight}}px " bindscroll="bindScroll">
+		             style="height:{{systemInfo.windowHeight}}px " bindscroll="bindScroll" bindscrolltolower="bindScrollToLower">
 			<view class="header-tab" style="opacity: {{tabOpacity}}">
 				<view class="item {{toView=='swiper-id'?'active':''}}" @tap="scrollToAnchor" data-id="swiper-id">商品
 				</view>
@@ -50,6 +50,8 @@
 
 			<view class="recommend">
 				<view class="split split-goods" id="recommend-id">推荐</view>
+				<details-goods-list :goodsList.sync="goodsList"/>
+				<details-load-more :loadingStatus.sync="loadingStatus"/>
 			</view>
 		</scroll-view>
 		<view class="detail-bottom">
@@ -80,9 +82,11 @@
 
 <script>
     import wepy from 'wepy'
-    import {getGoodsDetails} from '../../services/api/api'
+    import {getGoodsDetails, getGoodList} from '../../services/api/api'
     import ShowParameter from '../modules/show-parameter'
     import * as utils from '../../widgets/common/js/utils'
+    import DetailsGoodsList from '../modules/goods-list'
+    import LoadMore from '../../widgets/load-more/index'
     export default class GoodsDetails extends wepy.page {
         config = {
             navigationBarTitleText: '商品详情',
@@ -93,6 +97,8 @@
         }
         components = {
             'show-parameter': ShowParameter,
+            'details-goods-list': DetailsGoodsList,
+            'details-load-more': LoadMore,
         }
 
         data = {
@@ -108,6 +114,26 @@
             },
             tabOpacity: 0,
             toView: 'swiper-id',
+            loadingStatus: LoadMore.LOADING,
+            goodsList: [],
+            pageIndex: 1,
+        }
+
+        async getGoodsList(isFirst = false) {
+            this.loadingStatus = LoadMore.LOADING
+            let goodsListResult = await getGoodList({'pageIndex': this.pageIndex})
+            if (goodsListResult.length == 0 || this.pageIndex == 4) {
+                this.loadingStatus = LoadMore.NO_MORE
+            } else {
+                this.loadingStatus = LoadMore.FINISHED
+            }
+            if (!isFirst) {
+                this.goodsList = [...this.goodsList, ...goodsListResult['productItems']]
+            } else {
+                this.goodsList = goodsListResult['productItems']
+            }
+            this.pageIndex++
+            this.$apply()
         }
 
         async onLoad() {
@@ -116,7 +142,7 @@
 
             this.regProductIntro(this.goodsDetails.detail.mobileIntro)
             this.systemInfo = this.$parent.getSystemInfoSync()
-
+			await this.getGoodsList()
             this.$apply()
         }
 
@@ -134,7 +160,7 @@
         }
         watch = {
             toView(newValue){
-                console.log('newValue:',newValue)
+                console.log('newValue:', newValue)
             }
         }
         events = {
@@ -151,6 +177,13 @@
                 this.tabOpacity = 1
             } else {
                 this.tabOpacity = top / this.systemInfo.windowWidth
+            }
+        }
+
+        async bindScrollToLower() {
+            console.log('this.loadingStatus:',this.loadingStatus)
+            if (this.loadingStatus == LoadMore.FINISHED) {
+                await this.getGoodsList();
             }
         }
 
