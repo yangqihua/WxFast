@@ -1,0 +1,45 @@
+<style lang="less" rel="stylesheet/less">
+	@import "tab";
+</style>
+
+<template>
+	<view class="tab">
+		<block wx:if="{{tab.scroll}}">
+			<scroll-view class="tab-bd tab-bd-scroll {{ fixed ? 'tab-bd-fixed' : '' }}" scroll-x="true"
+			             style="height: {{ tab.height ? tab.height + 'px' : 'auto' }}">
+				<view wx:for="{{tab.list}}" wx:key="id"
+				      class="tab-item {{tab.selectedId == item.id ? 'tab-item-selected' : ''}}"
+				      data-component-id="{{componentId}}" data-item-id="{{item.id}}" @tap="handleTabChange">
+					<view class="tab-title">{{item.title}}</view>
+				</view>
+			</scroll-view>
+		</block>
+		<block wx:else>
+			<view class="tab-bd {{fixed ? 'tab-bd-fixed' : ''}}">
+				<view wx:for="{{tab.list}}" wx:key="id"
+				      class="tab-item {{tab.selectedId == item.id ? 'tab-item-selected' : ''}}"
+				      data-component-id="{{componentId}}" data-item-id="{{item.id}}" @tap="handleTabChange">
+					<view class="tab-title">{{item.title}}</view>
+				</view>
+			</view>
+		</block>
+	</view>
+</template>
+<script>
+    import wepy from 'wepy'
+
+    export default class Tab extends wepy.component {
+        props = {
+            tab: Object,
+            componentId: String
+        }
+        data = {}
+        methods = {
+            handleTabChange(e) {
+                let {componentId, itemId: selectedId} = e.currentTarget.dataset
+                console.info('[zan:tab:change]', {componentId, selectedId})
+                this.$emit('tabChange', selectedId)
+            }
+        }
+    }
+</script>

@@ -130,7 +130,7 @@
             this.systemInfo = this.$root.$parent.getSystemInfoSync()
             this.setParameterScrollViewHeight()
             await this.setSaleScrollViewHeight()
-            this.showConfirmData()
+//            this.showConfirmData()
         }
 
         methods = {

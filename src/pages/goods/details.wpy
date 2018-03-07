@@ -113,6 +113,13 @@
                 this.$invoke('show-parameter', 'takeOrder', {});
 	        }
         }
+        events = {
+            tabChange(selectedId, event) {
+                let { componentId } = event.source
+                this[componentId].selectedId = selectedId
+                this.$apply()
+            }
+        }
 
         regProductIntro(str) {
             let imgReg = /<img.*?(?:>|\/>)/gi;
