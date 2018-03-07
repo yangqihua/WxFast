@@ -1,5 +1,10 @@
 <template>
 	<view>
+		<view class="header-tab" style="opacity: {{tabOpacity}}">
+			<view class="item active">商品</view>
+			<view class="item">详情</view>
+			<view class="item">推荐</view>
+		</view>
 		<swiper style="height:{{systemInfo.windowWidth}}px" indicator-active-color="#ff5777" indicator-dots="true"
 		        autoplay="true" interval="3000" duration="300" circular="true">
 			<repeat for="{{goodsDetails.productExtensions.productThums}}" key="index" index="index" item="item">
@@ -75,8 +80,8 @@
         config = {
             navigationBarTitleText: '商品详情',
             backgroundTextStyle: 'dark',
-            navigationBarBackgroundColor: '#FFFFFF',
-            navigationBarTextStyle: 'black',
+            navigationBarTextStyle: '#fff',
+            navigationBarBackgroundColor: '#ff5777',
             backgroundColor: '#fefefe'
         }
         components = {
@@ -93,11 +98,12 @@
             systemInfo: {
                 windowWidth: 0,
                 windowHeight: 0,
-            }
+            },
+            tabOpacity:0
         }
 
         async onLoad() {
-            this.goodsDetails = await getGoodsDetails({id: 44})
+            this.goodsDetails = await getGoodsDetails({id: 45})
             console.log('this.goodsDetails:', this.goodsDetails)
 
             this.regProductIntro(this.goodsDetails.detail.mobileIntro)
@@ -121,6 +127,15 @@
             }
         }
 
+        onPageScroll(e) {
+            let top = e.scrollTop
+	        if(top>this.systemInfo.windowWidth){
+                this.tabOpacity = 1
+	        }else{
+	            this.tabOpacity = top/this.systemInfo.windowWidth
+	        }
+        }
+
         regProductIntro(str) {
             let imgReg = /<img.*?(?:>|\/>)/gi;
             let srcReg = /src=[\'\"]?([^\'\"]*)[\'\"]?/i;
@@ -138,6 +153,29 @@
 
 <style lang="less" rel="stylesheet/less">
 	@import "../../widgets/cell/cell";
+
+	.header-tab{
+		padding:~'16rpx 0';
+		line-height: ~'40rpx';
+		display: flex;
+		justify-content: center;
+		background: #fff;
+		color:@title-color;
+		position: fixed;
+		top:0;
+		width: 100%;
+		z-index: 1200;
+		font-size: @title-font-size;
+		/*opacity: 0.1;*/
+		.item{
+			margin: ~'0 50rpx';
+			padding: ~'1rpx 6rpx'
+		}
+		.active{
+			color:@active-color;
+			border-bottom: ~'4rpx' solid @active-color;
+		}
+	}
 
 	.goods-details {
 		padding: ~'28rpx';
