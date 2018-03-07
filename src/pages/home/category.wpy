@@ -17,7 +17,7 @@
 			             style="height:{{windowHeight-searchViewHeight}}px">
 				<view class="children">
 					<view class="children-item" wx:for="{{childCateList}}" wx:for-item="item" wx:key="index"
-					      @tap="tapCategory({{item.id}})">
+					      @tap="tapCategory({{item.id}},{{item.name}})">
 						<image class="child-image" src="{{item.icon}}"></image>
 						<view class="child-name">{{item.name}}</view>
 					</view>
@@ -84,8 +84,8 @@
                     }
                 }
             },
-            tapCategory(id){
-                console.log('id:', id)
+            tapCategory(id,name){
+                wx.navigateTo({url: '/pages/goods/list?id='+id+'&name='+name})
             }
         }
 

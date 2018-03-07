@@ -1,0 +1,86 @@
+<template>
+	<view>
+		<goods-list :goodsList.sync="goodsList" :scrollTop.sync="scrollTop"/>
+		<goods-load-more :loadingStatus.sync="loadingStatus"/>
+	</view>
+</template>
+
+<script>
+    import wepy from 'wepy'
+    import { getGoodList} from '../../services/api/api'
+    import GoodsList from '../modules/goods-list'
+    import LoadMore from '../../widgets/load-more/index'
+    export default class Index extends wepy.page {
+        config = {
+            navigationBarTitleText: '首页',
+            enablePullDownRefresh: true,
+        }
+        components = {
+            'goods-list': GoodsList,
+            'goods-load-more': LoadMore,
+        }
+        data = {
+            goodsList: [],
+            pageIndex: 1,
+            scrollTop: 0,
+            loadingStatus: LoadMore.LOADING,
+        }
+        methods = {
+        }
+
+        async onLoad(options) {
+            await this.getGoodsList()
+            wx.setNavigationBarTitle({title: options.name})
+        }
+
+        async getGoodsList(isRefresh = false) {
+            this.loadingStatus = LoadMore.LOADING
+            let curTime = (new Date()).valueOf();
+            let goodsListResult = await getGoodList({'pageIndex': this.pageIndex, 'pageSize': this.pageSize})
+            if (goodsListResult.length == 0) {
+                this.loadingStatus = LoadMore.NO_MORE
+            } else {
+                this.loadingStatus = LoadMore.FINISHED
+            }
+            if (!isRefresh) {
+                this.goodsList = [...this.goodsList, ...goodsListResult['productItems']]
+                this.pageIndex++
+                this.$apply()
+            } else {
+                wx.showNavigationBarLoading()
+                this.goodsList = goodsListResult['productItems']
+                this.pageIndex++
+                if ((new Date()).valueOf() - curTime > 1500) {
+                    this.$apply();
+                    wx.hideNavigationBarLoading()
+                    wx.stopPullDownRefresh()
+                } else {
+                    let delay = parseInt(1000 - ((new Date()).valueOf() - curTime));
+                    setTimeout(() => {
+                        this.$apply();
+                        wx.hideNavigationBarLoading()
+                        wx.stopPullDownRefresh()
+                    }, parseInt(delay))
+                }
+            }
+        }
+
+        async onReachBottom() {
+            if (this.loadingStatus == LoadMore.FINISHED) {
+                await this.getGoodsList();
+            }
+        }
+
+        async onPullDownRefresh() {
+            await this.getGoodsList(true)
+        }
+
+        onPageScroll(e) {
+            this.scrollTop = e.scrollTop
+        }
+    }
+</script>
+
+<style lang="less" rel="stylesheet/less">
+	@import "../../widgets/common/assets/styles/base";
+</style>

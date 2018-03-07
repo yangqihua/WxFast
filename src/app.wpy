@@ -18,6 +18,7 @@
                 'pages/home/cart',
 
                 'pages/goods/details',
+	            'pages/goods/list',
                 'pages/common/bind-phone',
 
 //                'pages/example/index',

@@ -142,6 +142,7 @@
         async onLoad(options) {
             let goodsId = options['id'] || 45;
             this.goodsDetails = await getGoodsDetails({id: goodsId})
+            wx.setNavigationBarTitle({title: this.goodsDetails.name})
             console.log('this.goodsDetails:', this.goodsDetails)
 
             this.regProductIntro(this.goodsDetails.detail.mobileIntro)
