@@ -167,15 +167,18 @@
                 this.showConfirmData();
             },
             doCart(){
-
                 if (!this.selectSku.id) {
-//                    this.$invoke('toast', 'showToast', {title: '请选择规格'})
+                    this.$invoke('toast', 'showToast', {title: '请选择商品属性'})
+                    return
                 }
+                this.$invoke('toast', 'showToast', {title: 'sku:' + this.selectSku.id})
             },
             doOrder(){
                 if (!this.selectSku.id) {
-//                    this.$invoke('toast', 'showToast', {title: '请选择规格'})
+                    this.$invoke('toast', 'showToast', {title: '请选择商品属性'})
+                    return
                 }
+                this.$invoke('toast', 'showToast', {title: 'sku:' + this.selectSku.id})
             },
             showParameter(){
                 this.showParameterModal()
@@ -212,28 +215,25 @@
 
         getSku() {
             let specSn = ''
-	        // 保证顺序不会变
+            // 保证顺序不会变
             this.salePropertys.forEach((item) => {
+                let isSelected = false
                 this.activeProductCategory.forEach(element => {
                     if (item.id == element.categoryId) {
+                        isSelected = true
                         specSn += element.propId + '|'
                     }
                 })
             })
-	        console.log('specSn:',specSn)
-
             let skus = this.productView.productExtensions.productSkus
-            let sku = ''
+            let sku = {}
             for (let i = 0; i < skus.length; i++) {
                 if (skus[i].specSn === specSn) {
                     sku = skus[i]
                 }
             }
-            if (sku.id === undefined) {
-                this.$invoke('toast', 'showToast', {title: '请选择商品规格'})
-            } else {
+            if (sku.stock) {
                 this.activeStock = sku.stock
-                this.$invoke('toast', 'showToast', {title: 'sku:' + sku.id})
             }
             return sku
         }
@@ -270,15 +270,12 @@
         }
 
         watch = {
-            productView(newValue,oldValue){
-                console.log('newValue:',newValue)
-                console.log('oldValue:',oldValue)
+            productView(newValue, oldValue){
                 this.displayPropertys = utils.deepCopy(newValue.productExtensions.productCategory.displayPropertys)
                 this.salePropertys = utils.deepCopy(newValue.productExtensions.productCategory.salePropertys)
                 newValue.productExtensions.productCategory.salePropertys.forEach(element => {
                     this.salePropertyTitle = this.salePropertyTitle + element.name + ' '
                 })
-	            console.log('this.salePropertyTitle:',this.salePropertyTitle)
 //                this.selectSku = newValue.productExtensions.productSkus[0] // 根据specSn获取商品的规格
 //                if (this.selectSku) {
 //                    this.activeStock = this.selectSku['stock']
