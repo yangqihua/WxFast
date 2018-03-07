@@ -33,7 +33,7 @@ export function createAnimation(timingFunction) {
 }
 
 export function getDomHeight(id) {
-    return new Promise((resolve,reject)=>{
+    return new Promise((resolve, reject) => {
         let query = wx.createSelectorQuery()
         query.select(id).boundingClientRect()
         query.exec((res) => {
@@ -45,6 +45,18 @@ export function getDomHeight(id) {
 
 export function pxTorpx(px) {
     let systemInfo = wepy.getSystemInfoSync()
-    let rate = 750/systemInfo.windowWidth;
-    return px*rate;
+    let rate = 750 / systemInfo.windowWidth;
+    return px * rate;
+}
+
+export function deepCopy(obj) {
+    if (typeof obj !== 'object' || !obj) {
+        return obj;
+    }
+    let newObj = obj.constructor === Array ? [] : {};
+    for (let i in obj) {
+        newObj[i] = typeof obj[i] === 'object' ?
+            deepCopy(obj[i]) : obj[i];
+    }
+    return newObj;
 }

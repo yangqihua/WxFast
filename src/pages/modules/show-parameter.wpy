@@ -45,6 +45,7 @@
 					</repeat>
 					<view class="num-box">
 						<view class="title">数量</view>
+						<view class="title">库存：{{selectSku.stock}}</view>
 						<stepper :max.sync="activeStock"></stepper>
 					</view>
 				</scroll-view>
@@ -110,13 +111,14 @@
             salePropertyTitle: '请选择：',
             // 选择的商品Sku
             selectSku: {
-                propertyValueDesc: null,
-                stock: null
+                propertyValueDesc: '请选择',
+                stock: '请选择',
+                bn: '请选择'
             },
             displayPropertys: [],
             salePropertys: [],
             activeProductCategory: [],
-	        activeStock:null,
+            activeStock: '请选择',
 
             buyCount: 10, // 商品购买数量
             saleItems: [] // 可能存在多个商品规格属性，默认填充四个
@@ -128,8 +130,7 @@
             this.systemInfo = this.$root.$parent.getSystemInfoSync()
             this.setParameterScrollViewHeight()
             await this.setSaleScrollViewHeight()
-//            this.showConfirmData()
-            this.$invoke('toast', 'showToast', {title:'请选择规格'})
+            this.showConfirmData()
         }
 
         methods = {
@@ -142,7 +143,6 @@
                     for (let j = 0; j < items.length; j++) {
                         if (items[j]['id'] == id) {
                             this.salePropertys[i]['propertyValues'][j]['active'] = true
-
                             for (let k = 0; k < items.length; k++) {
                                 if (items[k]['id'] != id) {
                                     this.salePropertys[i]['propertyValues'][k]['active'] = false
@@ -159,18 +159,23 @@
                             this.activeProductCategory.push(activeItem)
                         }
                     }
-                    this.$apply()
                 }
+                this.selectSku = this.getSku()
+                this.$apply()
             },
             takeOrder(){
                 this.showConfirmData();
             },
             doCart(){
-                console.log('购物车')
-                this.$invoke('toast', 'showToast', {title:'请选择规格'})
+
+                if (!this.selectSku.id) {
+//                    this.$invoke('toast', 'showToast', {title: '请选择规格'})
+                }
             },
             doOrder(){
-                this.$invoke('toast', 'showToast', {title:'请选择规格'})
+                if (!this.selectSku.id) {
+//                    this.$invoke('toast', 'showToast', {title: '请选择规格'})
+                }
             },
             showParameter(){
                 this.showParameterModal()
@@ -205,6 +210,34 @@
             },
         }
 
+        getSku() {
+            let specSn = ''
+	        // 保证顺序不会变
+            this.salePropertys.forEach((item) => {
+                this.activeProductCategory.forEach(element => {
+                    if (item.id == element.categoryId) {
+                        specSn += element.propId + '|'
+                    }
+                })
+            })
+	        console.log('specSn:',specSn)
+
+            let skus = this.productView.productExtensions.productSkus
+            let sku = ''
+            for (let i = 0; i < skus.length; i++) {
+                if (skus[i].specSn === specSn) {
+                    sku = skus[i]
+                }
+            }
+            if (sku.id === undefined) {
+                this.$invoke('toast', 'showToast', {title: '请选择商品规格'})
+            } else {
+                this.activeStock = sku.stock
+                this.$invoke('toast', 'showToast', {title: 'sku:' + sku.id})
+            }
+            return sku
+        }
+
         showParameterModal() {
             let height = this.systemInfo.windowHeight * 0.85;
             this.parameterAnimation.height(utils.pxTorpx(height) + 'rpx').step();
@@ -237,17 +270,20 @@
         }
 
         watch = {
-            productView(newValue){
-                this.displayPropertys = newValue.productExtensions.productCategory.displayPropertys
-                this.salePropertys = newValue.productExtensions.productCategory.salePropertys
+            productView(newValue,oldValue){
+                console.log('newValue:',newValue)
+                console.log('oldValue:',oldValue)
+                this.displayPropertys = utils.deepCopy(newValue.productExtensions.productCategory.displayPropertys)
+                this.salePropertys = utils.deepCopy(newValue.productExtensions.productCategory.salePropertys)
                 newValue.productExtensions.productCategory.salePropertys.forEach(element => {
                     this.salePropertyTitle = this.salePropertyTitle + element.name + ' '
                 })
-                this.selectSku = newValue.productExtensions.productSkus[0] // 根据specSn获取商品的规格
-	            if(this.selectSku){
-                    this.activeStock = this.selectSku['stock']
-	            }
-	            console.log('this.activeStock:',this.activeStock)
+	            console.log('this.salePropertyTitle:',this.salePropertyTitle)
+//                this.selectSku = newValue.productExtensions.productSkus[0] // 根据specSn获取商品的规格
+//                if (this.selectSku) {
+//                    this.activeStock = this.selectSku['stock']
+//                }
+//                console.log('this.activeStock:', this.activeStock)
                 this.$apply()
             },
         }

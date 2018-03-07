@@ -16,7 +16,6 @@
         }
         methods = {
             showToast({title = '', timeout = 2000}) {
-                console.log('title:', title)
                 let toast = this.toast || {}
                 clearTimeout(toast.timer)
 
