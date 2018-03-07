@@ -32,14 +32,22 @@ export function createAnimation(timingFunction) {
     })
 }
 
-export function getDomHeight(id) {
+export function getDomInfo(id) {
     return new Promise((resolve, reject) => {
-        let query = wx.createSelectorQuery()
-        query.select(id).boundingClientRect()
-        query.exec((res) => {
-            let domHeight = pxTorpx(res[0].height)
-            resolve(domHeight)
-        })
+        wx.createSelectorQuery().select(id).boundingClientRect(function(rect){
+            // rect.id      // 节点的ID
+            // rect.dataset // 节点的dataset
+            // rect.left    // 节点的左边界坐标
+            // rect.right   // 节点的右边界坐标
+            // rect.top     // 节点的上边界坐标
+            // rect.bottom  // 节点的下边界坐标
+            // rect.width   // 节点的宽度
+            // rect.height  // 节点的高度
+            if (!rect) {
+                console.warn('不存在id为' + id + '的节点')
+            }
+            resolve(rect)
+        }).exec()
     })
 }
 

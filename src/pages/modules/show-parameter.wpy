@@ -262,10 +262,10 @@
         }
 
         async setSaleScrollViewHeight() {
-            let headerHeight = await utils.getDomHeight('#sale-footer-id')
-            let footerHeight = await utils.getDomHeight('#sale-header-id')
+            let headerInfo = await utils.getDomInfo('#sale-footer-id')
+            let footerInfo = await utils.getDomInfo('#sale-header-id')
             let paddingAndMargin = 50
-            this.saleScrollViewHeight = utils.pxTorpx(this.systemInfo.windowHeight * 0.8) - headerHeight - footerHeight - paddingAndMargin + 'rpx'
+            this.saleScrollViewHeight = utils.pxTorpx(this.systemInfo.windowHeight * 0.8) - utils.pxTorpx(headerInfo.height) - utils.pxTorpx(footerInfo.height) - paddingAndMargin + 'rpx'
             this.$apply()
         }
 

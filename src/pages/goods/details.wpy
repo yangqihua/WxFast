@@ -1,49 +1,57 @@
 <template>
 	<view>
-		<view class="header-tab" style="opacity: {{tabOpacity}}">
-			<view class="item active">商品</view>
-			<view class="item">详情</view>
-			<view class="item">推荐</view>
-		</view>
-		<swiper style="height:{{systemInfo.windowWidth}}px" indicator-active-color="#ff5777" indicator-dots="true"
-		        autoplay="true" interval="3000" duration="300" circular="true">
-			<repeat for="{{goodsDetails.productExtensions.productThums}}" key="index" index="index" item="item">
-				<swiper-item>
-					<image src="{{item.originalUrl}}" mode="widthFix" style="width: 100%"
-					       @tap="showThumb({{item.originalUrl}})"/>
-				</swiper-item>
-			</repeat>
-		</swiper>
-		<view class="goods-details">
-			<view class="goods-info">
-				<view class="price-container">
-					<view class="price">{{goodsDetails.displayPrice}}</view>
-					<view class="market-price">￥{{goodsDetails.marketPrice}}</view>
+		<scroll-view scroll-into-view="{{toView}}" scroll-y="true" scroll-with-animation="true"
+		             style="height:{{systemInfo.windowHeight}}px " bindscroll="bindScroll">
+			<view class="header-tab" style="opacity: {{tabOpacity}}">
+				<view class="item {{toView=='swiper-id'?'active':''}}" @tap="scrollToAnchor" data-id="swiper-id">商品
 				</view>
-				<view class="buy-count">{{goodsDetails.soldCount}}人已购</view>
+				<view class="item {{toView=='image-details-id'?'active':''}}" @tap="scrollToAnchor"
+				      data-id="image-details-id">详情
+				</view>
+				<view class="item {{toView=='recommend-id'?'active':''}}" @tap="scrollToAnchor" data-id="recommend-id">
+					推荐
+				</view>
 			</view>
-			<view class="goods-name">
-				{{goodsDetails.name}}
+
+			<swiper style="height:{{systemInfo.windowWidth}}px" indicator-active-color="#ff5777" indicator-dots="true"
+			        autoplay="true" interval="3000" duration="300" circular="true" id="swiper-id">
+				<repeat for="{{goodsDetails.productExtensions.productThums}}" key="index" index="index" item="item">
+					<swiper-item>
+						<image src="{{item.originalUrl}}" mode="widthFix" style="width: 100%"
+						       @tap="showThumb({{item.originalUrl}})"/>
+					</swiper-item>
+				</repeat>
+			</swiper>
+			<view class="goods-details">
+				<view class="goods-info">
+					<view class="price-container">
+						<view class="price">{{goodsDetails.displayPrice}}</view>
+						<view class="market-price">￥{{goodsDetails.marketPrice}}</view>
+					</view>
+					<view class="buy-count">{{goodsDetails.soldCount}}人已购</view>
+				</view>
+				<view class="goods-name">
+					{{goodsDetails.name}}
+				</view>
+				<view class="goods-text">
+					<view>• 24小时发货</view>
+					<view>• 7天包退</view>
+					<view>• 售后补贴</view>
+				</view>
 			</view>
-			<view class="goods-text">
-				<view>• 24小时发货</view>
-				<view>• 7天包退</view>
-				<view>• 售后补贴</view>
+			<view class="split"/>
+			<show-parameter :productView.sync="goodsDetails"></show-parameter>
+			<view class="split split-goods" id="image-details-id">图文详情</view>
+			<view>
+				<repeat for="{{introductionImages}}" key="index" index="index" item="item">
+					<image src="{{item}}" mode="widthFix" style="width: 100%"/>
+				</repeat>
 			</view>
-		</view>
-		<view class="split"/>
-		<show-parameter :productView.sync="goodsDetails"></show-parameter>
-		<view class="split split-goods">图文详情</view>
-		<view>
-			<repeat for="{{introductionImages}}" key="index" index="index" item="item">
-				<image src="{{item}}" mode="widthFix" style="width: 100%"/>
-			</repeat>
-		</view>
 
-		<view class="recommend">
-
-		</view>
-
+			<view class="recommend">
+				<view class="split split-goods" id="recommend-id">推荐</view>
+			</view>
+		</scroll-view>
 		<view class="detail-bottom">
 			<view class="bottom-box">
 				<view class="item item-border">
@@ -67,8 +75,6 @@
 				<view class="sy-bottom btn_order" @tap="takeOrder">立即购买</view>
 			</view>
 		</view>
-
-
 	</view>
 </template>
 
@@ -76,6 +82,7 @@
     import wepy from 'wepy'
     import {getGoodsDetails} from '../../services/api/api'
     import ShowParameter from '../modules/show-parameter'
+    import * as utils from '../../widgets/common/js/utils'
     export default class GoodsDetails extends wepy.page {
         config = {
             navigationBarTitleText: '商品详情',
@@ -99,7 +106,8 @@
                 windowWidth: 0,
                 windowHeight: 0,
             },
-            tabOpacity:0
+            tabOpacity: 0,
+            toView: 'swiper-id',
         }
 
         async onLoad() {
@@ -108,32 +116,42 @@
 
             this.regProductIntro(this.goodsDetails.detail.mobileIntro)
             this.systemInfo = this.$parent.getSystemInfoSync()
+
             this.$apply()
         }
 
         methods = {
+            async scrollToAnchor(e){
+                this.toView = e.currentTarget.dataset.id
+                this.$apply()
+            },
             showThumb(url){
                 console.log('url:', url)
             },
-	        takeOrder(){
+            takeOrder(){
                 this.$invoke('show-parameter', 'takeOrder', {});
-	        }
+            }
+        }
+        watch = {
+            toView(newValue){
+                console.log('newValue:',newValue)
+            }
         }
         events = {
             tabChange(selectedId, event) {
-                let { componentId } = event.source
+                let {componentId} = event.source
                 this[componentId].selectedId = selectedId
                 this.$apply()
             }
         }
 
-        onPageScroll(e) {
-            let top = e.scrollTop
-	        if(top>this.systemInfo.windowWidth){
+        bindScroll(e) {
+            let top = e.detail.scrollTop
+            if (top > this.systemInfo.windowWidth) {
                 this.tabOpacity = 1
-	        }else{
-	            this.tabOpacity = top/this.systemInfo.windowWidth
-	        }
+            } else {
+                this.tabOpacity = top / this.systemInfo.windowWidth
+            }
         }
 
         regProductIntro(str) {
@@ -154,25 +172,25 @@
 <style lang="less" rel="stylesheet/less">
 	@import "../../widgets/cell/cell";
 
-	.header-tab{
-		padding:~'16rpx 0';
+	.header-tab {
+		padding: ~'16rpx 0';
 		line-height: ~'40rpx';
 		display: flex;
 		justify-content: center;
 		background: #fff;
-		color:@title-color;
+		color: @title-color;
 		position: fixed;
-		top:0;
+		top: 0;
 		width: 100%;
 		z-index: 1200;
 		font-size: @title-font-size;
 		/*opacity: 0.1;*/
-		.item{
+		.item {
 			margin: ~'0 50rpx';
 			padding: ~'1rpx 6rpx'
 		}
-		.active{
-			color:@active-color;
+		.active {
+			color: @active-color;
 			border-bottom: ~'4rpx' solid @active-color;
 		}
 	}
@@ -223,8 +241,6 @@
 			font-size: @title-font-size;
 		}
 	}
-
-
 
 	.split-goods {
 		position: relative;
