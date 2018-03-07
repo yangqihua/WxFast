@@ -1,0 +1,23 @@
+<template>
+	<view>
+		收货地址
+	</view>
+</template>
+
+<script>
+    import wepy from 'wepy'
+    import { getGoodList} from '../../../services/api/api'
+    export default class Index extends wepy.page {
+        config = {
+            navigationBarTitleText: '收货地址',
+        }
+        data = {
+        }
+        methods = {
+        }
+    }
+</script>
+
+<style lang="less" rel="stylesheet/less">
+	@import "../../../widgets/common/assets/styles/base";
+</style>

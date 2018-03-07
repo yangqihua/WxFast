@@ -21,6 +21,12 @@
 	            'pages/goods/list',
                 'pages/common/bind-phone',
 
+                'pages/user/order/buy',
+                'pages/user/order/list',
+                'pages/user/favorite/index',
+                'pages/user/buyeraddress/index',
+                'pages/user/buyeraddress/edit',
+
 //                'pages/example/index',
 //                'pages/example/classify',
 //                'pages/example/search',
