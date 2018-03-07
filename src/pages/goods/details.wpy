@@ -54,9 +54,10 @@
 				<details-load-more :loadingStatus.sync="loadingStatus"/>
 			</view>
 		</scroll-view>
+		<details-toast/>
 		<view class="detail-bottom">
 			<view class="bottom-box">
-				<view class="item item-border">
+				<view class="item item-border" @tap="goIndex">
 					<i class="iconfont icon-home"></i>
 					<view class="doc">首页</view>
 				</view>
@@ -68,7 +69,7 @@
 					<view class="doc">客服</view>
 				</view>
 
-				<view class="item {{isFavorite?'selec_active':''}}" @tap="takeFavorite">
+				<view class="item {{isFavorite?'selec_active':''}}" @tap="collect">
 					<i class="iconfont icon-collection"></i>
 					<view class="doc">收藏</view>
 				</view>
@@ -87,6 +88,7 @@
     import * as utils from '../../widgets/common/js/utils'
     import DetailsGoodsList from '../modules/goods-list'
     import LoadMore from '../../widgets/load-more/index'
+    import Toast from '../../widgets/toast/index'
     export default class GoodsDetails extends wepy.page {
         config = {
             navigationBarTitleText: '商品详情',
@@ -99,6 +101,7 @@
             'show-parameter': ShowParameter,
             'details-goods-list': DetailsGoodsList,
             'details-load-more': LoadMore,
+            'details-toast': Toast,
         }
 
         data = {
@@ -136,8 +139,9 @@
             this.$apply()
         }
 
-        async onLoad() {
-            this.goodsDetails = await getGoodsDetails({id: 45})
+        async onLoad(options) {
+            let goodsId = options['id'] || 45;
+            this.goodsDetails = await getGoodsDetails({id: goodsId})
             console.log('this.goodsDetails:', this.goodsDetails)
 
             this.regProductIntro(this.goodsDetails.detail.mobileIntro)
@@ -152,11 +156,22 @@
                 this.$apply()
             },
             showThumb(url){
-                console.log('url:', url)
+                wx.previewImage({
+                    current: url, // 当前显示图片的http链接
+                    urls: this.goodsDetails.productExtensions.productThums.map((item)=>{return item['originalUrl']})
+                })
             },
             takeOrder(){
                 this.$invoke('show-parameter', 'takeOrder', {});
-            }
+            },
+	        collect(){
+                this.$invoke('details-toast', 'showToast', {title: '商品id:'+this.goodsDetails.id})
+	        },
+	        goIndex(){
+                wx.switchTab({
+                    url: '/pages/home/index'
+                })
+	        }
         }
         watch = {
             toView(newValue){

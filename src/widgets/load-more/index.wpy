@@ -39,10 +39,6 @@
 
         data = {}
 
-        onLoad() {
-            console.log('this loading:', this.loadingStatus)
-        }
-
         methods = {
             loading(){
                 this.loadingStatus = Loadmore.LOADING;

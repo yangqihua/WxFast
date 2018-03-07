@@ -171,14 +171,16 @@
                     this.$invoke('toast', 'showToast', {title: '请选择商品属性'})
                     return
                 }
-                this.$invoke('toast', 'showToast', {title: 'sku:' + this.selectSku.id})
+                this.methods.closeSaleModel.call(this)
+                this.$invoke('toast', 'showToast', {title: 'sku id:' + this.selectSku.id})
             },
             doOrder(){
                 if (!this.selectSku.id) {
                     this.$invoke('toast', 'showToast', {title: '请选择商品属性'})
                     return
                 }
-                this.$invoke('toast', 'showToast', {title: 'sku:' + this.selectSku.id})
+                this.methods.closeSaleModel.call(this)
+                this.$invoke('toast', 'showToast', {title: 'sku id:' + this.selectSku.id})
             },
             showParameter(){
                 this.showParameterModal()

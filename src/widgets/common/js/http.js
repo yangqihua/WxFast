@@ -82,7 +82,7 @@ class HTTPUtil {
 
     static getUserId() {
         let userInfo = wepy.getStorageSync('userInfo')
-        return userInfo.userId || ''
+        return userInfo.id
     }
 
 }
