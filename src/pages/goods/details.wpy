@@ -97,7 +97,7 @@
         }
 
         async onLoad() {
-            this.goodsDetails = await getGoodsDetails({id: 45})
+            this.goodsDetails = await getGoodsDetails({id: 44})
             console.log('this.goodsDetails:', this.goodsDetails)
 
             this.regProductIntro(this.goodsDetails.detail.mobileIntro)

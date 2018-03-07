@@ -72,6 +72,7 @@
 				<view class="confirm-parameter" @tap="closeParameterModel">完成</view>
 			</view>
 		</view>
+		<toast></toast>
 	</view>
 </template>
 
@@ -79,9 +80,11 @@
     import wepy from 'wepy';
     import * as utils from '../../widgets/common/js/utils'
     import Stepper from '../../widgets/stepper/index'
+    import Toast from '../../widgets/toast/index'
     export default class ShowParameter extends wepy.component {
         components = {
             'stepper': Stepper,
+            'toast': Toast,
         }
         props = {
             productView: {
@@ -125,7 +128,8 @@
             this.systemInfo = this.$root.$parent.getSystemInfoSync()
             this.setParameterScrollViewHeight()
             await this.setSaleScrollViewHeight()
-            this.showConfirmData()
+//            this.showConfirmData()
+            this.$invoke('toast', 'showToast', {title:'请选择规格'})
         }
 
         methods = {
@@ -162,10 +166,11 @@
                 this.showConfirmData();
             },
             doCart(){
-
+                console.log('购物车')
+                this.$invoke('toast', 'showToast', {title:'请选择规格'})
             },
             doOrder(){
-
+                this.$invoke('toast', 'showToast', {title:'请选择规格'})
             },
             showParameter(){
                 this.showParameterModal()
