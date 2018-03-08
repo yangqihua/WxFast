@@ -46,7 +46,7 @@
 					<view class="num-box">
 						<view class="title">数量</view>
 						<view class="title">库存：{{selectSku.stock}}</view>
-						<stepper :max.sync="activeStock"></stepper>
+						<stepper :max.sync="activeStock" min="{{buyCount}}"></stepper>
 					</view>
 				</scroll-view>
 				<view class="close-model" @tap="closeSaleModel"><i class="iconfont icon-close"></i></view>
@@ -80,8 +80,10 @@
 <script>
     import wepy from 'wepy';
     import * as utils from '../../widgets/common/js/utils'
+    import tip from '../../widgets/common/js/tip'
     import Stepper from '../../widgets/stepper/index'
     import Toast from '../../widgets/toast/index'
+    import {addCart} from '../../services/api/api'
     export default class ShowParameter extends wepy.component {
         components = {
             'stepper': Stepper,
@@ -120,7 +122,7 @@
             activeProductCategory: [],
             activeStock: '请选择',
 
-            buyCount: 10, // 商品购买数量
+            buyCount: 1, // 商品购买数量
             saleItems: [] // 可能存在多个商品规格属性，默认填充四个
         }
 
@@ -166,13 +168,24 @@
             takeOrder(){
                 this.showConfirmData();
             },
-            doCart(){
+            async doCart(){
                 if (!this.selectSku.id) {
                     this.$invoke('toast', 'showToast', {title: '请选择商品属性'})
-                    return
+                } else {
+                    let userInfo = await this.$root.$parent.getUserInfo();
+                    this.methods.closeSaleModel.call(this)
+                    let result = await addCart({
+                        LoginUserId: userInfo.id,
+                        ProductSkuId: this.selectSku.id,
+                        ProductId: this.productView.id,
+                        Count: this.buyCount
+                    })
+	                console.log('result:',result)
+	                console.log('result!=null:',result!=null)
+	                if(result!==null){
+                        tip.success('添加成功')
+	                }
                 }
-                this.methods.closeSaleModel.call(this)
-                this.$invoke('toast', 'showToast', {title: 'sku id:' + this.selectSku.id})
             },
             doOrder(){
                 if (!this.selectSku.id) {
@@ -211,7 +224,7 @@
 
         events = {
             handleStepperChange(count){
-                console.log('count:', count)
+                this.buyCount = count
             },
         }
 

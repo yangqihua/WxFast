@@ -15,6 +15,11 @@ const getListByLogin = (params) => http.get(params, 'diy/GetListByLogin',false);
 
 const getGoodsDetails = (params) => http.get(params, 'product/show',true);
 
+const addCart = (params) => http.post(params, 'cart/addcart',true);
+const getCart = (params) => http.get(params, 'cart/getcart',true);
+const removeCart = (params) => http.delete(params, 'cart/removecart',true);
+const updateCart = (params) => http.put(params, 'cart/updatecart',true);
+
 export {
     getLink,
     getGoodList,
@@ -24,5 +29,9 @@ export {
     register,
     updateUserInfo,
     sendCode,
-    getGoodsDetails
+    getGoodsDetails,
+    addCart,
+    getCart,
+    removeCart,
+    updateCart,
 }

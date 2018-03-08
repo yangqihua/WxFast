@@ -17,7 +17,7 @@ class HTTPUtil {
         headers['content-type'] = 'application/json'
         isLoading && tip.loading()
         let result = await wepy.request({
-            url: BASE_URL + '/api/' + url + '?sign=' + sign + '&token=' + token + '&userId=' + userId + '&timestamp=' + TIMESTAMP,
+            url: BASE_URL + '/api/' + url + '?sign=' + sign + '&token=' + token + '&loginuserid=' + userId + '&timestamp=' + TIMESTAMP,
             data: params,
             method: method,
             header: headers,
@@ -64,6 +64,10 @@ class HTTPUtil {
         return await HTTPUtil.wxRequest(url, params, isLoading,'POST')
     }
 
+    static async delete(params = {}, url, isLoading = true) {
+        return await HTTPUtil.wxRequest(url, params, isLoading,'DELETE')
+    }
+
     static getSign(url) {
         let sign =
             TIMESTAMP +
@@ -71,13 +75,17 @@ class HTTPUtil {
             KEY +
             PROJECT_ID +
             'localhost'
-        return md5.hex_md5(sign)
+        return md5(sign)
     }
 
     static getToken(url) {
+        if (url.substring(0, 1) !== '/') {
+            url = '/' + url
+        }
         let userInfo = wepy.getStorageSync('userInfo')
         let userName = userInfo.userName && userInfo.userName.toLowerCase() || ''
-        return url.toLowerCase() + TIMESTAMP + userName
+        console.log('userName:',userName)
+        return md5(url.toLowerCase() + TIMESTAMP + userName)
     }
 
     static getUserId() {

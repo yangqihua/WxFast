@@ -12,12 +12,12 @@
     export default class extends wepy.app {
         config = {
             pages: [
+                'pages/goods/details',
                 'pages/home/index',
+                'pages/home/cart',
                 'pages/home/me',
                 'pages/home/category',
-                'pages/home/cart',
 
-                'pages/goods/details',
 	            'pages/goods/list',
                 'pages/common/bind-phone',
 
@@ -123,7 +123,7 @@
             await wepy.checkSession().catch(async(fail) => {
                 let loginResult = await wepy.login()
                 let userInfo = await this.getUserInfo()
-//	            console.log('loginCode:',loginResult.code)
+	            console.log('loginCode:',loginResult.code)
                 let result = await login({
                     jsCode: loginResult.code
                 })
@@ -133,7 +133,9 @@
                     userInfo['openid'] = result['session']['openid']
 	                let user = result['user']
 	                if(user){
-                        userInfo['id'] = user['id']
+//                        userInfo['id'] = user['id']
+                        userInfo['id'] = 1
+                        userInfo['userName'] = 'admin'
 	                }
 //                    console.log('login result:', result)
                     console.log('userInfo result:', userInfo)

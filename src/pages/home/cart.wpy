@@ -8,6 +8,7 @@
 <script>
     import wepy from 'wepy'
     import BindPhone from '../modules/bind-phone'
+    import {getCart, updateCart,removeCart,addCart} from '../../services/api/api'
     export default class Cart extends wepy.page {
         config = {
             navigationBarTitleText: '购物车',
@@ -17,6 +18,11 @@
         }
         components = {
             'bind-phone': BindPhone,
+        }
+        async onLoad(){
+            let userInfo = await this.$parent.getUserInfo();
+            let result = await getCart({LoginUserId:userInfo.id})
+	        console.log('result:',result)
         }
     }
 </script>
