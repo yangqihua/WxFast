@@ -46,7 +46,7 @@
 					<view class="num-box">
 						<view class="title">数量</view>
 						<view class="title">库存：{{selectSku.stock}}</view>
-						<stepper :max.sync="activeStock" min="{{buyCount}}"></stepper>
+						<stepper :max.sync="activeStock" :count="buyCount"></stepper>
 					</view>
 				</scroll-view>
 				<view class="close-model" @tap="closeSaleModel"><i class="iconfont icon-close"></i></view>
@@ -122,7 +122,7 @@
             activeProductCategory: [],
             activeStock: '请选择',
 
-            buyCount: 1, // 商品购买数量
+            buyCount: 10, // 商品购买数量
             saleItems: [] // 可能存在多个商品规格属性，默认填充四个
         }
 
@@ -172,16 +172,14 @@
                 if (!this.selectSku.id) {
                     this.$invoke('toast', 'showToast', {title: '请选择商品属性'})
                 } else {
-                    let userInfo = await this.$root.$parent.getUserInfo();
                     this.methods.closeSaleModel.call(this)
+                    let userInfo = await this.$root.$parent.getUserInfo();
                     let result = await addCart({
                         LoginUserId: userInfo.id,
                         ProductSkuId: this.selectSku.id,
                         ProductId: this.productView.id,
                         Count: this.buyCount
                     })
-	                console.log('result:',result)
-	                console.log('result!=null:',result!=null)
 	                if(result!==null){
                         tip.success('添加成功')
 	                }
@@ -220,12 +218,6 @@
                 this.hidden = true;
                 this.$apply();
             }
-        }
-
-        events = {
-            handleStepperChange(count){
-                this.buyCount = count
-            },
         }
 
         getSku() {

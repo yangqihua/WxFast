@@ -1,7 +1,7 @@
 
 <template>
 	<view>
-		<bind-phone/>
+
 	</view>
 </template>
 
@@ -21,7 +21,7 @@
         }
         async onLoad(){
             let userInfo = await this.$parent.getUserInfo();
-            let result = await getCart({LoginUserId:userInfo.id})
+            let result = await getCart({})
 	        console.log('result:',result)
         }
     }

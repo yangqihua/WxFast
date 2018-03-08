@@ -4,7 +4,7 @@
 <template>
 	<view class="stepper">
 		<view class="jian-btn {{count==(min)? 'disabled' : ''}}" catchtap="jianBtnTap">-</view>
-		<input type="number" @blur="_bindBlur" value="{{count}}"/>
+		<input type="number" disabled @blur="_bindBlur" value="{{count}}"/>
 		<view class="jia-btn {{count==(max)? 'disabled' : ''}}" catchtap="jiaBtnTap">+</view>
 	</view>
 </template>
@@ -24,9 +24,11 @@
                 type: Number,
                 default: 1
             },
-        }
-        data = {
-            count: 1,
+            count: {
+                type: Number,
+                default: 1,
+                twoWay: true
+            },
         }
         methods = {
             _bindBlur(e){
@@ -43,7 +45,7 @@
                     this.count = value
                 }
                 this.$apply()
-                this.$emit('handleStepperChange', this.count);
+//                this.$emit('handleStepperChange', this.count);
                 return '' + this.count
             },
             jiaBtnTap(){
@@ -51,15 +53,20 @@
                     return
                 }
                 this.count = this.count + this.stepper;
-                this.$emit('handleStepperChange', this.count);
+                this.$apply()
+//                this.$emit('handleStepperChange', this.count);
             },
             jianBtnTap(){
                 if (this.count == this.min) {
                     return
                 }
                 this.count = this.count - this.stepper;
-                this.$emit('handleStepperChange', this.count);
+                this.$apply()
+//                this.$emit('handleStepperChange', this.count);
             },
+	        getCount(){
+                return this.count
+	        }
         }
     }
 

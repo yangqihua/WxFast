@@ -84,7 +84,6 @@ class HTTPUtil {
         }
         let userInfo = wepy.getStorageSync('userInfo')
         let userName = userInfo.userName && userInfo.userName.toLowerCase() || ''
-        console.log('userName:',userName)
         return md5(url.toLowerCase() + TIMESTAMP + userName)
     }
 
