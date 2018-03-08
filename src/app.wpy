@@ -120,6 +120,12 @@
         }
 
         async checkLogin() {
+            // todo: for debug or test
+	        let userInfo = wepy.getStorageSync('userInfo') || {}
+            userInfo['id'] = 1
+            userInfo['userName'] = 'admin'
+            wepy.setStorageSync('userInfo', userInfo)
+
             await wepy.checkSession().catch(async(fail) => {
                 let loginResult = await wepy.login()
                 let userInfo = await this.getUserInfo()
@@ -166,6 +172,8 @@
 
         async getUserInfo() {
             let userInfo = this.globalData.userInfo || wepy.getStorageSync('userInfo')
+            userInfo['id'] = 1
+            userInfo['userName'] = 'admin'
             if (userInfo) {
                 return await userInfo
             } else {

@@ -1,31 +1,342 @@
-
 <template>
 	<view>
-
+		<view style="margin-bottom: 80rpx">
+			<repeat for="{{storeProducts}}" key="index" index="index" item="storeProductItem">
+				<view class="store-list">
+					<view class="store-item {{storeProductItem.active?'active':''}}">{{storeProductItem.storeName}}
+					</view>
+					<repeat for="{{storeProductItem.productItems}}" key="index" index="index" item="productItem">
+						<view class="product-item">
+							<image mode="aspectFill" style="width:180rpx; height:180rpx;"
+							       src="{{productItem.product.thumbnailUrl}}"/>
+							<view class="main-text">
+								<view class="item-name">{{productItem.product.name}}</view>
+								<view class="item-prop">{{productItem.productSku.propertyValueDesc}}</view>
+								<view class="stepper">
+									<view class="jian-btn {{count==(min)? 'disabled' : ''}}" catchtap="jianBtnTap">-
+									</view>
+									<input type="number" disabled value="{{productItem.count}}"/>
+									<view class="jia-btn {{count==(max)? 'disabled' : ''}}" catchtap="jiaBtnTap">+
+									</view>
+								</view>
+							</view>
+							<view class="item-last">
+								<view>
+									<view class="item-price">￥{{productItem.product.price}}</view>
+									<view class="item-display-price">{{productItem.product.displayPrice}}</view>
+								</view>
+								<image src="http://p3orru6vb.bkt.clouddn.com/delete.png"/>
+							</view>
+						</view>
+					</repeat>
+				</view>
+			</repeat>
+		</view>
+		<view class="footer">
+			<view class="first-item">全选(0)</view>
+			<!--<view style="height: auto">-->
+				<view class="cost-btn">结算</view>
+				<view class="total-price">￥0.00</view>
+			<!--</view>-->
+		</view>
 	</view>
 </template>
 
 <script>
     import wepy from 'wepy'
     import BindPhone from '../modules/bind-phone'
-    import {getCart, updateCart,removeCart,addCart} from '../../services/api/api'
+    import Stepper from '../../widgets/stepper/index'
+    import {getCart, updateCart, removeCart, addCart} from '../../services/api/api'
     export default class Cart extends wepy.page {
         config = {
             navigationBarTitleText: '购物车',
             navigationBarTextStyle: '#fff',
             enablePullDownRefresh: false,
             navigationBarBackgroundColor: '#ff5777',
+            backgroundColor: '#999',
         }
         components = {
             'bind-phone': BindPhone,
+            'cart-stepper': Stepper,
         }
-        async onLoad(){
+        data = {
+            storeProducts: [],
+        }
+
+        methods = {
+            jiaBtnTap(){
+                if (this.count == this.max) {
+                    return
+                }
+                this.count = this.count + this.stepper;
+                this.$apply()
+            },
+            jianBtnTap(){
+                if (this.count == this.min) {
+                    return
+                }
+                this.count = this.count - this.stepper;
+                this.$apply()
+            },
+        }
+
+        async onLoad() {
             let userInfo = await this.$parent.getUserInfo();
             let result = await getCart({})
-	        console.log('result:',result)
+            this.storeProducts = result['storeProducts']
+//            this.storeProducts = data
+            this.$apply()
+            console.log('this.storeProducts:', this.storeProducts)
         }
     }
+
+    const data = [
+        {
+            storeId: 1,
+            storeName: '自营',
+            active: false,
+            productItems: [
+                {
+                    count: 25,
+                    product: {
+                        name: "运动服套装女春秋2018新款潮韩版时尚气质显瘦大码卫衣休闲三件套",
+                        thumbnailUrl: "https://wx.5ug.com//wwwroot/static/images/nopic.jpg",
+                        price: 1500,
+                        displayPrice: '1500.00币',
+                    },
+                    productSku: {
+                        id: 21,
+                        propertyValueDesc: "XXS 白色 ",
+
+                        barCode: "",
+                        bn: "ZK043-55",
+                        costPrice: 100,
+                        createTime: "2018-02-27T23:16:32.6629474",
+                        displayPrice: "750.0元+210积分",
+                        fenRunPrice: 0,
+                        marketPrice: 1575,
+                        modified: "2018-03-05T23:07:05.461605",
+                        price: 1500,
+                        productId: 44,
+                        productStatus: 1,
+                        propertyJson: '',
+                        purchasePrice: 0,
+                        size: 0,
+                        specSn: "6f2788a3-9922-44ba-bc4e-700936e11650|9aae90b6-25ad-4f82-a6cc-6b5d6a807b64|",
+                        stock: 3276,
+                        storePlace: "",
+                        weight: 100,
+                    }
+                }
+            ],
+        },
+        {
+            storeId: 2,
+            active: true,
+            storeName: '阿迪达斯旗舰店，阿迪达斯旗舰店',
+            productItems: [
+                {
+                    count: 25,
+                    product: {
+                        name: "女春秋三件套",
+                        thumbnailUrl: "https://wx.5ug.com//wwwroot/static/images/nopic.jpg",
+                        price: 1500,
+                        displayPrice: '1500.00币',
+                    },
+                    productSku: {
+                        id: 21,
+                        propertyValueDesc: "XXS 白色 ",
+
+                        barCode: "",
+                        bn: "ZK043-55",
+                        costPrice: 100,
+                        createTime: "2018-02-27T23:16:32.6629474",
+                        displayPrice: "750.0元+210积分",
+                        fenRunPrice: 0,
+                        marketPrice: 1575,
+                        modified: "2018-03-05T23:07:05.461605",
+                        price: 1500,
+                        productId: 44,
+                        productStatus: 1,
+                        propertyJson: '',
+                        purchasePrice: 0,
+                        size: 0,
+                        specSn: "6f2788a3-9922-44ba-bc4e-700936e11650|9aae90b6-25ad-4f82-a6cc-6b5d6a807b64|",
+                        stock: 3276,
+                        storePlace: "",
+                        weight: 100,
+                    }
+                }
+            ],
+        }
+
+    ]
 </script>
 
-<style lang="less"  rel="stylesheet/less">
+<style lang="less" rel="stylesheet/less">
+	@import "../../widgets/common/assets/styles/base";
+
+	.store-list {
+		margin-top: ~'20rpx';
+		background: #fff;
+	}
+
+	.store-item {
+		background: url(http://p3orru6vb.bkt.clouddn.com/unselect.png) no-repeat ~'20rpx 16rpx';
+		background-size: ~'54rpx 54rpx';
+		border-bottom: ~'1rpx' solid @hairline-color;
+		padding: ~'16rpx 16rpx 16rpx 78rpx';
+		line-height: ~'54rpx';
+		color: @title-color;
+		font-size: @title-font-size;
+		&.active {
+			background: url(http://p3orru6vb.bkt.clouddn.com/select.png) no-repeat ~'20rpx 16rpx';
+			background-size: ~'54rpx 54rpx';
+		}
+	}
+
+	.product-item {
+		padding: ~'20rpx 20rpx 20rpx 82rpx';
+		background: url(http://p3orru6vb.bkt.clouddn.com/unselect.png) no-repeat ~'20rpx 83rpx';
+		background-size: ~'54rpx 54rpx';
+		display: flex;
+		justify-content: space-between;
+		&.active {
+			background: url(http://p3orru6vb.bkt.clouddn.com/select.png) no-repeat ~'20rpx 83rpx';
+			background-size: ~'54rpx 54rpx';
+		}
+	}
+
+	.main-text {
+		flex: 1;
+		padding-right: ~'32rpx';
+		padding-left: ~'16rpx';
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		.item-name {
+			overflow: hidden;
+			text-overflow: ellipsis;
+			display: -webkit-box;
+			-webkit-box-orient: vertical;
+			-webkit-line-clamp: 2;
+			color: @title-color;
+			font-size: ~'26rpx';
+		}
+		.item-prop {
+			color: @hint-color;
+			font-size: @hint-font-size;
+			padding-top: ~'4rpx';
+			padding-bottom: ~'2rpx';
+		}
+	}
+
+	.item-last {
+		float: right;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		.item-price {
+			color: @active-color;
+			font-size: @price-font-size;
+		}
+		.item-display-price {
+			color: @hint-color;
+			font-size: @hint-font-size;
+			text-decoration: line-through;
+		}
+		image {
+			width: ~'32rpx';
+			height: ~'32rpx';
+			padding-bottom: ~'2rpx';
+		}
+	}
+
+	.stepper {
+		width: ~'180rpx';
+		height: ~'46rpx';
+		line-height: ~'46rpx';
+		display: flex;
+		font-size: ~'28rpx';
+		text-align: center;
+		border: ~'1rpx' solid #ccc;
+		border-radius: ~'2rpx';
+		color: @active-color;
+		.jian-btn {
+			flex: 1;
+			width: ~'46rpx';
+			height: 100%;
+		}
+
+		.jian-btn.disabled {
+			background-color: #f5f5f9;
+			color: #ccc;
+		}
+
+		.jia-btn {
+			flex: 1;
+			width: ~'46rpx';
+			height: 100%;
+		}
+
+		.jia-btn.disabled {
+			background-color: #f5f5f9;
+			color: #ccc;
+		}
+
+		input {
+			color: @title-color;
+			width: ~'68rpx';
+			height: ~'46rpx';
+			line-height: ~'46rpx';
+			text-align: center;
+			font-size: ~'28rpx';
+			border-left: ~'1rpx' solid #ccc;
+			border-right: ~'1rpx' solid #ccc;
+		}
+
+	}
+
+	.footer {
+		position: fixed;
+		bottom: 0;
+		width: 100%;
+		z-index: 9999;
+		background: #fff;
+		padding: ~'10rpx 20rpx';
+		border-top: ~'1rpx' solid @hairline-color;
+		.first-item {
+			font-size: @desc-font-size;
+			float:left;
+			display: inline-block;
+			background: #fff url(http://p3orru6vb.bkt.clouddn.com/unselect.png) no-repeat 0 ~'5rpx';
+			background-size: ~'54rpx 54rpx';
+			padding-left: ~'62rpx';
+			line-height: ~'64rpx';
+			&.active {
+				background: url(http://p3orru6vb.bkt.clouddn.com/select.png) no-repeat;
+				background-size: ~'54rpx 54rpx';
+			}
+		}
+		.total-price {
+			float:right;
+			display: inline-block;
+			color: @active-color;
+			font-size: @price-font-size;
+			line-height: ~'64rpx';
+			height: 100%;
+		}
+		.cost-btn {
+			float:right;
+			display: inline-block;
+			margin-right: ~'40rpx';
+			margin-left: ~'20rpx';
+			line-height: ~'64rpx';
+			text-align: center;
+			color: #fff;
+			background: @active-color;
+			padding: 0 ~'50rpx';
+			font-size: @title-font-size;
+		}
+	}
 </style>
