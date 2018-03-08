@@ -62,6 +62,7 @@
 
         async onLoad() {
             this.userInfo = await this.$parent.getUserInfo()
+	        console.log('this.userInfo:',this.userInfo)
             this.userOrderNavList = await getLink({diyKey: 'grid_user_order_nav'})
             this.userIndexNavList = await getLink({diyKey: 'grid_user_index_nav'})
             this.userCellList = await getLink({diyKey: 'cell_user_index'})
