@@ -29,7 +29,8 @@
 									<view class="item-price">￥{{productItem.product.price}}</view>
 									<view class="item-display-price">{{productItem.product.displayPrice}}</view>
 								</view>
-								<image src="http://p3orru6vb.bkt.clouddn.com/delete.png"/>
+								<image catchtap="deleteCart({{productItem.productSku.id}})"
+								       src="http://p3orru6vb.bkt.clouddn.com/delete.png"/>
 							</view>
 						</view>
 					</repeat>
@@ -49,6 +50,7 @@
     import wepy from 'wepy'
     import BindPhone from '../modules/bind-phone'
     import Toast from '../../widgets/toast/index'
+    import tip from '../../widgets/common/js/tip'
     import {getCart, updateCart, removeCart, addCart} from '../../services/api/api'
     export default class Cart extends wepy.page {
         config = {
@@ -86,14 +88,37 @@
                     })
                 })
 
-	            let str = ''
-	            params.forEach((item)=>{
-                    str = str+'skuId:'+item['skuId']+' '
-                    str = str+'storeId:'+item['storeId']+' '
-                    str = str+'count:'+item['count']+' '
-	            })
+                let str = ''
+                params.forEach((item) => {
+                    str = str + 'skuId:' + item['skuId'] + ' '
+                    str = str + 'storeId:' + item['storeId'] + ' '
+                    str = str + 'count:' + item['count'] + ' '
+                })
                 this.$invoke('cart-toast', 'showToast', {title: str})
                 console.log('params:', params)
+            },
+            deleteCart(skuId){
+                for (let i = 0; i < this.storeProducts.length; i++) {
+                    let productItems = this.storeProducts[i]['productItems']
+                    for (let j = 0; j < productItems.length; j++) {
+                        if (productItems[j]['productSku']['id'] == skuId) {
+                            tip.confirm({
+                                text: '确定要删除该商品吗',
+                                payload: {skuId: skuId, productId: productItems[j]['product']['id']}
+                            }).then(async(payload) => {
+                                let userInfo = await this.$parent.getUserInfo()
+                                await removeCart({
+                                    LoginUserId: userInfo.id,
+                                    ProductSkuId: payload.skuId,
+                                    ProductId: payload.productId
+                                })
+                                let result = await getCart({})
+                                this.storeProducts = result['storeProducts']
+                                this.$apply()
+                            })
+                        }
+                    }
+                }
             },
             selectAll(){
                 this.isSelectAll = !this.isSelectAll
@@ -168,7 +193,7 @@
             },
         }
 
-        async onLoad() {
+        async onShow() {
             let userInfo = await this.$parent.getUserInfo();
             let result = await getCart({})
             this.storeProducts = result['storeProducts']
