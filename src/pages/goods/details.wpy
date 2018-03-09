@@ -140,7 +140,9 @@
         }
 
         async onLoad(options) {
-            let goodsId = options['id'] || 45;
+            console.log('options:',options)
+            let goodsId =  46;
+//            let goodsId = options['id'] || 45;
             this.goodsDetails = await getGoodsDetails({id: goodsId})
             wx.setNavigationBarTitle({title: this.goodsDetails.name})
             console.log('this.goodsDetails:', this.goodsDetails)

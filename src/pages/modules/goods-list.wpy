@@ -2,7 +2,7 @@
 	<view>
 		<view class="goods-list-container">
 			<repeat for="{{goodsList}}" key="id" index="index" item="item">
-				<navigator class="list-item" open-type="navigate" url="/pages/goods/details?id=45" hover-class="none">
+				<navigator class="list-item" open-type="navigate" url="/pages/goods/details?id={{item.id}}" hover-class="none">
 					<image lazy-load src="{{item.thumbnailUrl}}" mode="widthFix"/>
 					<view class="goods-details">
 						<view class="name">{{item.name}}</view>
