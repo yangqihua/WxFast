@@ -12,8 +12,8 @@
     export default class extends wepy.app {
         config = {
             pages: [
-                'pages/home/index',
                 'pages/home/cart',
+                'pages/home/index',
                 'pages/goods/details',
                 'pages/home/me',
                 'pages/home/category',
@@ -175,7 +175,6 @@
 
         async getUserInfo() {
             let userInfo = this.globalData.userInfo || wepy.getStorageSync('userInfo')
-	        console.log('getUserInfo:',userInfo)
             if (userInfo) {
                 return await userInfo
             } else {

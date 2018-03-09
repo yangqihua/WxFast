@@ -83,13 +83,17 @@ class HTTPUtil {
             url = '/' + url
         }
         let userInfo = wepy.getStorageSync('userInfo')
-        let userName = userInfo.userName && userInfo.userName.toLowerCase() || ''
+        // todo: for debug or test
+        let userName = 'admin'
+        // let userName = userInfo.userName && userInfo.userName.toLowerCase() || ''
         return md5(url.toLowerCase() + TIMESTAMP + userName)
     }
 
     static getUserId() {
         let userInfo = wepy.getStorageSync('userInfo')
-        return userInfo.id
+        // todo: for debug or test
+        return 1
+        // return userInfo.id
     }
 
 }

@@ -3,20 +3,24 @@
 		<view style="margin-bottom: 100rpx">
 			<repeat for="{{storeProducts}}" key="index" index="index" item="storeProductItem">
 				<view class="store-list">
-					<view class="store-item {{storeProductItem.active?'active':''}}">{{storeProductItem.storeName}}
+					<view class="store-item {{storeProductItem.active?'active':''}}"
+					      @tap="tapStoreItem({{storeProductItem.storeId}})">{{storeProductItem.storeName}}
 					</view>
 					<repeat for="{{storeProductItem.productItems}}" key="index" index="index" item="productItem">
-						<view class="product-item">
+						<view class="product-item {{productItem.active?'active':''}}"
+						      @tap="tapProductItem({{productItem.productSku.id}})">
 							<image mode="aspectFill" style="width:180rpx; height:180rpx;"
 							       src="{{productItem.product.thumbnailUrl}}"/>
 							<view class="main-text">
 								<view class="item-name">{{productItem.product.name}}</view>
 								<view class="item-prop">{{productItem.productSku.propertyValueDesc}}</view>
 								<view class="stepper">
-									<view class="jian-btn {{count==(min)? 'disabled' : ''}}" catchtap="jianBtnTap">-
+									<view class="jian-btn {{productItem.count==1? 'disabled' : ''}}"
+									      catchtap="jianBtnTap({{productItem.productSku.id}})">-
 									</view>
 									<input type="number" disabled value="{{productItem.count}}"/>
-									<view class="jia-btn {{count==(max)? 'disabled' : ''}}" catchtap="jiaBtnTap">+
+									<view class="jia-btn {{productItem.count==productItem.productSku.stock? 'disabled' : ''}}"
+									      catchtap="jiaBtnTap({{productItem.productSku.id}})">+
 									</view>
 								</view>
 							</view>
@@ -33,19 +37,18 @@
 			</repeat>
 		</view>
 		<view class="footer">
-			<view class="first-item">全选(0)</view>
-			<!--<view style="height: auto">-->
-				<view class="cost-btn">结算</view>
-				<view class="total-price">￥0.00</view>
-			<!--</view>-->
+			<view class="first-item {{isSelectAll?'active':''}}" @tap="selectAll">全选({{totalNum}})</view>
+			<view class="cost-btn" @tap="confirm">结算</view>
+			<view class="total-price">￥{{totalMoney}}</view>
 		</view>
+		<cart-toast/>
 	</view>
 </template>
 
 <script>
     import wepy from 'wepy'
     import BindPhone from '../modules/bind-phone'
-    import Stepper from '../../widgets/stepper/index'
+    import Toast from '../../widgets/toast/index'
     import {getCart, updateCart, removeCart, addCart} from '../../services/api/api'
     export default class Cart extends wepy.page {
         config = {
@@ -57,26 +60,111 @@
         }
         components = {
             'bind-phone': BindPhone,
-            'cart-stepper': Stepper,
+            'cart-toast': Toast,
         }
         data = {
+            isSelectAll: false,
             storeProducts: [],
+            totalNum: 0,
+            totalMoney: 0,
         }
 
         methods = {
-            jiaBtnTap(){
-                if (this.count == this.max) {
-                    return
-                }
-                this.count = this.count + this.stepper;
-                this.$apply()
+            confirm(){
+                let params = [];
+                this.storeProducts.forEach((storeItem) => {
+                    storeItem.productItems.forEach((productItem) => {
+                        if (productItem['active']) {
+                            params.push(
+                                {
+                                    skuId: productItem['productSku']['id'],
+                                    storeId: storeItem['storeId'],
+                                    count: productItem['count']
+                                }
+                            )
+                        }
+                    })
+                })
+
+	            let str = ''
+	            params.forEach((item)=>{
+                    str = str+'skuId:'+item['skuId']+' '
+                    str = str+'storeId:'+item['storeId']+' '
+                    str = str+'count:'+item['count']+' '
+	            })
+                this.$invoke('cart-toast', 'showToast', {title: str})
+                console.log('params:', params)
             },
-            jianBtnTap(){
-                if (this.count == this.min) {
-                    return
+            selectAll(){
+                this.isSelectAll = !this.isSelectAll
+                for (let i = 0; i < this.storeProducts.length; i++) {
+                    let productItems = this.storeProducts[i]['productItems']
+                    this.storeProducts[i]['active'] = this.isSelectAll
+                    for (let j = 0; j < productItems.length; j++) {
+                        productItems[j]['active'] = this.isSelectAll
+                    }
                 }
-                this.count = this.count - this.stepper;
-                this.$apply()
+            },
+            tapStoreItem(storeId){
+                for (let i = 0; i < this.storeProducts.length; i++) {
+                    if (this.storeProducts[i]['storeId'] == storeId) {
+                        this.storeProducts[i]['active'] = !this.storeProducts[i]['active']
+                        let productItems = this.storeProducts[i]['productItems']
+                        for (let j = 0; j < productItems.length; j++) {
+                            productItems[j]['active'] = this.storeProducts[i]['active']
+                        }
+                        break
+                    }
+                }
+
+            },
+            tapProductItem(skuId){
+                for (let i = 0; i < this.storeProducts.length; i++) {
+                    let productItems = this.storeProducts[i]['productItems']
+                    let isTap = false
+                    for (let j = 0; j < productItems.length; j++) {
+                        if (productItems[j]['productSku']['id'] == skuId) {
+                            productItems[j]['active'] = !productItems[j]['active']
+                            isTap = true
+                            break
+                        }
+                    }
+                    if (isTap) {
+                        this.storeProducts[i]['active'] = true
+                        for (let j = 0; j < productItems.length; j++) {
+                            this.storeProducts[i]['active'] &= productItems[j]['active']
+                        }
+                        break
+                    }
+                }
+            },
+            jiaBtnTap(skuId){
+                for (let i = 0; i < this.storeProducts.length; i++) {
+                    let productItems = this.storeProducts[i]['productItems']
+                    for (let j = 0; j < productItems.length; j++) {
+                        if (productItems[j]['productSku']['id'] == skuId) {
+                            if (productItems[j]['count'] == productItems[j]['productSku']['stock']) {
+                                return
+                            }
+                            productItems[j]['count'] += 1
+                            break
+                        }
+                    }
+                }
+            },
+            jianBtnTap(skuId){
+                for (let i = 0; i < this.storeProducts.length; i++) {
+                    let productItems = this.storeProducts[i]['productItems']
+                    for (let j = 0; j < productItems.length; j++) {
+                        if (productItems[j]['productSku']['id'] == skuId) {
+                            if (productItems[j]['count'] == 1) {
+                                return
+                            }
+                            productItems[j]['count'] -= 1
+                            break
+                        }
+                    }
+                }
             },
         }
 
@@ -88,6 +176,26 @@
             this.$apply()
             console.log('this.storeProducts:', this.storeProducts)
         }
+
+        watch = {
+            storeProducts(newValue){
+                this.totalNum = 0
+                this.totalMoney = 0
+                let flag = true
+                newValue.forEach((storeItem) => {
+                    storeItem.productItems.forEach((productItem) => {
+                        flag &= productItem['active']
+                        if (productItem['active']) {
+                            this.totalNum++
+                            this.totalMoney += productItem['product']['price'] * productItem['count']
+                        }
+                    })
+                })
+                this.isSelectAll = flag
+                this.$apply()
+            }
+        }
+
     }
 
     const data = [
@@ -97,7 +205,7 @@
             active: false,
             productItems: [
                 {
-                    count: 25,
+                    count: 1,
                     product: {
                         name: "运动服套装女春秋2018新款潮韩版时尚气质显瘦大码卫衣休闲三件套",
                         thumbnailUrl: "https://wx.5ug.com//wwwroot/static/images/nopic.jpg",
@@ -105,7 +213,7 @@
                         displayPrice: '1500.00币',
                     },
                     productSku: {
-                        id: 21,
+                        id: 24,
                         propertyValueDesc: "XXS 白色 ",
 
                         barCode: "",
@@ -136,7 +244,8 @@
             storeName: '阿迪达斯旗舰店，阿迪达斯旗舰店',
             productItems: [
                 {
-                    count: 25,
+                    active: true,
+                    count: 3275,
                     product: {
                         name: "女春秋三件套",
                         thumbnailUrl: "https://wx.5ug.com//wwwroot/static/images/nopic.jpg",
@@ -307,7 +416,7 @@
 		border-top: ~'1rpx' solid @hairline-color;
 		.first-item {
 			font-size: @desc-font-size;
-			float:left;
+			float: left;
 			display: inline-block;
 			background: #fff url(http://p3orru6vb.bkt.clouddn.com/unselect.png) no-repeat 0 ~'5rpx';
 			background-size: ~'54rpx 54rpx';
@@ -319,7 +428,7 @@
 			}
 		}
 		.total-price {
-			float:right;
+			float: right;
 			display: inline-block;
 			color: @active-color;
 			font-size: @price-font-size;
@@ -327,7 +436,7 @@
 			height: 100%;
 		}
 		.cost-btn {
-			float:right;
+			float: right;
 			display: inline-block;
 			margin-right: ~'40rpx';
 			margin-left: ~'20rpx';
