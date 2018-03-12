@@ -16,7 +16,7 @@ const getListByLogin = (params) => http.get(params, 'diy/GetListByLogin',false);
 const getGoodsDetails = (params) => http.get(params, 'product/show',true);
 
 const addCart = (params) => http.post(params, 'cart/addcart',true);
-const getCart = (params) => http.get(params, 'cart/getcart',true);
+const getCart = (params) => http.get(params, 'cart/getcart',false);
 const removeCart = (params) => http.delete(params, 'cart/removecart',true);
 const updateCart = (params) => http.put(params, 'cart/updatecart',true);
 

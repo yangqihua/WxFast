@@ -1,36 +1,41 @@
 <template>
 	<view>
-		<view style="margin-bottom: 100rpx">
+		<view wx:if="{{storeProducts.length==0}}">
+			<cart-abnormal category="DATA"/>
+		</view>
+		<view wx:else style="margin-bottom: 100rpx">
 			<repeat for="{{storeProducts}}" key="index" index="index" item="storeProductItem">
 				<view class="store-list">
 					<view class="store-item {{storeProductItem.active?'active':''}}"
 					      @tap="tapStoreItem({{storeProductItem.storeId}})">{{storeProductItem.storeName}}
 					</view>
-					<repeat for="{{storeProductItem.productItems}}" key="index" index="index" item="productItem">
+					<repeat for="{{storeProductItem.productSkuItems}}" key="index" index="index" item="productItem">
 						<view class="product-item {{productItem.active?'active':''}}"
-						      @tap="tapProductItem({{productItem.productSku.id}})">
+						      @tap="tapProductItem({{productItem.productSkuId}})">
 							<image mode="aspectFill" style="width:180rpx; height:180rpx;"
-							       src="{{productItem.product.thumbnailUrl}}"/>
+							       src="{{productItem.thumbnailUrl}}"/>
 							<view class="main-text">
-								<view class="item-name">{{productItem.product.name}}</view>
-								<view class="item-prop">{{productItem.productSku.propertyValueDesc}}</view>
+								<view class="item-name">{{productItem.name}}</view>
+								<view class="item-prop">{{productItem.propertyValueDesc}}</view>
 								<view class="stepper">
-									<view class="jian-btn {{productItem.count==1? 'disabled' : ''}}"
-									      catchtap="jianBtnTap({{productItem.productSku.id}})">-
+									<view class="jian-btn {{productItem.buyCount==1? 'disabled' : ''}}"
+									      catchtap="jianBtnTap({{productItem.productSkuId}})">-
 									</view>
-									<input type="number" disabled value="{{productItem.count}}"/>
-									<view class="jia-btn {{productItem.count==productItem.productSku.stock? 'disabled' : ''}}"
-									      catchtap="jiaBtnTap({{productItem.productSku.id}})">+
+									<input type="number" disabled value="{{productItem.buyCount}}"/>
+									<view class="jia-btn {{productItem.buyCount==productItem.stock? 'disabled' : ''}}"
+									      catchtap="jiaBtnTap({{productItem.productSkuId}})">+
 									</view>
 								</view>
 							</view>
 							<view class="item-last">
 								<view>
-									<view class="item-price">￥{{productItem.product.price}}</view>
-									<view class="item-display-price">{{productItem.product.displayPrice}}</view>
+									<view class="item-price" style="text-align:right">￥{{productItem.price}}</view>
+									<view class="item-display-price" style="text-align:right">{{productItem.displayPrice}}</view>
 								</view>
-								<image catchtap="deleteCart({{productItem.productSku.id}})"
-								       src="http://p3orru6vb.bkt.clouddn.com/delete.png"/>
+								<view style="text-align:right">
+									<image catchtap="deleteCart({{productItem.productSkuId}})"
+									       src="http://p3orru6vb.bkt.clouddn.com/delete.png"/>
+								</view>
 							</view>
 						</view>
 					</repeat>
@@ -51,6 +56,7 @@
     import BindPhone from '../modules/bind-phone'
     import Toast from '../../widgets/toast/index'
     import tip from '../../widgets/common/js/tip'
+    import Abnormal from '../../widgets/abnormal/index'
     import {getCart, updateCart, removeCart, addCart} from '../../services/api/api'
     export default class Cart extends wepy.page {
         config = {
@@ -63,6 +69,7 @@
         components = {
             'bind-phone': BindPhone,
             'cart-toast': Toast,
+            'cart-abnormal': Toast,
         }
         data = {
             isSelectAll: false,
@@ -75,13 +82,13 @@
             confirm(){
                 let params = [];
                 this.storeProducts.forEach((storeItem) => {
-                    storeItem.productItems.forEach((productItem) => {
+                    storeItem.productSkuItems.forEach((productItem) => {
                         if (productItem['active']) {
                             params.push(
                                 {
-                                    skuId: productItem['productSku']['id'],
+                                    skuId: productItem['productSkuId'],
                                     storeId: storeItem['storeId'],
-                                    count: productItem['count']
+                                    count: productItem['buyCount']
                                 }
                             )
                         }
@@ -95,16 +102,15 @@
                     str = str + 'count:' + item['count'] + ' '
                 })
                 this.$invoke('cart-toast', 'showToast', {title: str})
-                console.log('params:', params)
             },
             deleteCart(skuId){
                 for (let i = 0; i < this.storeProducts.length; i++) {
-                    let productItems = this.storeProducts[i]['productItems']
+                    let productItems = this.storeProducts[i]['productSkuItems']
                     for (let j = 0; j < productItems.length; j++) {
-                        if (productItems[j]['productSku']['id'] == skuId) {
+                        if (productItems[j]['productSkuId'] == skuId) {
                             tip.confirm({
                                 text: '确定要删除该商品吗',
-                                payload: {skuId: skuId, productId: productItems[j]['product']['id']}
+                                payload: {skuId: skuId, productId: productItems[j]['productId']}
                             }).then(async(payload) => {
                                 let userInfo = await this.$parent.getUserInfo()
                                 await removeCart({
@@ -113,7 +119,7 @@
                                     ProductId: payload.productId
                                 })
                                 let result = await getCart({})
-                                this.storeProducts = result['storeProducts']
+                                this.storeProducts = result['storeItems']
                                 this.$apply()
                             })
                         }
@@ -123,7 +129,7 @@
             selectAll(){
                 this.isSelectAll = !this.isSelectAll
                 for (let i = 0; i < this.storeProducts.length; i++) {
-                    let productItems = this.storeProducts[i]['productItems']
+                    let productItems = this.storeProducts[i]['productSkuItems']
                     this.storeProducts[i]['active'] = this.isSelectAll
                     for (let j = 0; j < productItems.length; j++) {
                         productItems[j]['active'] = this.isSelectAll
@@ -134,7 +140,7 @@
                 for (let i = 0; i < this.storeProducts.length; i++) {
                     if (this.storeProducts[i]['storeId'] == storeId) {
                         this.storeProducts[i]['active'] = !this.storeProducts[i]['active']
-                        let productItems = this.storeProducts[i]['productItems']
+                        let productItems = this.storeProducts[i]['productSkuItems']
                         for (let j = 0; j < productItems.length; j++) {
                             productItems[j]['active'] = this.storeProducts[i]['active']
                         }
@@ -145,10 +151,10 @@
             },
             tapProductItem(skuId){
                 for (let i = 0; i < this.storeProducts.length; i++) {
-                    let productItems = this.storeProducts[i]['productItems']
+                    let productItems = this.storeProducts[i]['productSkuItems']
                     let isTap = false
                     for (let j = 0; j < productItems.length; j++) {
-                        if (productItems[j]['productSku']['id'] == skuId) {
+                        if (productItems[j]['productSkuId'] == skuId) {
                             productItems[j]['active'] = !productItems[j]['active']
                             isTap = true
                             break
@@ -165,13 +171,13 @@
             },
             jiaBtnTap(skuId){
                 for (let i = 0; i < this.storeProducts.length; i++) {
-                    let productItems = this.storeProducts[i]['productItems']
+                    let productItems = this.storeProducts[i]['productSkuItems']
                     for (let j = 0; j < productItems.length; j++) {
-                        if (productItems[j]['productSku']['id'] == skuId) {
-                            if (productItems[j]['count'] == productItems[j]['productSku']['stock']) {
+                        if (productItems[j]['productSkuId'] == skuId) {
+                            if (productItems[j]['buyCount'] == productItems[j]['stock']) {
                                 return
                             }
-                            productItems[j]['count'] += 1
+                            productItems[j]['buyCount'] += 1
                             break
                         }
                     }
@@ -179,13 +185,13 @@
             },
             jianBtnTap(skuId){
                 for (let i = 0; i < this.storeProducts.length; i++) {
-                    let productItems = this.storeProducts[i]['productItems']
+                    let productItems = this.storeProducts[i]['productSkuItems']
                     for (let j = 0; j < productItems.length; j++) {
-                        if (productItems[j]['productSku']['id'] == skuId) {
-                            if (productItems[j]['count'] == 1) {
+                        if (productItems[j]['productSkuId'] == skuId) {
+                            if (productItems[j]['buyCount'] == 1) {
                                 return
                             }
-                            productItems[j]['count'] -= 1
+                            productItems[j]['buyCount'] -= 1
                             break
                         }
                     }
@@ -196,10 +202,10 @@
         async onShow() {
             let userInfo = await this.$parent.getUserInfo();
             let result = await getCart({})
-            this.storeProducts = result['storeProducts']
+            this.storeProducts = result['storeItems']
 //            this.storeProducts = data
             this.$apply()
-            console.log('this.storeProducts:', this.storeProducts)
+//            console.log('this.storeProducts:', this.storeProducts)
         }
 
         watch = {
@@ -208,11 +214,11 @@
                 this.totalMoney = 0
                 let flag = true
                 newValue.forEach((storeItem) => {
-                    storeItem.productItems.forEach((productItem) => {
+                    storeItem.productSkuItems.forEach((productItem) => {
                         flag &= productItem['active']
                         if (productItem['active']) {
                             this.totalNum++
-                            this.totalMoney += productItem['product']['price'] * productItem['count']
+                            this.totalMoney += productItem['price'] * productItem['buyCount']
                         }
                     })
                 })
@@ -343,7 +349,7 @@
 
 	.main-text {
 		flex: 1;
-		padding-right: ~'32rpx';
+		padding-right: ~'28rpx';
 		padding-left: ~'16rpx';
 		display: flex;
 		flex-direction: column;

@@ -12,9 +12,9 @@
     export default class extends wepy.app {
         config = {
             pages: [
+                'pages/home/cart',
                 'pages/home/index',
                 'pages/goods/details',
-                'pages/home/cart',
                 'pages/home/me',
                 'pages/home/category',
 
