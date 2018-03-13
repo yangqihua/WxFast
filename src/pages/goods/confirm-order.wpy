@@ -1,0 +1,61 @@
+<!--确认订单-->
+<template>
+	<view>
+	</view>
+</template>
+<script>
+    import wepy from 'wepy';
+    import {buyInfo, getUserAddress} from '../../services/api/api'
+    import tip from '../../widgets/common/js/tip'
+    export default class ComfireOrder extends wepy.page {
+        config = {
+            navigationBarTitleText: '确认订单',
+            backgroundColor: '#EFEFEF'
+        }
+        components = {}
+
+        data = {
+            userInfo: {},
+            orderGoodsList: [],
+        }
+
+        async getAddressInfo() {
+        }
+
+        async getBuyInfo() {
+            let orderParams = []
+            this.orderGoodsList.forEach((item) => {
+                let orderParam = {
+                    LoginUserId: this.userInfo.id,
+                    ProductSkuId: item['skuId'],
+                    ProductId: item['productId'],
+                    Count: item['count'],
+                    Amount: item['count'] * item['price'],
+                    StoreId: item['storeId'],
+                }
+                orderParams.push(orderParam)
+            })
+            let result = await buyInfo({
+                ProductJson: orderParams,
+                LoginUserId: this.userInfo.id,
+                IsBuy: true
+            })
+	        console.log('buyInfo:',result)
+        }
+
+        async onLoad(option) {
+            this.userInfo = await this.$parent.getUserInfo()
+            this.orderGoodsList = this.$parent.globalData['orderGoodsList']
+            console.log('this.orderGoodsList:', this.orderGoodsList)
+	        await this.getBuyInfo()
+        }
+
+        computed = {}
+
+        events = {}
+    }
+
+</script>
+<style lang="less" rel="stylesheet/less">
+
+</style>

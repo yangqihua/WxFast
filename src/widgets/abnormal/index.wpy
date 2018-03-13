@@ -45,16 +45,12 @@
             }
         }
         onLoad() {
-            console.log('this.category:',this.category)
             if (this.category && Types[this.category]) {
                 this.image = this.data.image || Types[this.category].image;
                 this.title = this.data.title || Types[this.category].title;
                 this.button = this.data.button || Types[this.category].button;
                 this.tip = this.data.tip || Types[this.category].tip;
             }
-        }
-        onUnload(){
-            console.log('unload')
         }
     }
 </script>

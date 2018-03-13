@@ -42,7 +42,7 @@
 				</view>
 			</repeat>
 		</view>
-		<view class="footer">
+		<view class="footer" wx:if="{{storeProducts.length>0}}">
 			<view class="first-item {{isSelectAll?'active':''}}" @tap="selectAll">全选({{totalNum}})</view>
 			<view class="cost-btn" @tap="confirm">结算</view>
 			<view class="total-price">￥{{totalMoney}}</view>
@@ -86,7 +86,9 @@
                         if (productItem['active']) {
                             params.push(
                                 {
+                                    productId: productItem['productId'],
                                     skuId: productItem['productSkuId'],
+                                    price: productItem['price'],
                                     storeId: storeItem['storeId'],
                                     count: productItem['buyCount']
                                 }
@@ -95,13 +97,18 @@
                     })
                 })
 
-                let str = ''
-                params.forEach((item) => {
-                    str = str + 'skuId:' + item['skuId'] + ' '
-                    str = str + 'storeId:' + item['storeId'] + ' '
-                    str = str + 'count:' + item['count'] + ' '
+	            this.$parent.globalData['orderGoodsList'] = params
+                wx.navigateTo({
+                    url: '/pages/goods/confirm-order'
                 })
-                this.$invoke('cart-toast', 'showToast', {title: str})
+//                let str = ''
+//                params.forEach((item) => {
+//                    str = str + 'productId:' + item['productId'] + ' '
+//                    str = str + 'skuId:' + item['skuId'] + ' '
+//                    str = str + 'storeId:' + item['storeId'] + ' '
+//                    str = str + 'count:' + item['count'] + ' '
+//                })
+//                this.$invoke('cart-toast', 'showToast', {title: str})
             },
             deleteCart(skuId){
                 for (let i = 0; i < this.storeProducts.length; i++) {
@@ -205,7 +212,7 @@
             this.storeProducts = result['storeItems']
 //            this.storeProducts = data
             this.$apply()
-            console.log('this.storeProducts:', this.storeProducts)
+//            console.log('this.storeProducts:', this.storeProducts)
         }
 
         events = {
@@ -230,7 +237,7 @@
                         }
                     })
                 })
-                this.isSelectAll = flag
+                this.isSelectAll = flag & newValue.length
                 this.$apply()
             }
         }

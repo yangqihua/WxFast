@@ -27,6 +27,7 @@ const addOrder = (params) => http.post(params, 'Order/Buy',true);
 const getOrder = (params) => http.get(params, 'Order/Index',true);
 
 const buyInfo = (params) => http.post(params, 'Order/BuyInfo',true);
+const getUserAddress = (params) => http.post(params, 'UserAddress/Single',true);
 
 export {
     getLink,
@@ -47,4 +48,5 @@ export {
     addOrder,
     getOrder,
     buyInfo,
+    getUserAddress
 }
