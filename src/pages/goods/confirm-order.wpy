@@ -1,6 +1,15 @@
 <!--确认订单-->
 <template>
 	<view>
+		<view class="address-box">
+			<view class="add-address" wx:if="{{!userAddress.name}}">
+				<view class="title" @tap="addAddress">新增收货地址</view>
+			</view>
+			<view class="show-address" wx:else @tap="selectAddress">
+				<view class="name-tel">收货人: {{userAddress.name}} {{userAddress.mobile}}</view>
+				<view class="address-text">收货地址: {{userAddress.addressDescription}} {{userAddress.address}}</view>
+			</view>
+		</view>
 	</view>
 </template>
 <script>
@@ -9,17 +18,20 @@
     import tip from '../../widgets/common/js/tip'
     export default class ComfireOrder extends wepy.page {
         config = {
-            navigationBarTitleText: '确认订单',
+            navigationBarTitleText: '确认下单',
             backgroundColor: '#EFEFEF'
         }
         components = {}
 
         data = {
             userInfo: {},
+            userAddress: {},
             orderGoodsList: [],
         }
 
         async getAddressInfo() {
+            this.userAddress = await getUserAddress({id: ''})
+            this.$apply()
         }
 
         async getBuyInfo() {
@@ -40,14 +52,24 @@
                 LoginUserId: this.userInfo.id,
                 IsBuy: true
             })
-	        console.log('buyInfo:',result)
+            console.log('buyInfo:', result)
+        }
+
+        methods = {
+            addAddress(){
+
+            },
+            selectAddress(){
+
+            }
         }
 
         async onLoad(option) {
             this.userInfo = await this.$parent.getUserInfo()
             this.orderGoodsList = this.$parent.globalData['orderGoodsList']
             console.log('this.orderGoodsList:', this.orderGoodsList)
-	        await this.getBuyInfo()
+            await this.getAddressInfo()
+//	        await this.getBuyInfo()
         }
 
         computed = {}
@@ -57,5 +79,48 @@
 
 </script>
 <style lang="less" rel="stylesheet/less">
+	@import "../../widgets/common/assets/styles/base";
 
+	.address-box {
+		width: 100%;
+		background: url(http://p3orru6vb.bkt.clouddn.com/arrow-right.png) no-repeat ~'705rpx' center,
+		url(http://p3orru6vb.bkt.clouddn.com/address_bg.png) no-repeat center top;
+		background-size: ~'16rpx auto,750rpx 6rpx';
+		background-color: #fff;
+		margin: ~'20rpx' 0;
+	}
+
+	.add-addres {
+		width: 100%;
+	}
+
+	.add-address .title {
+		font-size: ~'28rpx';
+		color: #000;
+		margin-left: ~'30rpx';
+		background: url(http://p3orru6vb.bkt.clouddn.com/add-address.png) no-repeat left center;
+		background-size: ~'60rpx' auto;
+		padding: ~'40rpx 0 40rpx 80rpx';
+	}
+
+	.show-address {
+		width: ~'664rpx';
+		box-sizing: border-box;
+		padding-left: ~'100rpx';
+		background: url(http://p3orru6vb.bkt.clouddn.com/address.png) no-repeat ~'30rpx' center;
+		background-size: ~'46rpx' auto;
+	}
+
+	.show-address .name-tel {
+		font-size: ~'26rpx';
+		color: @desc-color;
+		padding: ~'30rpx 0 6rpx 0';
+	}
+
+	.show-address .address-text {
+		font-size:@hint-font-size;
+		color: @hint-color;
+		padding-bottom: ~'28rpx';
+		line-height: ~'36rpx';
+	}
 </style>
