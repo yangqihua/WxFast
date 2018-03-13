@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<view wx:if="{{storeProducts.length==0}}">
-			<cart-abnormal category="DATA"/>
+			<cart-abnormal category="CART"/>
 		</view>
 		<view wx:else style="margin-bottom: 100rpx">
 			<repeat for="{{storeProducts}}" key="index" index="index" item="storeProductItem">
@@ -69,7 +69,7 @@
         components = {
             'bind-phone': BindPhone,
             'cart-toast': Toast,
-            'cart-abnormal': Toast,
+            'cart-abnormal': Abnormal,
         }
         data = {
             isSelectAll: false,
@@ -205,7 +205,15 @@
             this.storeProducts = result['storeItems']
 //            this.storeProducts = data
             this.$apply()
-//            console.log('this.storeProducts:', this.storeProducts)
+            console.log('this.storeProducts:', this.storeProducts)
+        }
+
+        events = {
+            abnormalTap(){
+                wx.switchTab({
+                    url: '/pages/home/index'
+                })
+            }
         }
 
         watch = {

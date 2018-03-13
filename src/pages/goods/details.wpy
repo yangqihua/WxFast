@@ -1,7 +1,8 @@
 <template>
 	<view>
 		<scroll-view scroll-into-view="{{toView}}" scroll-y="true" scroll-with-animation="true"
-		             style="height:{{systemInfo.windowHeight}}px " bindscroll="bindScroll" bindscrolltolower="bindScrollToLower">
+		             style="height:{{systemInfo.windowHeight}}px " bindscroll="bindScroll"
+		             bindscrolltolower="bindScrollToLower">
 			<view class="header-tab" style="opacity: {{tabOpacity}}">
 				<view class="item {{toView=='swiper-id'?'active':''}}" @tap="scrollToAnchor" data-id="swiper-id">商品
 				</view>
@@ -83,7 +84,7 @@
 
 <script>
     import wepy from 'wepy'
-    import {getGoodsDetails, getGoodList} from '../../services/api/api'
+    import {getGoodsDetails, getGoodList, addAction} from '../../services/api/api'
     import ShowParameter from '../modules/show-parameter'
     import * as utils from '../../widgets/common/js/utils'
     import DetailsGoodsList from '../modules/goods-list'
@@ -140,8 +141,8 @@
         }
 
         async onLoad(options) {
-            console.log('options:',options)
-            let goodsId =  46;
+            console.log('options:', options)
+            let goodsId = 46;
 //            let goodsId = options['id'] || 45;
             this.goodsDetails = await getGoodsDetails({id: goodsId})
             wx.setNavigationBarTitle({title: this.goodsDetails.name})
@@ -149,7 +150,7 @@
 
             this.regProductIntro(this.goodsDetails.detail.mobileIntro)
             this.systemInfo = this.$parent.getSystemInfoSync()
-			await this.getGoodsList()
+            await this.getGoodsList()
             this.$apply()
         }
 
@@ -161,24 +162,29 @@
             showThumb(url){
                 wx.previewImage({
                     current: url, // 当前显示图片的http链接
-                    urls: this.goodsDetails.productExtensions.productThums.map((item)=>{return item['originalUrl']})
+                    urls: this.goodsDetails.productExtensions.productThums.map((item) => {
+                        return item['originalUrl']
+                    })
                 })
             },
             takeOrder(){
                 this.$invoke('show-parameter', 'takeOrder', {});
             },
-	        collect(){
-                this.$invoke('details-toast', 'showToast', {title: '商品id:'+this.goodsDetails.id})
-	        },
-	        goIndex(){
+            async collect(){
+                let userInfo = this.$parent.getUserInfo()
+                let result = await addAction({LoginUserId:userInfo.id,EntityId:this.goodsDetails.id,Type:'ProductFavorite'})
+	            console.log('result:',result)
+//                this.$invoke('details-toast', 'showToast', {title: '商品id:' + this.goodsDetails.id})
+            },
+            goIndex(){
                 wx.switchTab({
                     url: '/pages/home/index'
                 })
-	        }
+            }
         }
         watch = {
             toView(newValue){
-                console.log('newValue:', newValue)
+//                console.log('newValue:', newValue)
             }
         }
         events = {
@@ -199,7 +205,7 @@
         }
 
         async bindScrollToLower() {
-            console.log('this.loadingStatus:',this.loadingStatus)
+            console.log('this.loadingStatus:', this.loadingStatus)
             if (this.loadingStatus == LoadMore.FINISHED) {
                 await this.getGoodsList();
             }

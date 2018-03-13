@@ -13,8 +13,8 @@
         config = {
             pages: [
                 'pages/home/cart',
-                'pages/home/index',
                 'pages/goods/details',
+                'pages/home/index',
                 'pages/home/me',
                 'pages/home/category',
 

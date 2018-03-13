@@ -20,6 +20,14 @@ const getCart = (params) => http.get(params, 'cart/getcart',false);
 const removeCart = (params) => http.delete(params, 'cart/removecart',true);
 const updateCart = (params) => http.put(params, 'cart/updatecart',true);
 
+const addAction = (params) => http.post(params, 'User/AddAction',true);
+const removeAction = (params) => http.delete(params, 'User/RemoveAction',true);
+
+const addOrder = (params) => http.post(params, 'Order/Buy',true);
+const getOrder = (params) => http.get(params, 'Order/Index',true);
+
+const buyInfo = (params) => http.post(params, 'Order/BuyInfo',true);
+
 export {
     getLink,
     getGoodList,
@@ -34,4 +42,9 @@ export {
     getCart,
     removeCart,
     updateCart,
+    addAction,
+    removeAction,
+    addOrder,
+    getOrder,
+    buyInfo,
 }
