@@ -41,20 +41,25 @@
         }
 
         async getBuyInfo() {
-            let orderParams = []
-            this.orderGoodsList.forEach((item) => {
-                let orderParam = {
-                    LoginUserId: this.userInfo.id,
-                    ProductSkuId: item['skuId'],
-                    ProductId: item['productId'],
-                    Count: item['count'],
-                    Amount: item['count'] * item['price'],
-                    StoreId: item['storeId'],
-                }
-                orderParams.push(orderParam)
-            })
+            let orderParams = [{
+                "ProductSkuId": 114,
+                "Count": 1,
+                "ProductId": 45,
+                "storeId": 12,
+                "LoginUserId": 1
+            }]
+//            this.orderGoodsList.forEach((item) => {
+//                let orderParam = {
+//                    LoginUserId: this.userInfo.id,
+//                    ProductSkuId: item['skuId'],
+//                    ProductId: item['productId'],
+//                    Count: item['count'],
+//                    StoreId: item['storeId'],
+//                }
+//                orderParams.push(orderParam)
+//            })
             let result = await buyInfo({
-                ProductJson: orderParams,
+                ProductJson: JSON.stringify(orderParams),
                 LoginUserId: this.userInfo.id,
                 IsBuy: true
             })
@@ -79,7 +84,7 @@
             this.orderGoodsList = this.$parent.globalData['orderGoodsList']
             console.log('this.orderGoodsList:', this.orderGoodsList)
             await this.getAddressInfo()
-//	        await this.getBuyInfo()
+            await this.getBuyInfo()
         }
 
         computed = {}
@@ -91,42 +96,41 @@
 <style lang="less" rel="stylesheet/less">
 	@import "../../widgets/common/assets/styles/base";
 
-	.footer{
+	.footer {
 		position: fixed;
 		bottom: 0;
 		width: 100%;
 		border-top: ~'1rpx' solid @hairline-color;
 		line-height: ~'90rpx';
 		height: ~'90rpx';
-		view{
+		view {
 			display: inline-block;
 		}
-		.total-text{
-			padding-left:~'30rpx';
-			color:@desc-color;
+		.total-text {
+			padding-left: ~'30rpx';
+			color: @desc-color;
 			font-size: @desc-font-size;
 		}
-		.total-money{
-			color:@active-color;
+		.total-money {
+			color: @active-color;
 			font-size: @price-font-size;
 			padding-left: ~'2rpx';
 		}
-		.total-num{
-			float:right;
+		.total-num {
+			float: right;
 			padding-right: ~'6rpx';
-			font-size:@hint-font-size;
+			font-size: @hint-font-size;
 			color: @hint-color;
 		}
-		.confirm-btn{
-			padding:0 ~'40rpx';
+		.confirm-btn {
+			padding: 0 ~'40rpx';
 			text-align: center;
-			float:right;
-			color:#fff;
+			float: right;
+			color: #fff;
 			background: @active-color;
 			font-size: @title-font-size;
 		}
 	}
-
 
 	.address-box {
 		width: 100%;
@@ -165,7 +169,7 @@
 	}
 
 	.show-address .address-text {
-		font-size:@desc-font-size;
+		font-size: @desc-font-size;
 		color: @hint-color;
 		padding-bottom: ~'28rpx';
 		line-height: ~'36rpx';
