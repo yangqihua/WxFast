@@ -7,8 +7,14 @@
 			</view>
 			<view class="show-address" wx:else @tap="selectAddress">
 				<view class="name-tel">收货人: {{userAddress.name}} {{userAddress.mobile}}</view>
-				<view class="address-text">收货地址: {{userAddress.addressDescription}} {{userAddress.address}}</view>
+				<view class="address-text">收货地址: {{userAddress.addressDescription}}</view>
 			</view>
+		</view>
+		<view class="footer">
+			<view class="total-text">总价:</view>
+			<view class="total-money">￥2342.00</view>
+			<view class="confirm-btn">提交订单</view>
+			<view class="total-num">共1件商品</view>
 		</view>
 	</view>
 </template>
@@ -57,10 +63,14 @@
 
         methods = {
             addAddress(){
-
+                wx.navigateTo({
+                    url: '/pages/goods/web-view'
+                })
             },
             selectAddress(){
-
+                wx.navigateTo({
+                    url: '/pages/goods/web-view'
+                })
             }
         }
 
@@ -80,6 +90,43 @@
 </script>
 <style lang="less" rel="stylesheet/less">
 	@import "../../widgets/common/assets/styles/base";
+
+	.footer{
+		position: fixed;
+		bottom: 0;
+		width: 100%;
+		border-top: ~'1rpx' solid @hairline-color;
+		line-height: ~'90rpx';
+		height: ~'90rpx';
+		view{
+			display: inline-block;
+		}
+		.total-text{
+			padding-left:~'30rpx';
+			color:@desc-color;
+			font-size: @desc-font-size;
+		}
+		.total-money{
+			color:@active-color;
+			font-size: @price-font-size;
+			padding-left: ~'2rpx';
+		}
+		.total-num{
+			float:right;
+			padding-right: ~'6rpx';
+			font-size:@hint-font-size;
+			color: @hint-color;
+		}
+		.confirm-btn{
+			padding:0 ~'40rpx';
+			text-align: center;
+			float:right;
+			color:#fff;
+			background: @active-color;
+			font-size: @title-font-size;
+		}
+	}
+
 
 	.address-box {
 		width: 100%;
@@ -112,13 +159,13 @@
 	}
 
 	.show-address .name-tel {
-		font-size: ~'26rpx';
+		font-size: @title-font-size;
 		color: @desc-color;
 		padding: ~'30rpx 0 6rpx 0';
 	}
 
 	.show-address .address-text {
-		font-size:@hint-font-size;
+		font-size:@desc-font-size;
 		color: @hint-color;
 		padding-bottom: ~'28rpx';
 		line-height: ~'36rpx';

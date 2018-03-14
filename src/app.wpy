@@ -12,10 +12,11 @@
     export default class extends wepy.app {
         config = {
             pages: [
+                'pages/home/index',
 	            'pages/goods/confirm-order',
+	            'pages/goods/web-view',
                 'pages/home/cart',
                 'pages/goods/details',
-                'pages/home/index',
                 'pages/home/me',
                 'pages/home/category',
 
@@ -29,13 +30,13 @@
                 'pages/user/buyeraddress/edit',
 
 //                'pages/example/index',
+//                'pages/example/cell',
 //                'pages/example/classify',
 //                'pages/example/search',
 //                'pages/example/input',
 //                'pages/example/button',
 //                'pages/example/toptips',
 //                'pages/example/layout',
-//                'pages/example/cell',
 //                'pages/example/panel',
 //                'pages/example/load-more',
 //                'pages/example/abnor',

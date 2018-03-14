@@ -1,0 +1,33 @@
+
+<template>
+	<web-view src="{{url}}"></web-view>
+</template>
+
+<script>
+	import wepy from 'wepy'
+	export default class WebView extends wepy.page {
+		config = {
+			navigationBarTitleText: '内嵌网页页面',
+			backgroundTextStyle: 'dark',
+			navigationBarBackgroundColor: '#FFFFFF',
+			navigationBarTextStyle: 'black',
+		}
+		data = {
+			url:'',
+		}
+
+		methods = {
+		}
+
+		onUnload(){
+			this.url = '';
+		}
+
+		onLoad(options) {
+			this.url = options.url;
+		}
+	}
+</script>
+
+<style lang="less"  rel="stylesheet/less">
+</style>

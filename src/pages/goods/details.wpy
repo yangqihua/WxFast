@@ -212,6 +212,9 @@
         }
 
         regProductIntro(str) {
+            if(!str){
+                return
+            }
             let imgReg = /<img.*?(?:>|\/>)/gi;
             let srcReg = /src=[\'\"]?([^\'\"]*)[\'\"]?/i;
             let arr = str.match(imgReg);
@@ -229,6 +232,9 @@
 <style lang="less" rel="stylesheet/less">
 	@import "../../widgets/cell/cell";
 
+	view{
+		overflow: hidden;
+	}
 	.header-tab {
 		padding: ~'16rpx 0';
 		line-height: ~'40rpx';
