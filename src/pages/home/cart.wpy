@@ -99,7 +99,7 @@
 
 	            this.$parent.globalData['orderGoodsList'] = params
                 wx.navigateTo({
-                    url: '/pages/goods/confirm-order'
+                    url: '/pages/user/order/buy'
                 })
 //                let str = ''
 //                params.forEach((item) => {
