@@ -1,0 +1,151 @@
+<template>
+	<view>
+		<view class="over-model" wx:if="{{!hidden}}" @tap="closeModel"></view>
+		<view class="panel-model" id="parameter-id" animation="{{animationData}}">
+			<view class="panel-header">商品参数</view>
+			<view class="panel-title">商品参数</view>
+			<scroll-view scroll-y="true" style="height:{{scrollViewHeight}};">
+				<view class="panel">
+					<view>hello</view>
+				</view>
+			</scroll-view>
+			<!--<view class="confirm-btn" style="padding:10rpx 0rpx">-->
+				<!--<view class="confirm-parameter" @tap="closeModel">完成</view>-->
+			<!--</view>-->
+		</view>
+	</view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    import * as utils from '../../widgets/common/js/utils'
+    import tip from '../../widgets/common/js/tip'
+    import {addCart} from '../../services/api/api'
+    export default class ShowPay extends wepy.component {
+        props = {
+            money: String,
+        }
+        data = {
+            animation: null,
+            animationData: null,
+            hidden: true,
+            systemInfo: {
+                windowWidth: 0,
+                windowHeight: 0,
+            },
+            scrollViewHeight: 0,
+            showParameter: false, // 是否显示商品参数窗口
+        }
+
+        async onLoad() {
+            this.animation = utils.createAnimation('ease')
+            this.systemInfo = this.$root.$parent.getSystemInfoSync()
+            this.setScrollViewHeight()
+            this.methods.showModel.apply(this)
+        }
+
+        methods = {
+            showModel(){
+                let height = this.systemInfo.windowHeight * 0.6;
+                this.animation.height(utils.pxTorpx(height) + 'rpx').step();
+                this.animationData = this.animation.export()
+                this.hidden = false;
+                this.$apply();
+            },
+            closeModel(){
+                this.animation.height(0).step();
+                this.animationData = this.animation.export()
+                this.hidden = true;
+                this.$apply();
+            }
+        }
+
+        setScrollViewHeight() {
+            let headerHeight = '88'
+            let footerHeight = '100'
+            this.scrollViewHeight = utils.pxTorpx(this.systemInfo.windowHeight * 0.6) - headerHeight - footerHeight + 'rpx';
+            this.$apply()
+        }
+
+    }
+</script>
+
+<style lang="less" rel="stylesheet/less">
+	@import "../../widgets/cell/cell";
+	@import "../../widgets/panel/panel";
+
+	.panel-model {
+		position: fixed;
+		height: 0;
+		width: 100%;
+		z-index: 1002;
+		background: #fff;
+		bottom: 0;
+	}
+
+	.panel-header{
+		text-align: center;
+		background: @active-color;
+		color: #fff;
+		font-size: @title-font-size;
+		line-height: ~'80rpx';
+
+	}
+
+	.model-content {
+		padding: ~'20rpx';
+		position: relative;
+	}
+
+	.head-box {
+		display: flex;
+		align-items: center;
+		border-bottom: 1px solid @hairline-color;
+		padding-bottom: ~'20rpx';
+		box-sizing: border-box;
+		.goods-img {
+			height: ~'200rpx';
+			width: ~'200rpx';
+		}
+
+		.product-wrap {
+			padding: ~'0 20rpx';
+		}
+		.product-name {
+			color: @title-color;
+			font-size: @desc-font-size;
+		}
+		.price-container {
+			padding-top: ~'6rpx';
+			line-height: ~'32rpx';
+		}
+		.price {
+			color: @active-color;
+			font-size: ~'30rpx';
+			padding-right: ~'12rpx';
+			display: inline-block;
+		}
+		.market-price {
+			display: inline-block;
+			font-size: @desc-font-size;
+			color: @hint-color;
+			text-decoration: line-through;
+		}
+		.modal-spec {
+			color: @desc-color;
+			font-size: @desc-font-size;
+		}
+
+	}
+
+	.close-model {
+		position: absolute;
+		right: ~'8rpx';
+		top: ~'0rpx';
+		.icon-close {
+			color: @theme-color;
+			font-size: @big-font-size;
+		}
+
+	}
+</style>

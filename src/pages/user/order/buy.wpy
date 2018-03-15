@@ -95,28 +95,38 @@
 			<view class="total-text">总价:</view>
 			<view class="total-money">￥{{priceView.totalAmount}}</view>
 
-			<view class="confirm-btn">提交订单</view>
+			<view class="confirm-btn" @tap="submitOrder">
+				<picker bindchange="bindPayChange" range-key="name" range="{{payMethods}}">提交订单</picker>
+			</view>
 			<view class="total-num">共{{modelView.totalCount}}件商品</view>
 		</view>
+		<buy-toast/>
 	</view>
 </template>
 <script>
     import wepy from 'wepy';
     import {buyInfo, getUserAddress, getPrice} from '../../../services/api/api'
     import tip from '../../../widgets/common/js/tip'
+    import ShowPay from '../../modules/show-pay'
+    import Toast from '../../../widgets/toast/index'
     export default class Buy extends wepy.page {
         config = {
             navigationBarTitleText: '确认下单',
-            backgroundColor: '#EFEFEF'
+            backgroundColor: '#EFEFEF',
+            navigationBarTextStyle: '#fff',
+            navigationBarBackgroundColor: '#ff5777',
         }
-        components = {}
+        components = {
+            'show-pay': ShowPay,
+            'buy-toast': Toast,
+        }
 
         data = {
             orderGoodsList: [],
             userInfo: {},
             userAddress: {},
             payMethods: [
-                {id: '1', name: '余额支付'},
+                {id: '1', name: '余额支付(余额70467.16元)'},
                 {id: '2', name: '微信支付'},
             ],
 
@@ -187,6 +197,13 @@
         }
 
         methods = {
+            bindPayChange(e){
+                let payName = this.payMethods[e.detail.value]['name']
+                this.$invoke('buy-toast', 'showToast', {title: '使用 '+payName+' 支付了 '+this.priceView.totalAmount+'元'})
+            },
+            submitOrder(){
+                this.$invoke('show-pay', 'showModel', {});
+            },
             async bindAddressChange(e){
                 const current = e.target.dataset.current
                 this.showDelivery[current] = this.modelView['storeItems'][current]['expressTemplates'][e.detail.value]
@@ -367,7 +384,7 @@
 		line-height: ~'90rpx';
 		height: ~'90rpx';
 		background: #fff;
-		z-index: 999999;
+		z-index: 998;
 		view {
 			display: inline-block;
 		}
