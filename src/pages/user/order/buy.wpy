@@ -13,83 +13,96 @@
 
 		<view style="margin-bottom: 100rpx">
 			<repeat for="{{modelView.storeItems}}" key="index" index="index" item="storeProductItem">
-				<view class="store-list">
-					<view class="store-item">{{storeProductItem.storeName}}</view>
-					<repeat for="{{storeProductItem.productSkuItems}}" key="index" index="index" item="productItem">
-						<view class="product-item">
-							<image mode="aspectFill" style="width:180rpx; height:180rpx;"
-							       src="{{productItem.thumbnailUrl}}"/>
-							<view class="main-text">
-								<view>
-									<view class="item-name">{{productItem.name}}</view>
-									<view class="item-prop">{{productItem.bn}} {{productItem.propertyValueDesc}}</view>
-								</view>
-								<view style="line-height: 40rpx">
-									<view class="item-price">￥{{productItem.displayPrice}}</view>
-									<view class="item-display-price">￥{{productItem.marketPrice}}</view>
-									<view class="item-count">X {{productItem.buyCount}}</view>
+				<view style="background: #fff;">
+					<view class="store-list">
+						<view class="store-item">{{storeProductItem.storeName}}</view>
+						<repeat for="{{storeProductItem.productSkuItems}}" key="index" index="index" item="productItem">
+							<view class="product-item">
+								<image mode="aspectFill" style="width:180rpx; height:180rpx;"
+								       src="{{productItem.thumbnailUrl}}"/>
+								<view class="main-text">
+									<view>
+										<view class="item-name">{{productItem.name}}</view>
+										<view class="item-prop">{{productItem.bn}} {{productItem.propertyValueDesc}}
+										</view>
+									</view>
+									<view style="line-height: 40rpx">
+										<view class="item-price">￥{{productItem.displayPrice}}</view>
+										<view class="item-display-price">￥{{productItem.marketPrice}}</view>
+										<view class="item-count">X {{productItem.buyCount}}</view>
+									</view>
 								</view>
 							</view>
+						</repeat>
+					</view>
+					<picker bindchange="bindAddressChange" range-key="value" data-current="{{index}}"
+					        range="{{storeProductItem.expressTemplates}}">
+						<view class="panel">
+							<view class="cell cell-access">
+								<view class="cell-body">快递方式</view>
+								<view class="cell-right">{{showDelivery[index]['value'] || '请选择'}}</view>
+							</view>
 						</view>
-					</repeat>
-				</view>
-				<picker bindchange="bindAddressChange" range-key="value" data-current="{{index}}"
-				        range="{{storeProductItem.expressTemplates}}">
+					</picker>
+					<view class="buy-text-input">
+						<view class="field-title">
+							卖家留言
+						</view>
+						<textarea
+								auto-height
+								value="{{ userMessages[index] }}"
+								placeholder="填写内容已和卖家协商确认"
+								class="field-input cell-body"
+								placeholder-class="field-placeholder"
+								bindBlur="bindBlur"
+						/>
+					</view>
+					<view class="bottom-container">
+						共
+						<view>{{storeProductItem.totalCount}}</view>
+						件商品
+						运费:
+						<view>{{storePrices[index].expressAmount }}</view>
+						小计:
+						<view>{{storePrices[index].totalAmount}}</view>
+					</view>
 					<view class="panel">
-						<view class="cell cell-access">
-							<view class="cell-body">快递方式</view>
-							<view class="cell-right">{{showDelivery[index]['value'] || '请选择'}}</view>
+						<view class="cell cell-switch">
+							<view class="cell-body">
+								<view class="cell-text">使用200积分支付</view>
+								<view class="cell-desc">现金账户余额12455.29币</view>
+							</view>
+							<view class="cell-right">
+								<switch checked/>
+							</view>
 						</view>
-					</view>
-				</picker>
-				<view class="buy-text-input">
-					<view class="field-title">
-						卖家留言
-					</view>
-					<textarea
-							auto-height
-							value="{{ userMessages[index] }}"
-							placeholder="填写内容已和卖家协商确认"
-							class="field-input cell-body"
-							placeholder-class="field-placeholder"
-							bindBlur="bindBlur"
-					/>
-				</view>
-				<view class="panel">
-					<view class="cell cell-switch">
-						<view class="cell-body">
-							<view class="cell-text">使用200积分支付</view>
-							<view class="cell-desc">现金账户余额12455.29币</view>
-						</view>
-						<view class="cell-right">
-							<switch checked/>
-						</view>
-					</view>
 
-					<view class="cell cell-switch">
-						<view class="cell-body">
-							<view class="cell-text">使用2000虚拟币支付</view>
-							<view class="cell-desc">现金账户余额12455.29币</view>
-						</view>
-						<view class="cell-right">
-							<switch checked/>
+						<view class="cell cell-switch">
+							<view class="cell-body">
+								<view class="cell-text">使用2000虚拟币支付</view>
+								<view class="cell-desc">现金账户余额12455.29币</view>
+							</view>
+							<view class="cell-right">
+								<switch checked/>
+							</view>
 						</view>
 					</view>
 				</view>
-
 			</repeat>
 		</view>
+
 		<view class="footer">
 			<view class="total-text">总价:</view>
-			<view class="total-money">￥2342.00</view>
+			<view class="total-money">￥{{priceView.totalAmount}}</view>
+
 			<view class="confirm-btn">提交订单</view>
-			<view class="total-num">共1件商品</view>
+			<view class="total-num">共{{modelView.totalCount}}件商品</view>
 		</view>
 	</view>
 </template>
 <script>
     import wepy from 'wepy';
-    import {buyInfo, getUserAddress} from '../../../services/api/api'
+    import {buyInfo, getUserAddress, getPrice} from '../../../services/api/api'
     import tip from '../../../widgets/common/js/tip'
     export default class Buy extends wepy.page {
         config = {
@@ -102,6 +115,10 @@
             orderGoodsList: [],
             userInfo: {},
             userAddress: {},
+            payMethods: [
+                {id: '1', name: '余额支付'},
+                {id: '2', name: '微信支付'},
+            ],
 
             modelView: '', // 商品数据，从服务器上远程获取
             priceView: '', // 价格显示模型
@@ -114,6 +131,8 @@
             isFromCart: false, // 购买信息是否来自购物车，如果是，则需要删除购物车中，相对应的商品数据
             moneyItem: [], // 非人民币资产信息
             showDelivery: [] // 显示物流快递
+
+
         }
 
         async getAddressInfo() {
@@ -143,29 +162,36 @@
                     "storeId": 13,
                     "LoginUserId": 1
                 }]
-            orderParams = []
-            this.orderGoodsList.forEach((item) => {
-                let orderParam = {
-                    LoginUserId: this.userInfo.id,
-                    ProductSkuId: item['skuId'],
-                    ProductId: item['productId'],
-                    Count: item['count'],
-                    StoreId: item['storeId'],
-                }
-                orderParams.push(orderParam)
-            })
+//            orderParams = []
+//            this.orderGoodsList.forEach((item) => {
+//                let orderParam = {
+//                    LoginUserId: this.userInfo.id,
+//                    ProductSkuId: item['skuId'],
+//                    ProductId: item['productId'],
+//                    Count: item['count'],
+//                    StoreId: item['storeId'],
+//                }
+//                orderParams.push(orderParam)
+//            })
             this.modelView = await buyInfo({
                 ProductJson: JSON.stringify(orderParams),
                 LoginUserId: this.userInfo.id,
                 IsBuy: true
             })
+            this.modelView.storeItems.forEach((item) => {
+                let activeExpress = item.expressTemplates.length == 0 ? {key: '', value: ''} : item.expressTemplates[0]
+                this.showDelivery.push(activeExpress)
+            })
+            await this.getPrice()
             this.$apply();
         }
 
         methods = {
-            bindAddressChange(e){
+            async bindAddressChange(e){
                 const current = e.target.dataset.current
                 this.showDelivery[current] = this.modelView['storeItems'][current]['expressTemplates'][e.detail.value]
+                await this.getPrice()
+
             },
             addAddress(){
                 wx.navigateTo({
@@ -177,6 +203,30 @@
                     url: '/pages/goods/web-view'
                 })
             }
+        }
+
+        async getPrice() {
+
+            let storeDelivery = []
+            console.log('this.showDelivery:', this.showDelivery)
+            for (let i = 0; i < this.modelView.storeItems.length; i++) {
+                let storeItem = this.modelView.storeItems[i]
+                let deliveryItem = {
+                    key: storeItem.storeId,
+                    value: this.showDelivery[i]['key']
+                }
+                storeDelivery.push(deliveryItem)
+            }
+            let priceInput = {
+                sign: this.modelView.sign, // 传递签名
+                loginUserId: this.userInfo.id, // 用户Id
+                addressId: this.userAddress.id,
+                storeExpressJson: JSON.stringify(storeDelivery)
+            }
+            this.priceView = await getPrice(priceInput)
+            this.storePrices = this.priceView.storePrices
+            this.asyncFlag = true
+            this.$apply()
         }
 
         async onLoad(option) {
@@ -197,13 +247,28 @@
 	@import "../../../widgets/panel/panel";
 	@import "../../../widgets/cell/cell";
 
-	.buy-text-input{
-		padding:~'30rpx 30rpx';
+	.bottom-container {
+		padding: ~'12rpx 30rpx';
+		line-height: ~'50rpx';
+		font-size: @title-font-size;
+		float: right;
+		view {
+			display: inline-block;
+			color: @active-color;
+			font-size: @price-font-size;
+			font-weight: bold;
+		}
+
+	}
+
+	.buy-text-input {
+		padding: ~'30rpx 30rpx';
 		display: flex;
 		font-size: @title-font-size;
 		line-height: ~'32rpx';
 		background: #fff;
-		.field-title{
+		border-bottom: ~'1rpx' solid @hairline-color;
+		.field-title {
 
 		}
 		.field-input {
@@ -220,9 +285,9 @@
 		}
 	}
 
-
 	.panel {
 		background: #fff;
+		width: 100%;
 	}
 
 	.store-list {
@@ -315,6 +380,7 @@
 			color: @active-color;
 			font-size: @price-font-size;
 			padding-left: ~'2rpx';
+			font-weight: bold;
 		}
 		.total-num {
 			float: right;
