@@ -1,6 +1,6 @@
 <template>
 	<view>
-		我的订单
+		<order-list-tab :tab.sync="tabs"/>
 	</view>
 </template>
 
@@ -19,15 +19,43 @@
             'order-list-tab': Tab,
         }
         data = {
-            tabs:[
-
-            ],
+            tabs: {
+                list: [
+                    {
+                        id: '1',
+                        title: '全部'
+                    },
+                    {
+                        id: '2',
+                        title: '待付款'
+                    },
+                    {
+                        id: '3',
+                        title: '待发货'
+                    },
+                    {
+                        id: '4',
+                        title: '待收货'
+                    },
+                    {
+                        id: '5',
+                        title: '待评价'
+                    }
+                ],
+                selectedId: '1',
+            },
             orderList: [],
             pageIndex: 1,
             scrollTop: 0,
             loadingStatus: LoadMore.LOADING,
         }
         methods = {
+        }
+
+        events = {
+            tabChange(selectedId){
+                console.log('selectedId:',selectedId)
+            }
         }
 
         async onLoad(options) {

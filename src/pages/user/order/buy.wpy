@@ -172,17 +172,17 @@
                     "storeId": 13,
                     "LoginUserId": 1
                 }]
-//            orderParams = []
-//            this.orderGoodsList.forEach((item) => {
-//                let orderParam = {
-//                    LoginUserId: this.userInfo.id,
-//                    ProductSkuId: item['skuId'],
-//                    ProductId: item['productId'],
-//                    Count: item['count'],
-//                    StoreId: item['storeId'],
-//                }
-//                orderParams.push(orderParam)
-//            })
+            orderParams = []
+            this.orderGoodsList.forEach((item) => {
+                let orderParam = {
+                    LoginUserId: this.userInfo.id,
+                    ProductSkuId: item['skuId'],
+                    ProductId: item['productId'],
+                    Count: item['count'],
+                    StoreId: item['storeId'],
+                }
+                orderParams.push(orderParam)
+            })
             this.modelView = await buyInfo({
                 ProductJson: JSON.stringify(orderParams),
                 LoginUserId: this.userInfo.id,
