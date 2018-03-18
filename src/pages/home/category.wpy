@@ -1,8 +1,10 @@
 <template>
 	<view>
 		<view id="search_container">
-			<search class="search"></search>
-			<image src="http://p3orru6vb.bkt.clouddn.com/mesg.png"/>
+			<navigator hover-class="none" style="width: 100%" url="/pages/search/search">
+				<search class="search" @tap="goSearch"></search>
+			</navigator>
+			<!--<image src="http://p3orru6vb.bkt.clouddn.com/mesg.png"/>-->
 		</view>
 		<view class="classify">
 			<scroll-view class="classify-category" scroll-y scroll-with-animation
@@ -47,7 +49,7 @@
             scrollTop: 100,
             windowHeight: 0,
             categoryList: [],
-            childCateList:[],
+            childCateList: [],
         }
 
         getSearchViewHeight() {
@@ -73,6 +75,11 @@
         }
 
         methods = {
+            goSearch(e){
+                wx.navigateTo({
+                    url: '/pages/search/search'
+                })
+            },
             changeCate(e) {
                 let id = e.currentTarget.dataset.id;
                 for (let i = 0; i < this.categoryList.length; i++) {
@@ -84,8 +91,8 @@
                     }
                 }
             },
-            tapCategory(id,name){
-                wx.navigateTo({url: '/pages/goods/list?id='+id+'&name='+name})
+            tapCategory(id, name){
+                wx.navigateTo({url: '/pages/goods/list?id=' + id + '&name=' + name})
             }
         }
 
@@ -102,8 +109,8 @@
 
 	#search_container {
 		display: flex;
-		padding: ~'16rpx 10rpx 16rpx 30rpx';
-		background-color: #f0f0f0;
+		padding: ~'16rpx 30rpx 16rpx 30rpx';
+		background-color: #FF5777;
 		box-sizing: border-box;
 		border-bottom: 1px solid @hairline-color;
 		image {

@@ -24,7 +24,7 @@ const addAction = (params) => http.post(params, 'User/AddAction', true);
 const removeAction = (params) => http.delete(params, 'User/RemoveAction', true);
 
 const addOrder = (params) => http.post(params, 'Order/Buy', true);
-const getOrder = (params) => http.get(params, 'Order/Index', true);
+const getOrderList = (params) => http.get(params, 'Order/Index', true);
 
 const buyInfo = (params) => http.post(params, 'Order/BuyInfo', true);
 const getPrice = (params) => http.post(params, 'order/getPrice', false);
@@ -47,7 +47,7 @@ export {
     addAction,
     removeAction,
     addOrder,
-    getOrder,
+    getOrderList,
     buyInfo,
     getUserAddress,
     getPrice

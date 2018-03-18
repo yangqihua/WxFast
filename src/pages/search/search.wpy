@@ -1,0 +1,71 @@
+<template>
+	<view>
+		<view class="search_container">
+			<search-page :focus.sync="focus"/>
+			<button class="btn btn_search" @tap="search()">搜索</button>
+		</view>
+	</view>
+</template>
+<script>
+    import wepy from 'wepy';
+    import Search from '../../widgets/search/index'
+    import {getCategoryList} from '../../services/api/api'
+
+    export default class Category extends wepy.page {
+        config = {
+            navigationBarTitleText: '搜索',
+            backgroundTextStyle: 'dark',
+            backgroundColor: '#EFEFEF',
+            navigationBarBackgroundColor: '#ff5777',
+            navigationBarTextStyle: '#fff',
+        }
+        components = {
+            'search-page': Search,
+        }
+        data = {
+            focus:true,
+        }
+
+        methods = {}
+
+        events = {
+            doTap(){
+                console.log('hear is do tap method from parent')
+            }
+        }
+    }
+
+</script>
+<style lang="less" rel="stylesheet/less">
+	@import "../../widgets/common/assets/styles/base";
+
+	.search_container {
+		display: flex;
+		padding: ~'0rpx 16rpx 0rpx 24rpx';
+		background-color: #FF5777;
+		box-sizing: border-box;
+		border-bottom: 1px solid @hairline-color;
+		image {
+			padding: ~'1rpx 20rpx';
+			width: ~'60rpx';
+			height: ~'60rpx';
+		}
+	}
+
+	.btn {
+		width: ~'118rpx';
+		height: ~'56rpx';
+		font-size: ~'28rpx';
+		line-height: ~'56rpx';
+		margin-left: ~'20rpx';
+		padding-left: ~'5rpx';
+		padding-right: ~'5rpx';
+	}
+
+	.btn_search {
+		color: #fff;
+		background: #ff5777;
+	}
+
+
+</style>

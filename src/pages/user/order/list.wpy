@@ -6,7 +6,7 @@
 
 <script>
     import wepy from 'wepy'
-    import { getGoodList} from '../../../services/api/api'
+    import { getOrderList} from '../../../services/api/api'
     import LoadMore from '../../../widgets/load-more/index'
     import Tab from '../../../widgets/tab/index'
     export default class Index extends wepy.page {
@@ -66,7 +66,7 @@
         async getOrderList(isRefresh = false) {
             this.loadingStatus = LoadMore.LOADING
             let curTime = (new Date()).valueOf();
-            let goodsListResult = await getGoodList({'pageIndex': this.pageIndex, 'pageSize': this.pageSize})
+            let goodsListResult = await getOrderList({'pageIndex': this.pageIndex, 'pageSize': this.pageSize})
             if (goodsListResult.length == 0) {
                 this.loadingStatus = LoadMore.NO_MORE
             } else {
