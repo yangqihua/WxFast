@@ -1,9 +1,9 @@
 <template>
 	<view>
 		<view id="search_container">
-			<navigator hover-class="none" style="width: 100%" url="/pages/search/search">
-				<search class="search" @tap="goSearch"></search>
-			</navigator>
+			<view style="width: 100%" catchtap="goSearch">
+				<search :disabled.sync="searchDisabled" class="search" @tap="goSearch"></search>
+			</view>
 			<!--<image src="http://p3orru6vb.bkt.clouddn.com/mesg.png"/>-->
 		</view>
 		<view class="classify">
@@ -45,6 +45,7 @@
             'search': Search,
         }
         data = {
+            searchDisabled:true,
             searchViewHeight: 0,
             scrollTop: 100,
             windowHeight: 0,

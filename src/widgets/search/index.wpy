@@ -6,7 +6,7 @@
         <view class="search-content">
             <i class="iconfont icon-search"></i>
             <input placeholder-class="search-placeholder" type="text" name="search-input"
-                   @tap="_bindTap" @input="_bindInput" @confirm="_bindConfirm" focus="{{focus}}"
+                   @tap="_bindTap" @input="_bindInput" @confirm="_bindConfirm" focus="{{focus}}" disabled="{{disabled}}"
                    class="search-input" value="{{searchValue}}" confirm-type="search"
                    placeholder="{{placeHolder}}"/>
             <i wx:if="{{searchValue!=''}}" @tap="deleteSearchValue" class="iconfont icon-del"></i>
@@ -17,6 +17,10 @@
     import wepy from 'wepy';
     export default class Search extends wepy.component {
         props = {
+            disabled: {
+                type: Boolean,
+                default: false
+            },
             focus: {
                 type: Boolean,
                 default: false
