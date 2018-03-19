@@ -19,8 +19,22 @@
 
 		<view class="goods-container">
 			<view class="goods-text">流行单品</view>
-			<index-goods :goodsList.sync="goodsList" :scrollTop.sync="scrollTop"/>
-			<load-more :loadingStatus.sync="loadingStatus"/>
+			<refresh-scroll-view>
+				<!-- wepy bug: 自定义组件中的 slot 不能是自定义组件 -->
+				<view class="goods-list-container" slot="content">
+					<repeat for="{{goodsList}}" key="index" index="index" item="item">
+						<navigator class="list-item" open-type="navigate" url="/pages/goods/details?id={{item.id}}"
+						           hover-class="none">
+							<image lazy-load src="{{item.thumbnailUrl}}" mode="widthFix"/>
+							<view class="goods-details">
+								<view class="name">{{item.name}}</view>
+								<view class="price">￥{{item.price}}</view>
+								<view class="market-price">￥{{item.marketPrice}}</view>
+							</view>
+						</navigator>
+					</repeat>
+				</view>
+			</refresh-scroll-view>
 		</view>
 	</view>
 </template>
@@ -30,6 +44,10 @@
     import {getLink, getGoodList} from '../../services/api/api'
     import IndexGoodsList from '../modules/goods-list'
     import LoadMore from '../../widgets/load-more/index'
+
+    import RefreshScrollViewMixin from '../../mixins/refresh-scroll-view'
+    import RefreshScrollView from '../../widgets/refresh-scroll-view/index'
+
     export default class Index extends wepy.page {
         config = {
             navigationBarTitleText: '首页',
@@ -39,9 +57,10 @@
             enablePullDownRefresh: true,
         }
         components = {
-            'index-goods': IndexGoodsList,
-            'load-more': LoadMore,
+            'refresh-scroll-view': RefreshScrollView,
         }
+        mixins = [RefreshScrollViewMixin]
+
         data = {
             swiperList: [],
             gridList: [],
@@ -61,60 +80,38 @@
             this.swiperList = await getLink({diyKey: 'swiper_index'})
             this.gridList = await getLink({diyKey: 'grid_index'})
             this.$apply()
-            await this.getGoodsList()
         }
 
-        async getGoodsList(isRefresh = false) {
-            this.loadingStatus = LoadMore.LOADING
-            let curTime = (new Date()).valueOf();
-            let goodsListResult = await getGoodList({'pageIndex': this.pageIndex, 'pageSize': this.pageSize})
-            if (goodsListResult.length == 0) {
-                this.loadingStatus = LoadMore.NO_MORE
-            }else{
-                this.loadingStatus = LoadMore.FINISHED
-            }
-            if (!isRefresh) {
-                this.goodsList = [...this.goodsList, ...goodsListResult['productItems']]
-                this.pageIndex++
-                this.$apply()
-            } else {
-                wx.showNavigationBarLoading()
-                this.goodsList = goodsListResult['productItems']
-                this.pageIndex++
-                if ((new Date()).valueOf() - curTime > 1500) {
-                    this.$apply();
-                    wx.hideNavigationBarLoading()
-                    wx.stopPullDownRefresh()
-                } else {
-                    let delay = parseInt(1000 - ((new Date()).valueOf() - curTime));
-                    setTimeout(() => {
-                        this.$apply();
-                        wx.hideNavigationBarLoading()
-                        wx.stopPullDownRefresh()
-                    }, parseInt(delay))
-                }
-            }
-        }
-
-        async onReachBottom() {
-            if (this.loadingStatus == LoadMore.FINISHED) {
-                await this.getGoodsList();
-            }
-        }
-
-        async onPullDownRefresh() {
-            await this.getGoodsList(true)
-        }
-
-        onPageScroll(e) {
-            this.scrollTop = e.scrollTop
+        events = {
+            upCallback (page) {
+                getGoodList({'pageIndex': page.num, 'pageSize': page.pageSize}).then((result) => {
+                    result = result['productItems']
+                    this.$invoke('refresh-scroll-view', 'endSuccess', result.length)
+                    this.goodsList = this.goodsList.concat(result)
+                    this.$apply()
+                }).catch((e) => {
+                    this.$invoke('refresh-scroll-view', 'endError')
+                })
+            },
+	        downCallback (page) {
+                getGoodList({'pageIndex': page.num, 'pageSize': page.pageSize},1000).then((result) => {
+                    result = result['productItems']
+                    this.$invoke('refresh-scroll-view', 'endRefresh', result.length)
+                    this.goodsList = result
+                    this.$apply()
+                }).catch((e) => {
+                    this.$invoke('refresh-scroll-view', 'endRefreshError')
+                })
+            },
         }
     }
 </script>
 
 <style lang="less" rel="stylesheet/less">
-	@import "../../widgets/common/assets/styles/base";
-
+	@import "../../assets/styles/goods-item";
+	view{
+		overflow: hidden;
+	}
 	.grid-list {
 		background-color: #fff;
 		color: @title-color;

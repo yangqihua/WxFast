@@ -91,15 +91,21 @@
             }
         }
 
+        unLoad(){
+            this.methods.resetPage.call(this)
+        }
+
         methods = {
             resetPage(){
                 this.page = {
                     num:0,
 	                pageSize:10,
                 }
+                this.loadingStatus = -1
+	            this.$apply()
             },
             loadMore(){
-                if (this.loadingStatus != WxScrollView.LOADING) {
+                if (this.loadingStatus != WxScrollView.LOADING && this.loadingStatus!=WxScrollView.NO_MORE && this.loadingStatus!=WxScrollView.NO_DATA) {
                     this._loading()
                     this.$emit('upCallback', this.page);
                 }

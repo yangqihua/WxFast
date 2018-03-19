@@ -28,7 +28,7 @@ const getOrderList = (params) => http.get(params, 'Order/Index', true);
 
 const buyInfo = (params) => http.post(params, 'Order/BuyInfo', true);
 const getPrice = (params) => http.post(params, 'order/getPrice', false);
-const getUserAddress = (params) => http.post(params, 'UserAddress/Single', false);
+const getUserAddress = (params) => http.get(params, 'UserAddress/Single', false);
 
 export {
     getLink,

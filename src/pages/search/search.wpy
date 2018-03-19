@@ -118,7 +118,9 @@
 <style lang="less" rel="stylesheet/less">
 	@import "../../assets/styles/goods-item";
 	@import "../../widgets/panel/panel";
-
+	view{
+		overflow: hidden;
+	}
 	.wel_value {
 		list-style-type: none;
 		margin: 4px 6px 8px 6px;
