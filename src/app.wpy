@@ -13,8 +13,9 @@
         config = {
             pages: [
                 'pages/home/index',
-                'pages/search/search',
+	            'pages/goods/list',
                 'pages/user/order/list',
+                'pages/search/search',
 	            'pages/user/order/buy',
                 'pages/home/cart',
 	            'pages/goods/web-view',
@@ -22,7 +23,6 @@
                 'pages/home/me',
                 'pages/home/category',
 
-	            'pages/goods/list',
                 'pages/common/bind-phone',
 
                 'pages/user/favorite/index',
