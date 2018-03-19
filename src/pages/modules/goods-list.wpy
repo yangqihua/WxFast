@@ -41,46 +41,5 @@
 </script>
 
 <style lang="less" rel="stylesheet/less">
-	@import "../../widgets/common/assets/styles/variable";
-	.goods-list-container {
-		padding: ~'0rpx 10rpx';
-		display: flex;
-		flex-wrap: wrap;
-		padding-bottom: ~'36rpx';
-	}
-
-	.list-item {
-		box-sizing: border-box;
-		width: ~'360rpx';
-		margin-top: ~'10rpx';
-		border: 1px solid #efe8ee;
-
-		image {
-			width:~'358rpx';
-			height:~'358rpx';
-		}
-		.goods-details {
-			padding: ~'6rpx 12rpx 15rpx 12rpx';
-		}
-		.name{
-			color: @title-color;
-			font-size: @title-font-size;
-		}
-		.price{
-			color:@active-color;
-			font-size: @price-font-size;
-			padding-right: ~'12rpx';
-			display: inline-block;
-		}
-		.market-price{
-			display: inline-block;
-			font-size: @desc-font-size;
-			color:@hint-color;
-			text-decoration:line-through;
-		}
-	}
-
-	.list-item:nth-child(odd) {
-		margin-right: ~'10rpx';
-	}
+	@import "../../assets/styles/goods-item";
 </style>

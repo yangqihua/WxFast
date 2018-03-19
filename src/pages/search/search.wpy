@@ -4,12 +4,30 @@
 			<search-page :focus.sync="focus"/>
 			<button class="btn btn_search" @tap="search()">搜索</button>
 		</view>
+
+		<refresh-scroll-view>
+			<view class="goods-list-container" slot="content">
+				<repeat for="{{goodsList}}" key="index" index="index" item="item">
+					<navigator class="list-item" open-type="navigate" url="/pages/goods/details?id={{item.id}}"
+					           hover-class="none">
+						<image lazy-load src="{{item.thumbnailUrl}}" mode="widthFix"/>
+						<view class="goods-details">
+							<view class="name">{{item.name}}</view>
+							<view class="price">￥{{item.price}}</view>
+							<view class="market-price">￥{{item.marketPrice}}</view>
+						</view>
+					</navigator>
+				</repeat>
+			</view>
+		</refresh-scroll-view>
 	</view>
 </template>
 <script>
     import wepy from 'wepy';
     import Search from '../../widgets/search/index'
-    import {getCategoryList} from '../../services/api/api'
+    import {getGoodList} from '../../services/api/api'
+    import RefreshScrollViewMixin from '../../mixins/refresh-scroll-view'
+    import RefreshScrollView from '../../widgets/refresh-scroll-view/index'
 
     export default class Category extends wepy.page {
         config = {
@@ -21,23 +39,40 @@
         }
         components = {
             'search-page': Search,
+            'refresh-scroll-view': RefreshScrollView,
         }
+        mixins = [RefreshScrollViewMixin]
+
         data = {
-            focus:true,
+            focus: true,
+            goodsList: [],
         }
 
         methods = {}
 
         events = {
+            upCallback (page) {
+                getGoodList({'pageIndex': page.num, 'pageSize': page.pageSize}).then((result) => {
+	                result = result['productItems']
+                    console.log('result:',result)
+                    this.$invoke('refresh-scroll-view', 'endSuccess', result.length)
+                    this.goodsList = this.goodsList.concat(result)
+                    this.$apply()
+                }).catch((e) => {
+                    this.$invoke('refresh-scroll-view', 'endError')
+                })
+            },
             doTap(){
                 console.log('hear is do tap method from parent')
             }
         }
+
+
     }
 
 </script>
 <style lang="less" rel="stylesheet/less">
-	@import "../../widgets/common/assets/styles/base";
+	@import "../../assets/styles/goods-item";
 
 	.search_container {
 		display: flex;

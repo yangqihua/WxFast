@@ -9,7 +9,7 @@ const updateUserInfo = (params) => http.put(params, 'User/Update', true);
 const sendCode = (params) => http.post(params, 'common/sendmobileVerifiyCode', true);
 
 const getLink = (params) => http.get(params, 'diy/getlink', false);
-const getGoodList = (params) => http.get(params, 'product/list', false);
+const getGoodList = (params, minTime = 0) => http.get(params, 'product/list', false, minTime);
 const getCategoryList = (params) => http.get(params, 'product/class', false);
 const getListByLogin = (params) => http.get(params, 'diy/GetListByLogin', false);
 
