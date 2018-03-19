@@ -65,10 +65,6 @@
             swiperList: [],
             gridList: [],
             goodsList: [],
-            pageIndex: 1,
-            pageSize: 10,
-            scrollTop: 0,
-            loadingStatus: LoadMore.LOADING,
         }
         methods = {
             navigateTo(url){

@@ -5,13 +5,13 @@
 			<view class="userinfo-nickname">{{ userInfo.nickName }}</view>
 		</view>
 
-		<view class="cell cell-access cell-no-border" style="padding: 15rpx 30rpx">
+		<view @tap="goOrderList(0)" class="cell cell-access cell-no-border" style="padding: 15rpx 30rpx">
 			<view class="cell-body">我的订单</view>
 			<view class="cell-right">查看全部</view>
 		</view>
 		<view class="order-nav">
 			<view class="order-nav-item" wx:for="{{userOrderNavList}}" wx:for-item="item" wx:key="index"
-			      @tap="tapOrderNav({{item.url}})">
+			      @tap="goOrderList({{index}})">
 				<image class="child-image" src="/assets/svg/{{item.icon}}.svg"></image>
 				<view class="child-name">{{item.name}}</view>
 			</view>
@@ -58,6 +58,14 @@
             userOrderNavList: [],
             userIndexNavList: [],
             userCellList: [],
+        }
+
+        methods = {
+            goOrderList(orderStatus){
+                wx.navigateTo({
+                    url: '/pages/user/order/list?orderStatus='+orderStatus
+                })
+            }
         }
 
         async onLoad() {
@@ -110,11 +118,11 @@
 		text-align: center;
 		.child-image {
 			display: inline-block;
-			width: ~'80rpx';
-			height: ~'80rpx';
+			width: ~'60rpx';
+			height: ~'60rpx';
 		}
 		.child-name {
-			font-size: @title-font-size;
+			font-size: @desc-font-size;
 			color: @title-color;
 			white-space: nowrap;
 			overflow: hidden;

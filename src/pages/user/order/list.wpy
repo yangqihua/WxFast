@@ -1,13 +1,20 @@
 <template>
 	<view>
 		<order-list-tab :tab.sync="tabs"/>
+
+		<refresh-scroll-view>
+			<view slot="content">
+
+			</view>
+		</refresh-scroll-view>
 	</view>
 </template>
 
 <script>
     import wepy from 'wepy'
-    import { getOrderList} from '../../../services/api/api'
-    import LoadMore from '../../../widgets/load-more/index'
+    import {getOrderList} from '../../../services/api/api'
+    import RefreshScrollViewMixin from '../../../mixins/refresh-scroll-view'
+    import RefreshScrollView from '../../../widgets/refresh-scroll-view/index'
     import Tab from '../../../widgets/tab/index'
     export default class Index extends wepy.page {
         config = {
@@ -15,9 +22,10 @@
             enablePullDownRefresh: true,
         }
         components = {
-            'order-list-load-more': LoadMore,
+            'refresh-scroll-view': RefreshScrollView,
             'order-list-tab': Tab,
         }
+        mixins = [RefreshScrollViewMixin]
         data = {
             tabs: {
                 list: [
@@ -45,69 +53,46 @@
                 selectedId: '1',
             },
             orderList: [],
-            pageIndex: 1,
-            scrollTop: 0,
-            loadingStatus: LoadMore.LOADING,
+            orderStatus: 1,
         }
-        methods = {
+        methods = {}
+
+        onLoad(options) {
         }
 
         events = {
             tabChange(selectedId){
-                console.log('selectedId:',selectedId)
-            }
+                console.log('selectedId:', selectedId)
+            },
+            upCallback (page) {
+                getOrderList({
+                    'pageIndex': page.num,
+                    'pageSize': page.pageSize,
+                    Type: 1,
+                    OrderStatus: this.orderStatus
+                }).then((result) => {
+                    console.log('result11:',result)
+//                    result = result['productItems']
+//                    this.$invoke('refresh-scroll-view', 'endSuccess', result.length)
+//                    this.goodsList = this.goodsList.concat(result)
+//                    this.$apply()
+                }).catch((e) => {
+                    this.$invoke('refresh-scroll-view', 'endError')
+                })
+            },
+            downCallback (page) {
+                getOrderList({'pageIndex': page.num, 'pageSize': page.pageSize}, 1000).then((result) => {
+                    result = result['productItems']
+                    this.$invoke('refresh-scroll-view', 'endRefresh', result.length)
+                    this.goodsList = result
+                    this.$apply()
+                }).catch((e) => {
+                    this.$invoke('refresh-scroll-view', 'endRefreshError')
+                })
+            },
         }
 
-        async onLoad(options) {
-            await this.getOrderList()
-            wx.setNavigationBarTitle({title: options.name})
-        }
 
-        async getOrderList(isRefresh = false) {
-            this.loadingStatus = LoadMore.LOADING
-            let curTime = (new Date()).valueOf();
-            let goodsListResult = await getOrderList({'pageIndex': this.pageIndex, 'pageSize': this.pageSize})
-            if (goodsListResult.length == 0) {
-                this.loadingStatus = LoadMore.NO_MORE
-            } else {
-                this.loadingStatus = LoadMore.FINISHED
-            }
-            if (!isRefresh) {
-                this.goodsList = [...this.goodsList, ...goodsListResult['productItems']]
-                this.pageIndex++
-                this.$apply()
-            } else {
-                wx.showNavigationBarLoading()
-                this.goodsList = goodsListResult['productItems']
-                this.pageIndex++
-                if ((new Date()).valueOf() - curTime > 1500) {
-                    this.$apply();
-                    wx.hideNavigationBarLoading()
-                    wx.stopPullDownRefresh()
-                } else {
-                    let delay = parseInt(1000 - ((new Date()).valueOf() - curTime));
-                    setTimeout(() => {
-                        this.$apply();
-                        wx.hideNavigationBarLoading()
-                        wx.stopPullDownRefresh()
-                    }, parseInt(delay))
-                }
-            }
-        }
-
-        async onReachBottom() {
-            if (this.loadingStatus == LoadMore.FINISHED) {
-                await this.getOrderList();
-            }
-        }
-
-        async onPullDownRefresh() {
-            await this.getOrderList(true)
-        }
-
-        onPageScroll(e) {
-            this.scrollTop = e.scrollTop
-        }
     }
 </script>
 
