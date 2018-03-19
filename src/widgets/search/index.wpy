@@ -27,7 +27,8 @@
             },
             searchValue: {
                 type: String,
-                default: ''
+                default: '',
+                twoWay: true
             },
             placeHolder: {
                 type: String,
@@ -41,6 +42,7 @@
             _bindInput(e) {
                 this.searchValue = e.detail.value;
                 this.$apply();
+                this.$emit('bindInput', this.searchValue);
             },
             _bindConfirm(e){
                 this.searchValue = e.detail.value;

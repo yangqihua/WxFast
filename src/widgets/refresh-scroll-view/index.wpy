@@ -68,24 +68,38 @@
                 type: Number,
                 default: 2000,
             },
-            abnormalCategory:{
+            abnormalCategory: {
                 type: String,
                 default: 'DATA'
             },
+            autoUpLoad:{
+                type: Boolean,
+                default: true
+            }
         }
 
         data = {
-            loadingStatus: WxScrollView.FINISHED,
+            loadingStatus: -1,
             scrollTop: 0,
         }
 
         onLoad() {
-            this.methods.loadMore.apply(this);
+            console.log('this.autoUpLoad:',this.autoUpLoad)
+            if (this.autoUpLoad) {
+                this.loadingStatus = WxScrollView.FINISHED
+                this.methods.loadMore.apply(this);
+            }
         }
 
         methods = {
+            resetPage(){
+                this.page = {
+                    num:0,
+	                pageSize:10,
+                }
+            },
             loadMore(){
-                if (this.loadingStatus == WxScrollView.FINISHED) {
+                if (this.loadingStatus != WxScrollView.LOADING) {
                     this._loading()
                     this.$emit('upCallback', this.page);
                 }

@@ -1,12 +1,25 @@
 <template>
 	<view>
 		<view class="search_container">
-			<search-page :focus.sync="focus"/>
+			<search-page :focus.sync="focus" :searchValue.sync="searchValue"/>
 			<button class="btn btn_search" @tap="search()">搜索</button>
 		</view>
 
-		<refresh-scroll-view>
-			<view class="goods-list-container" slot="content">
+		<view wx:if="{{!searchValue}}" style="background: #fff;padding-top: 100rpx;">
+			<view class="panel panel-title">
+				<view style="padding-bottom: 18rpx;font-size: 26rpx;">热门搜索</view>
+			</view>
+			<view class="wel_value">
+				<repeat for="{{hotList}}" key="index" index="index" item="item">
+					<view class="wel_value_item" @tap="searchKey({{item.label}})">
+						{{item.label}}
+					</view>
+				</repeat>
+			</view>
+		</view>
+
+		<refresh-scroll-view wx:if="{{searchValue && showScrollView}}" :autoUpLoad.sync="autoUpLoad">
+			<view class="goods-list-container" style="padding-top: 100rpx;" slot="content">
 				<repeat for="{{goodsList}}" key="index" index="index" item="item">
 					<navigator class="list-item" open-type="navigate" url="/pages/goods/details?id={{item.id}}"
 					           hover-class="none">
@@ -20,6 +33,7 @@
 				</repeat>
 			</view>
 		</refresh-scroll-view>
+
 	</view>
 </template>
 <script>
@@ -44,17 +58,36 @@
         mixins = [RefreshScrollViewMixin]
 
         data = {
+            autoUpLoad: false,
             focus: true,
+            showScrollView: false,
             goodsList: [],
+            hotList: [
+                {id: 1, label: '男鞋'},
+                {id: 2, label: '女装'},
+                {id: 3, label: '手提电脑'},
+                {id: 3, label: '手提电脑'},
+                {id: 3, label: '手提电脑'},
+                {id: 3, label: '手提电脑'},
+                {id: 3, label: '手提电脑'},
+            ],
+            searchValue: '',
         }
 
-        methods = {}
+        methods = {
+            searchKey(label){
+                this.searchValue = label
+                this.events.doSearch.call(this,this.searchValue)
+            },
+            search(){
+                this.events.doSearch.call(this,this.searchValue)
+            }
+        }
 
         events = {
             upCallback (page) {
                 getGoodList({'pageIndex': page.num, 'pageSize': page.pageSize}).then((result) => {
-	                result = result['productItems']
-                    console.log('result:',result)
+                    result = result['productItems']
                     this.$invoke('refresh-scroll-view', 'endSuccess', result.length)
                     this.goodsList = this.goodsList.concat(result)
                     this.$apply()
@@ -62,8 +95,19 @@
                     this.$invoke('refresh-scroll-view', 'endError')
                 })
             },
-            doTap(){
-                console.log('hear is do tap method from parent')
+            doSearch(value){
+                console.log('value:',value)
+	            this.showScrollView = true
+                this.goodsList = []
+                this.$invoke('refresh-scroll-view', 'resetPage')
+                this.$invoke('refresh-scroll-view', 'loadMore')
+	            this.$apply()
+            },
+            bindInput(value){
+                if(this.goodsList.length){
+                    this.goodsList = []
+                }
+                this.showScrollView = false
             }
         }
 
@@ -73,8 +117,30 @@
 </script>
 <style lang="less" rel="stylesheet/less">
 	@import "../../assets/styles/goods-item";
+	@import "../../widgets/panel/panel";
+
+	.wel_value {
+		list-style-type: none;
+		margin: 4px 6px 8px 6px;
+		display: flex;
+		flex-wrap: wrap;
+		padding: ~'10rpx 0 20rpx 0';
+		.wel_value_item {
+			margin: 6px;
+			padding: 5px 14px;
+			background-color: #faf5f5;
+			color: #3b333b;
+			&:nth-child(1), &:nth-child(2), &:nth-child(3) {
+				background-color: #fdf0f0;
+				color: #fe2a43;
+			}
+		}
+	}
 
 	.search_container {
+		position: fixed;
+		top:0;
+		width: 100%;
 		display: flex;
 		padding: ~'0rpx 16rpx 0rpx 24rpx';
 		background-color: #FF5777;
