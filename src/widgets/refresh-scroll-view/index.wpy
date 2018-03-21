@@ -22,7 +22,7 @@
 
 		<view wx:if="{{loadingStatus==4}}" class="loadmore no_more">
 			<view class="loadmore_tips"> 加载异常
-				<view class="load_error" @tap="_error">重新加载</view>
+				<text class="load_error" @tap="_error">重新加载</text>
 			</view>
 		</view>
 		<abnormal :category.sync="abnormalCategory" wx:if="{{loadingStatus==3}}"></abnormal>
@@ -84,7 +84,6 @@
         }
 
         onLoad() {
-            console.log('this.autoUpLoad:',this.autoUpLoad)
             if (this.autoUpLoad) {
                 this.loadingStatus = WxScrollView.FINISHED
                 this.methods.loadMore.apply(this);
@@ -127,7 +126,7 @@
             },
 
             endSuccess(resultSize){
-                console.log('resultSize:', resultSize)
+//                console.log('resultSize:', resultSize)
                 if (resultSize == 0 && this.page.num == 0) {
                     this._noData()
                 } else if (resultSize < this.page.pageSize) {

@@ -12,15 +12,15 @@
     export default class extends wepy.app {
         config = {
             pages: [
-                'pages/home/index',
-                'pages/home/me',
                 'pages/user/order/list',
+                'pages/home/me',
+                'pages/goods/details',
+                'pages/home/index',
 	            'pages/goods/list',
                 'pages/search/search',
 	            'pages/user/order/buy',
                 'pages/home/cart',
 	            'pages/goods/web-view',
-                'pages/goods/details',
                 'pages/home/category',
 
                 'pages/common/bind-phone',

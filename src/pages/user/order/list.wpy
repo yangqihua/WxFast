@@ -30,61 +30,71 @@
             tabs: {
                 list: [
                     {
-                        id: '1',
+                        id: '',
                         title: '全部'
                     },
                     {
-                        id: '2',
+                        id: '1',
                         title: '待付款'
                     },
                     {
-                        id: '3',
+                        id: '2',
                         title: '待发货'
                     },
                     {
-                        id: '4',
+                        id: '3',
                         title: '待收货'
+                    },
+                    {
+                        id: '4',
+                        title: '待评价'
                     },
                     {
                         id: '5',
                         title: '待评价'
                     }
                 ],
-                selectedId: '1',
+                selectedId: '',  // id 就是 orderStatus
             },
             orderList: [],
-            orderStatus: 1,
         }
         methods = {}
 
         onLoad(options) {
+            this.tabs.selectedId = options.orderStatus || ''
         }
 
         events = {
             tabChange(selectedId){
-                console.log('selectedId:', selectedId)
+                this.orderList = []
+                this.$invoke('refresh-scroll-view', 'resetPage')
+                this.$invoke('refresh-scroll-view', 'loadMore')
             },
             upCallback (page) {
                 getOrderList({
                     'pageIndex': page.num,
                     'pageSize': page.pageSize,
                     Type: 1,
-                    OrderStatus: this.orderStatus
+                    OrderStatus: this.tabs.selectedId
                 }).then((result) => {
-                    console.log('result11:',result)
-//                    result = result['productItems']
-//                    this.$invoke('refresh-scroll-view', 'endSuccess', result.length)
-//                    this.goodsList = this.goodsList.concat(result)
-//                    this.$apply()
+                    console.log('result1:', result)
+                    this.$invoke('refresh-scroll-view', 'endSuccess', result.length)
+                    this.orderList = this.orderList.concat(result)
+                    this.$apply()
                 }).catch((e) => {
                     this.$invoke('refresh-scroll-view', 'endError')
                 })
             },
             downCallback (page) {
-                getOrderList({'pageIndex': page.num, 'pageSize': page.pageSize}, 1000).then((result) => {
-                    result = result['productItems']
+                getOrderList({
+                    'pageIndex': page.num,
+                    'pageSize': page.pageSize,
+                    Type: 1,
+                    OrderStatus: this.tabs.selectedId
+                }, 1000).then((result) => {
+                    console.log('result1:', result)
                     this.$invoke('refresh-scroll-view', 'endRefresh', result.length)
-                    this.goodsList = result
+                    this.orderList = result
                     this.$apply()
                 }).catch((e) => {
                     this.$invoke('refresh-scroll-view', 'endRefreshError')

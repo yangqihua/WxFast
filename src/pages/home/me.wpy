@@ -5,13 +5,13 @@
 			<view class="userinfo-nickname">{{ userInfo.nickName }}</view>
 		</view>
 
-		<view @tap="goOrderList(0)" class="cell cell-access cell-no-border" style="padding: 15rpx 30rpx">
+		<view @tap="linkTo('/order/list')" class="cell cell-access cell-no-border" style="padding: 15rpx 30rpx">
 			<view class="cell-body">我的订单</view>
 			<view class="cell-right">查看全部</view>
 		</view>
 		<view class="order-nav">
 			<view class="order-nav-item" wx:for="{{userOrderNavList}}" wx:for-item="item" wx:key="index"
-			      @tap="goOrderList({{index}})">
+			      @tap="linkTo({{item.url}})">
 				<image class="child-image" src="/assets/svg/{{item.icon}}.svg"></image>
 				<view class="child-name">{{item.name}}</view>
 			</view>
@@ -61,9 +61,9 @@
         }
 
         methods = {
-            goOrderList(orderStatus){
+            linkTo(url){
                 wx.navigateTo({
-                    url: '/pages/user/order/list?orderStatus='+orderStatus
+                    url: '/pages/user'+url
                 })
             }
         }
