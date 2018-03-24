@@ -15,11 +15,11 @@
                 'pages/user/order/list',
                 'pages/home/me',
                 'pages/goods/details',
+                'pages/home/cart',
                 'pages/home/index',
 	            'pages/goods/list',
                 'pages/search/search',
 	            'pages/user/order/buy',
-                'pages/home/cart',
 	            'pages/goods/web-view',
                 'pages/home/category',
 

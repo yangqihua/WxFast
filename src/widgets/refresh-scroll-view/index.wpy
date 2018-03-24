@@ -147,7 +147,7 @@
             },
 
             _error(e){
-                this.$emit('upCallback', this.page);
+                this.methods.loadMore.call(this,this.page)
             },
 
             _goTop(){

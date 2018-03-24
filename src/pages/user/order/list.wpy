@@ -1,10 +1,48 @@
 <template>
-	<view>
+	<view">
 		<order-list-tab :tab.sync="tabs"/>
 
 		<refresh-scroll-view>
 			<view slot="content">
+				<view>
+					<repeat for="{{orderList}}" key="index" index="index" item="storeProductItem">
+						<view style="margin: 20rpx;background: #fff; border:1rpx solid #E5E5E5;">
+							<view class="store-list">
+								<view class="order-status">{{storeProductItem.orderStatuName}}</view>
+								<view class="store-item">{{storeProductItem.storeName}}</view>
+								<repeat for="{{storeProductItem.outOrderProducts}}" key="index" index="index"
+								        item="productItem">
+									<view class="product-item">
+										<image mode="aspectFill" style="width:120rpx; height:120rpx;"
+										       src="{{productItem.thumbnailUrl}}"/>
+										<view class="main-text">
+											<view class="item-name">{{productItem.name}}</view>
+											<view class="item-prop">{{productItem.bn}} {{productItem.propertyValueDesc}}
+											</view>
 
+										</view>
+										<view style="display: flex;flex-direction: column;justify-content: space-between;text-align: right">
+											<view>
+												<view class="item-price">￥{{productItem.price}}</view>
+												<view class="item-display-price">￥{{productItem.displayPrice}}</view>
+											</view>
+											<view class="item-count">X {{productItem.buyCount}}</view>
+										</view>
+									</view>
+								</repeat>
+							</view>
+							<view class="order-cell">
+								<view class="cell-body">全国包邮 总计：
+									<text>￥{{storeProductItem.paymentAmount}}</text>
+								</view>
+							</view>
+							<view class="order-cell cell-btns">
+								<view class="cell-btn">付款</view>
+							</view>
+						</view>
+
+					</repeat>
+				</view>
 			</view>
 		</refresh-scroll-view>
 	</view>
@@ -20,6 +58,7 @@
         config = {
             navigationBarTitleText: '我的订单',
             enablePullDownRefresh: true,
+            backgroundColor: '#EFEFEF',
         }
         components = {
             'refresh-scroll-view': RefreshScrollView,
@@ -51,7 +90,7 @@
                     },
                     {
                         id: '5',
-                        title: '待评价'
+                        title: '售后'
                     }
                 ],
                 selectedId: '',  // id 就是 orderStatus
@@ -61,7 +100,7 @@
         methods = {}
 
         onLoad(options) {
-            this.tabs.selectedId = options.orderStatus || ''
+            this.tabs.selectedId = options.orderStatus || '1'
         }
 
         events = {
@@ -107,5 +146,107 @@
 </script>
 
 <style lang="less" rel="stylesheet/less">
-	@import "../../../widgets/common/assets/styles/base";
+	@import "../../../widgets/panel/panel";
+	@import "../../../widgets/cell/cell";
+
+	.cell-btns {
+		justify-content: flex-end;
+		.cell-btn {
+			padding: ~'4rpx 24rpx';
+			font-size: @desc-font-size;
+			background: @active-color;
+			color: #fff;
+		}
+	}
+
+	.order-cell {
+		position: relative;
+		padding: ~'24rpx';
+		display: flex;
+		align-items: center;
+		font-size: @title-font-size;
+		border-top: ~'1rpx' solid @hairline-color;
+		line-height: 1.6;
+		.cell-body {
+			color: @hint-color;
+			text-align: right;
+			width: 100%;
+		}
+		text {
+			font-size: @price-font-size;
+			color: @active-color;
+		}
+	}
+
+	.order-status {
+		color: @active-color;
+		font-size: @title-font-size;
+		line-height: ~'60rpx';
+		background: #F6F4F5;
+		padding-left: ~'30rpx';
+		border-bottom: ~'1rpx' solid @hairline-color;
+	}
+
+	.store-list {
+		/*margin-top: ~'20rpx';*/
+		background: #fff;
+	}
+
+	.store-item {
+		padding: ~'12rpx 30rpx';
+		border-bottom: ~'1rpx' solid @hairline-color;
+		line-height: ~'54rpx';
+		color: @title-color;
+		font-size: @title-font-size;
+	}
+
+	.product-item {
+		padding: ~'16rpx 30rpx';
+		display: flex;
+		justify-content: space-between;
+	}
+
+	.main-text {
+		flex: 1;
+		padding-left: ~'32rpx';
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		.item-name {
+			overflow: hidden;
+			text-overflow: ellipsis;
+			display: -webkit-box;
+			-webkit-box-orient: vertical;
+			-webkit-line-clamp: 2;
+			color: @title-color;
+			font-size: ~'26rpx';
+		}
+		.item-prop {
+			color: @hint-color;
+			font-size: @hint-font-size;
+			padding-top: ~'4rpx';
+			padding-bottom: ~'2rpx';
+		}
+	}
+
+	.item-price {
+		color: @active-color;
+		font-size: @price-font-size;
+	}
+
+	.item-display-price {
+		padding-left: ~'12rpx';
+		color: @hint-color;
+		font-size: @hint-font-size;
+		text-decoration: line-through;
+	}
+
+	.item-count {
+		display: inline-block;
+		float: right;
+		color: @hint-color;
+		font-size: @hint-font-size;
+	}
+
+
 </style>
