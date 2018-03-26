@@ -217,7 +217,7 @@
             } else {
                 this.tabOpacity = top / this.systemInfo.windowWidth
             }
-
+			this.toView = ''
             let recommendResult = await utils.getDomInfo('#recommend-id')
             if (recommendResult.top <= 0) {
                 this.activeAnchor = 'recommend-id'
