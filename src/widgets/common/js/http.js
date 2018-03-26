@@ -27,7 +27,7 @@ class HTTPUtil {
         }).catch((fail) => {
             // 1.客户端类型异常
             isLoading && tip.loaded()
-            tip.alert({text: '请求数据异常'})
+            tip.alert({text: '网络异常'})
         })
 
         if ((minTime - ((new Date()).valueOf() - curTime)) > 0) {

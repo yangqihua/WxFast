@@ -1,5 +1,5 @@
 <template>
-	<view">
+	<view>
 		<order-list-tab :tab.sync="tabs"/>
 
 		<refresh-scroll-view>
@@ -100,7 +100,7 @@
         methods = {}
 
         onLoad(options) {
-            this.tabs.selectedId = options.orderStatus || '1'
+            this.tabs.selectedId = options.orderStatus || ''
         }
 
         events = {

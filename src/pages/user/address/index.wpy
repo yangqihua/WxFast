@@ -1,0 +1,157 @@
+<template>
+	<view>
+		<repeat for="{{addressList}}" key="index" index="index" item="item">
+			<view class="item-container">
+				<view style="padding: 12rpx 24rpx;background: #fff;">
+					<view class="name">{{item.name}}</view>
+					<view class="mobile">{{item.mobile}}</view>
+					<view class="desc">{{item.addressDescription}}</view>
+				</view>
+				<view class="item-footer">
+					<view class="default-text {{item.isDefault?'active':''}}" @tap="changeDefault({{item.id}})">设为默认
+					</view>
+					<view>
+						<button class="btn btn-mini btn-primary">编辑</button>
+						<button class="btn btn-mini btn-danger">删除</button>
+					</view>
+				</view>
+			</view>
+		</repeat>
+	</view>
+</template>
+
+<script>
+    import wepy from 'wepy'
+    import {getUserAddressList, setDefaultAddress} from '../../../services/api/api'
+    const data = {
+        "result": [{
+            "id": "87c5f392-5b20-43e3-a0fe-3e1cddd4a208",
+            "loginUserId": 1,
+            "name": "李四",
+            "province": 110000,
+            "city": 110100,
+            "country": 110101,
+            "address": "拉对方立刻",
+            "zipCode": null,
+            "mobile": "17727169875",
+            "isDefault": false,
+            "addressDescription": "北京 北京 东城区 拉对方立刻"
+        }, {
+            "id": "8a9335a9-1f54-4d5c-bc6e-bc61322f8dfa",
+            "loginUserId": 1,
+            "name": "莉莉",
+            "province": 140000,
+            "city": 140100,
+            "country": 140105,
+            "address": "颠三倒四多所多撒大声地",
+            "zipCode": null,
+            "mobile": "17727169875",
+            "isDefault": true,
+            "addressDescription": "山西 太原市 小店区 颠三倒四多所多撒大声地"
+        }, {
+            "id": "f5206031-a1d0-4b77-80ca-ae575fc5e969",
+            "loginUserId": 1,
+            "name": "老板",
+            "province": 140000,
+            "city": 140100,
+            "country": 140122,
+            "address": "地址添加",
+            "zipCode": null,
+            "mobile": "17727169875",
+            "isDefault": false,
+            "addressDescription": "山西 太原市 阳曲县 地址添加"
+        }],
+        "status": 1
+    }
+    export default class extends wepy.page {
+        config = {
+            navigationBarTitleText: '地址管理',
+        }
+        data = {
+            addressList: [],
+            activeId: '',
+        }
+
+        methods = {
+            async changeDefault(id){
+                let userInfo = await this.$parent.getUserInfo()
+	            console.log('id:',id)
+	            console.log('this.addressList:',this.addressList)
+                await setDefaultAddress({
+                    id: id,
+                    loginUserId: userInfo.id,
+                    userId: userInfo.id,
+                })
+//                await this.getAddressList()
+                for (let i = 0; i < this.addressList.length; i++) {
+                    if (this.addressList[i]['id'] == id) {
+                        this.addressList[i]['isDefault'] = true
+                    } else {
+                        this.addressList[i]['isDefault'] = false
+                    }
+
+                }
+                this.$apply()
+            }
+        }
+
+        async onLoad() {
+            await this.getAddressList()
+        }
+
+        async getAddressList() {
+            this.addressList = await getUserAddressList()
+//            this.addressList = data.result
+            this.$apply()
+//            console.log('this.addressList:', this.addressList)
+        }
+
+    }
+</script>
+
+<style lang="less" rel="stylesheet/less">
+	@import "../../../widgets/button/button";
+
+	.item-container {
+		margin: ~'24rpx 24rpx 0 24rpx';
+		border: ~'1rpx' solid @hairline-color;
+		line-height: ~'50rpx';
+		box-shadow: 0 ~'10rpx' ~'10rpx' #ccc;
+		.name, .mobile {
+			display: inline-block;
+			font-size: @title-font-size;
+			color: @title-color;
+		}
+		.name {
+			padding-right: ~'20rpx';
+		}
+		.desc {
+			font-size: @desc-font-size;
+			color: @desc-color;
+		}
+		.item-footer {
+			border-top: ~'1rpx' solid @hairline-color;
+			padding: ~'12rpx 24rpx';
+			display: flex;
+			justify-content: space-between;
+			line-height: ~'50rpx';
+			button {
+				margin: 0 0 0 ~'12rpx';
+				/*font-size:~'20rpx';*/
+				padding: 0 ~'14rpx';
+				/*line-height: ~'30rpx';*/
+			}
+		}
+		.default-text {
+			font-size: ~'26rpx';
+			color: @desc-color;
+			background: url(http://p3orru6vb.bkt.clouddn.com/unselect.png) no-repeat ~'0rpx 6rpx';
+			padding-left: ~'44rpx';
+			background-size: ~'42rpx 42rpx';
+			&.active {
+				background: url(http://p3orru6vb.bkt.clouddn.com/select.png) no-repeat ~'0rpx 6rpx';
+				background-size: ~'40rpx 40rpx';
+			}
+		}
+	}
+</style>
