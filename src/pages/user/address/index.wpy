@@ -23,46 +23,6 @@
 <script>
     import wepy from 'wepy'
     import {getUserAddressList, setDefaultAddress} from '../../../services/api/api'
-    const data = {
-        "result": [{
-            "id": "87c5f392-5b20-43e3-a0fe-3e1cddd4a208",
-            "loginUserId": 1,
-            "name": "李四",
-            "province": 110000,
-            "city": 110100,
-            "country": 110101,
-            "address": "拉对方立刻",
-            "zipCode": null,
-            "mobile": "17727169875",
-            "isDefault": false,
-            "addressDescription": "北京 北京 东城区 拉对方立刻"
-        }, {
-            "id": "8a9335a9-1f54-4d5c-bc6e-bc61322f8dfa",
-            "loginUserId": 1,
-            "name": "莉莉",
-            "province": 140000,
-            "city": 140100,
-            "country": 140105,
-            "address": "颠三倒四多所多撒大声地",
-            "zipCode": null,
-            "mobile": "17727169875",
-            "isDefault": true,
-            "addressDescription": "山西 太原市 小店区 颠三倒四多所多撒大声地"
-        }, {
-            "id": "f5206031-a1d0-4b77-80ca-ae575fc5e969",
-            "loginUserId": 1,
-            "name": "老板",
-            "province": 140000,
-            "city": 140100,
-            "country": 140122,
-            "address": "地址添加",
-            "zipCode": null,
-            "mobile": "17727169875",
-            "isDefault": false,
-            "addressDescription": "山西 太原市 阳曲县 地址添加"
-        }],
-        "status": 1
-    }
     export default class extends wepy.page {
         config = {
             navigationBarTitleText: '地址管理',

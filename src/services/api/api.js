@@ -20,6 +20,7 @@ const getCart = (params) => http.get(params, 'cart/getcart', false)
 const removeCart = (params) => http.delete(params, 'cart/removecart', true)
 const updateCart = (params) => http.put(params, 'cart/updatecart', true)
 
+const getAction = (params) => http.get(params, 'User/getAction', false)
 const addAction = (params) => http.post(params, 'User/AddAction', true)
 const removeAction = (params) => http.delete(params, 'User/RemoveAction', true)
 
@@ -48,6 +49,7 @@ export {
     removeCart,
     updateCart,
     addAction,
+    getAction,
     removeAction,
     addOrder,
     getOrderList,
